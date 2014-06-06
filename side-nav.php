@@ -1,4 +1,8 @@
-            <div class="navbar-default navbar-static-side" role="navigation">
+<?php
+    $page_name = basename($_SERVER['PHP_SELF'], ".php");      
+            if ($page_name !== "login"){
+                
+                echo '<div class="navbar-default navbar-static-side" role="navigation">
                 <div class="sidebar-collapse">
                     <ul class="nav" id="side-menu">
                         <li class="sidebar-search">
@@ -10,7 +14,7 @@
                                     </button>
                                 </span>
                             </div>
-                            <!-- /input-group -->
+                            
                         </li>
                         <li>
                             <a href="tracklist.php"><i class="fa fa-twitter fa-fw"></i> Tracklist</a>
@@ -25,7 +29,6 @@
                                     <a href="#">Timeline</a>
                                 </li>
                             </ul>
-                            <!-- /.nav-second-level -->
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-table fa-fw"></i> Tables</a>
@@ -52,7 +55,6 @@
                                     <a href="grid.html">Grid</a>
                                 </li>
                             </ul>
-                            <!-- /.nav-second-level -->
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
@@ -79,10 +81,9 @@
                                             <a href="#">Third Level Item</a>
                                         </li>
                                     </ul>
-                                    <!-- /.nav-third-level -->
                                 </li>
                             </ul>
-                            <!-- /.nav-second-level -->
+
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
@@ -94,11 +95,8 @@
                                     <a href="login.html">Login Page</a>
                                 </li>
                             </ul>
-                            <!-- /.nav-second-level -->
                         </li>
                     </ul>
-                    <!-- /#side-menu -->
                 </div>
-                <!-- /.sidebar-collapse -->
-            </div>
-            <!-- /.navbar-static-side -->
+            
+            </div>';}?>

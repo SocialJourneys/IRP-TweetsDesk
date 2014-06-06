@@ -1,23 +1,78 @@
-<!DOCTYPE html>
-<html>
+<?php include('core/init.core.php');
 
-<head>
+    //Initialize the errors array:
+    $errors = array();
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    //If user is already logged in, then it redirects to dashboard:
+    if(isset($_SESSION['account'])){
+        header('Location: tracklist.php');
+        die();
+    }
 
-    <title>Start Bootstrap - SB Admin Version 2.0 Demo</title>
+    //Check if the email and password fields were submitted:
+    if(isset($_POST['email'], $_POST['password'])){
+        //Check if the email is empty:
+        if(empty($_POST['email'])){
+            $errors[] = 'The email cannot be empty.';
+        }
 
-    <!-- Core CSS - Include with every page -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+        //Check if the password is empty:
+        if(empty($_POST['password'])){
+            $errors[] = 'The password cannot be empty.';
+        }
 
-    <!-- SB Admin CSS - Include with every page -->
-    <link href="css/sb-admin.css" rel="stylesheet">
+        //Api URL:
+        $url = APIURL."/auth";
 
-</head>
+        //Header of the API:
+        $headers = array('Content-Type: application/json');
+        
+        //Data array of the API:
+        $dataArray = array(
+                        'email'    => htmlentities($_POST['email']),
+                        'password' => htmlentities($_POST['password'])
+                        );
+        
+        //Encode the data array into JSON:
+        $data = json_encode($dataArray);
 
-<body>
+        //Get a response from the API:
+        $response = rest_post($url, $data, $headers);
+
+        //Get the user object:
+        $userobj = json_decode($response);
+        
+        //Get the status of the user (active/innactive):
+        $status = $userobj->{'statusCode'};
+
+        //Check if the login was successful:
+        if($status!=200){
+            $errors[] = $userobj->{'errors'}[0];
+            $errors[] = $userobj->{'moreInfo'};
+        }else if($status==200){
+            //Create the session:
+            if(empty($errors)){
+                //Get the size of the businessApiKeys array:
+                //Store the variables in a session:
+                $_SESSION['account'] = array('email'  => $userobj->{'email'},
+                                             'apiKey' => $userobj->{'userApiKey'},
+                                             'name'   => $userobj->{'userFullName'},
+                                             'accountType' => $userobj->{'accountType'});
+                
+
+
+
+                //print_r($_SESSION['account']);
+                //Redirect to the dashboard: 
+                header('Location: tracklist.php');
+
+                die();   
+            }
+        }
+    }
+?>
+
+<?php include('header.php');?>
 
     <div class="container">
         <div class="row">
@@ -27,7 +82,7 @@
                         <h3 class="panel-title">Please Sign In</h3>
                     </div>
                     <div class="panel-body">
-                        <form role="form">
+                        <form role="form" method="post" role="form">
                             <fieldset>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
@@ -41,7 +96,7 @@
                                     </label>
                                 </div>
                                 <!-- Change this to a button or input when using this as a form -->
-                                <a href="index.html" class="btn btn-lg btn-success btn-block">Login</a>
+                            <button class="btn btn-lg btn-success btn-block" type="submit">Login</button><br/>
                             </fieldset>
                         </form>
                     </div>
@@ -50,14 +105,5 @@
         </div>
     </div>
 
-    <!-- Core Scripts - Include with every page -->
-    <script src="js/jquery-1.10.2.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<?php include('footer.php');?>
 
-    <!-- SB Admin Scripts - Include with every page -->
-    <script src="js/sb-admin.js"></script>
-
-</body>
-
-</html>
