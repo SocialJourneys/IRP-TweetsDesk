@@ -4,23 +4,26 @@
 <?php
     $term_name = $_GET['id'];
 //http://dtp-24.sncs.abdn.ac.uk/phpPgAdmin/
-        $db = pg_connect('host=http://dtp-24.sncs.abdn.ac.uk dbname=tweetdesk user=postgres password=5L1ght1y'); 
+        $db = pg_connect('host=localhost port=5432 dbname=tweetdesk user=postgres password=5L1ght1y'); 
 
-        $query = "SELECT * FROM tweet"; 
+        $query = "SELECT * FROM track_list"; 
 
-        $result = pg_query($query); 
+        $result = pg_query($db,$query); 
         if (!$result) { 
             echo "Problem with query " . $query . "<br/>"; 
             echo pg_last_error(); 
             exit(); 
         } 
 
-        print_r($result);
-        die();
+        //print_r($result);
+        //die();
 
         while($myrow = pg_fetch_assoc($result)) { 
+            print_r($myrow);
            // printf ("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>", $myrow['id'], htmlspecialchars($myrow['firstname']), htmlspecialchars($myrow['surname']), htmlspecialchars($myrow['emailaddress']));
         } 
+
+        die();
         ?> 
 
 ?>
