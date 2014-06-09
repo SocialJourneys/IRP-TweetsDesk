@@ -1,4 +1,5 @@
-<?php include('core/init.core.php');
+<?php include('core/init.core.php');?>
+<?php
 
     //Initialize the errors array:
     $errors = array();
@@ -71,7 +72,6 @@
         }
     }
 ?>
-
 <?php include('header.php');?>
 
     <div class="container">
@@ -82,6 +82,17 @@
                         <h3 class="panel-title">Please Sign In</h3>
                     </div>
                     <div class="panel-body">
+
+                                        <div>
+                    <?php if(empty($errors)===false){ ?>
+                        <ul class="fedback-error-signin">
+                            <?php foreach ($errors as $error) {
+                                echo "<li><p><span class=\"glyphicon glyphicon-remove form-control-feedback\"></span>&nbsp;&nbsp;".$error."</p></li>";
+                            } ?>
+                        </ul>
+                    <?php } ?>
+                </div>
+
                         <form role="form" method="post" role="form">
                             <fieldset>
                                 <div class="form-group">
