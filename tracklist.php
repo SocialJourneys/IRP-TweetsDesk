@@ -2,6 +2,14 @@
 <?php include('core/init.core.php');?>
 <?php
 
+$isDelete = $_GET['delete'];
+$delete_msg = ''; 
+
+if($isDelete==='YES')
+    $delete_msg = '<strong>Success!</strong> You have successfully deleted.'; 
+else
+    $delete_msg = '<strong>Oops!</strong> There was an error, please try again.'; 
+
 $url = APIURL.'/tracklist';
 $headers = array('Content-Type: application/json',"Authorization: ".$_SESSION['account']['apiKey']);
 //$headers = array('Content-Type: application/json');
@@ -11,12 +19,6 @@ $dataArray = json_decode($response);
 //print_r($response);
 //die();
 $dataArray = $dataArray->{'trackLists'};
-
-
-if(isset($_POST['track-term'])){
-    echo $_POST['track-term'];
-   // die();
-}
 
 
 ?>
@@ -32,6 +34,17 @@ if(isset($_POST['track-term'])){
     <!-- /.row -->
     <div class="row">
 
+<ol class="breadcrumb">
+  <li class="active">Tracklist</li>
+</ol>
+
+<?php 
+if($isDelete==='YES'){
+    echo '<div class="alert alert-success alert-dismissable">';
+    echo '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
+    echo $delete_msg;
+    echo'</div>';}
+?>
         <div style="margin-top:50px;" class="mainbox col-lg-6">
             <div class="panel panel-info" >
                 <div class="panel-heading">
@@ -43,7 +56,7 @@ if(isset($_POST['track-term'])){
                         <div class="row">
                           <div class="col-lg-10">
                             <div class="input-group">
-                              <span class="input-group-addon" id="dropdown-symbol">@</span>
+                              <span class="input-group-addon" id="dropdown-symbol"> </span>
                               <input type="text" class="form-control" id="add-term-input">
                               <div class="input-group-btn">
                                 <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" id="dropdown-title" value='0'>Select Type <span class="caret"></span></button>
@@ -106,7 +119,7 @@ $tempData = json_decode($rawData, true);
 //print_r($dataArray);
 ?>
 <div class="row" id="term-list">
-    <div class="col-lg-12">
+    <div class="col-lg-10">
         <div class="panel panel-info">
             <div class="panel-heading">
                 Current Track Items
@@ -126,11 +139,12 @@ $tempData = json_decode($rawData, true);
                             <?php foreach ($dataArray as $key => $value) {
                                 $name = $value->{'name'};
                                 $id = $value->{'id'};
+                                $type = $value->{'type'};
                                 echo '<tr class="gradeA">';
                                 echo '<td class="center"><a href="tracklist-details.php?id='.$value->{'name'}.'">'.$value->{'name'}.'</a></td>';
                                 echo '<td class="center">'.$value->{'type'}.'</td>';
  //                               echo "<td class=\"center\"><a href=\"#\" class=\"btn btn-danger btn-sm active\" role=\"button\" onClick=\"deleteTerm($id,'$name')\">Delete</a></td>";
-                                echo "<td class=\"center\"><a href=\"122#\" class=\"btn btn-danger btn-sm active\" role=\"button\" data-toggle=\"modal\" data-target=\"#confirm-delete\" data-id=$id data-name=\"'$name'\">Delete</a></td>";
+                                echo "<td class=\"center\"><a data-href=\"http-calls/delete-term.php\" class=\"btn btn-danger btn-sm active\" role=\"button\" data-toggle=\"modal\" data-target=\"#confirm-delete\" data-id=$id data-type=\"'$type'\" data-name=\"'$name'\">Delete</a></td>";
                                 echo '</tr>';
 
                             }?>
@@ -172,26 +186,15 @@ $tempData = json_decode($rawData, true);
 
 
 <?php include('footer.php');?>
-<!-- Core Scripts - Include with every page -->
-<script src="js/jquery-1.10.2.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
 
-<!-- Page-Level Plugin Scripts - Tables -->
-<script src="js/plugins/dataTables/jquery.dataTables.js"></script>
-<script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
-
-<!-- JS Scripts - Include with every page -->
-<script src="js/sb-admin.js"></script>
-
-<script src="http-calls/add-term.js"></script>
-<script src="http-calls/delete-term.js"></script>
+<script type="text/javascript" src="http-calls/add-term.js"> </script>
+<script type="text/javascript" src="http-calls/delete-term.js"> </script>
 
 <!-- Data table init -->
 <script>
-$(document).ready(function() {
-    $('#dataTables-tracklist').dataTable();
-});
+
+$('#dataTables-tracklist').dataTable();
+
 
 <!-- changing drop down title -->
 $('.dropdown-toggle').dropdown();
@@ -218,8 +221,9 @@ $('#dropdown-term-type li').on('click',function(){
 //show delete confirmation
 $('#confirm-delete').on('show.bs.modal', function(e) {
     var term_id = $(e.relatedTarget).data('id');
-    $(this).find('.danger').attr('onClick', 'doDelete('+term_id+')');
-    $('.debug-record').html('Delete URL: <strong>' + $(e.relatedTarget).data('name') + '</strong>');
+    var term_type = $(e.relatedTarget).data('type');
+    $(this).find('.danger').attr('href', $(e.relatedTarget).data('href')+'?term_id='+term_id);
+    $('.debug-record').html('Delete '+term_type+': <strong>' + $(e.relatedTarget).data('name') + '</strong>');
 });
 
 </script>

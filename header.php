@@ -11,7 +11,7 @@
     <title>Tweets Desk for Social Journeys</title>
 
     <!-- Core CSS - Include with every page -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
 
     <!-- Page-Level Plugin CSS - Dashboard -->
@@ -20,6 +20,12 @@
 
     <!-- SB Admin CSS - Include with every page -->
     <link href="css/sb-admin.css" rel="stylesheet">
+
+    <!-- Page-Level Plugin CSS - Tables -->
+    <link href="css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+
+    <link href="css/style.css" rel="stylesheet">
 
 </head>
 
@@ -33,14 +39,8 @@
 <?php include('side-nav.php');?>   <!-- /.left side bar-->
 
 
-        </nav>
+        </nav> <!-- /.nav-->
 
 
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="font-awesome/css/font-awesome.css" rel="stylesheet">
 
-    <!-- Page-Level Plugin CSS - Tables -->
-    <link href="css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
 
-    <!-- SB Admin CSS - Include with every page -->
-    <link href="css/sb-admin.css" rel="stylesheet">

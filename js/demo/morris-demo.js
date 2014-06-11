@@ -1,61 +1,102 @@
 $(function() {
 
     Morris.Area({
-        element: 'morris-area-chart',
+        element: 'morris-hour-chart',
         data: [{
-            period: '2010 Q1',
-            iphone: 2666,
-            ipad: null,
-            itouch: 2647
+            hour: '2014-06-10 12:00',
+            tweets: 100,
+            users: 12,
         }, {
-            period: '2010 Q2',
-            iphone: 2778,
-            ipad: 2294,
-            itouch: 2441
+            hour: '2014-06-10 1:00',
+            tweets: 200,
+            users: 7,
         }, {
-            period: '2010 Q3',
-            iphone: 4912,
-            ipad: 1969,
-            itouch: 2501
+            hour: '2014-06-10 2:00',
+            tweets: 10,
+            users: 3,
         }, {
-            period: '2010 Q4',
-            iphone: 3767,
-            ipad: 3597,
-            itouch: 5689
+            hour: '2014-06-10 3:00',
+            tweets: 15,
+            users: 4,
         }, {
-            period: '2011 Q1',
-            iphone: 6810,
-            ipad: 1914,
-            itouch: 2293
+            hour: '2014-06-10 4:00',
+            tweets: 5,
+            users: 2,
         }, {
-            period: '2011 Q2',
-            iphone: 5670,
-            ipad: 4293,
-            itouch: 1881
+            hour: '2014-06-10 5:00',
+            tweets: 20,
+            users: 5,
         }, {
-            period: '2011 Q3',
-            iphone: 4820,
-            ipad: 3795,
-            itouch: 1588
+            hour: '2014-06-10 6:00',
+            tweets: 30,
+            users: 7,
         }, {
-            period: '2011 Q4',
-            iphone: 15073,
-            ipad: 5967,
-            itouch: 5175
+            hour: '2014-06-10 7:00',
+            tweets: 100,
+            users: 40,
         }, {
-            period: '2012 Q1',
-            iphone: 10687,
-            ipad: 4460,
-            itouch: 2028
+            hour: '2014-06-10 8:00',
+            tweets: 145,
+            users: 70,
         }, {
-            period: '2012 Q2',
-            iphone: 8432,
-            ipad: 5713,
-            itouch: 1791
+            hour: '2014-06-10 9:00',
+            tweets: 350,
+            users: 100,
         }],
-        xkey: 'period',
-        ykeys: ['iphone', 'ipad', 'itouch'],
-        labels: ['iPhone', 'iPad', 'iPod Touch'],
+        xkey: 'hour',
+        ykeys: ['tweets', 'users'],
+        labels: ['Tweets', 'Users'],
+        pointSize: 2,
+        hideHover: 'auto',
+        resize: true
+    });
+
+Morris.Area({
+        element: 'morris-day-chart',
+        data: [{
+            day: '2014-05-10',
+            tweets: 1000,
+            users: 120,
+        }, {
+            day: '2014-05-11',
+            tweets: 2000,
+            users: 70,
+        }, {
+            day: '2014-05-12',
+            tweets: 100,
+            users: 30,
+        }, {
+            day: '2014-05-13',
+            tweets: 105,
+            users: 40,
+        }, {
+            day: '2014-05-14',
+            tweets: 50,
+            users: 20,
+        }, {
+            day: '2014-05-15',
+            tweets: 200,
+            users: 50,
+        }, {
+            day: '2014-05-16',
+            tweets: 300,
+            users: 70,
+        }, {
+            day: '2014-05-17',
+            tweets: 1000,
+            users: 400,
+        }, {
+            day: '2014-05-18',
+            tweets: 1405,
+            users: 700,
+        }, {
+            day: '2014-05-18',
+            tweets: 3500,
+            users: 1000,
+        }],
+        xkey: 'day',
+        ykeys: ['tweets', 'users'],
+        labels: ['Tweets', 'Users'],
         pointSize: 2,
         hideHover: 'auto',
         resize: true
