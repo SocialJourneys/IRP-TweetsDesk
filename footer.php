@@ -22,6 +22,18 @@
     <!-- datatables-->
     <link href="css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
 
+
+<?php include('dialogs.php');?>
+
 </body>
 
 </html>
+
+
+
+<!-- Page-Level Plugin Scripts - Tables -->
+<script src="js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
+<!-- JS Scripts - Include with every page -->
+<script src="js/sb-admin.js"></script>

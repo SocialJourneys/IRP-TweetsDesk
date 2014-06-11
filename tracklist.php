@@ -46,23 +46,27 @@ if(isset($_POST['track-term'])){
                               <span class="input-group-addon" id="dropdown-symbol">@</span>
                               <input type="text" class="form-control" id="add-term-input">
                               <div class="input-group-btn">
-                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" id="dropdown-title">Select Type <span class="caret"></span></button>
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" id="dropdown-title" value='0'>Select Type <span class="caret"></span></button>
                                 <ul class="dropdown-menu pull-right" id="dropdown-term-type">
-                                  <li><a href="#" value="hashtag">Hashtag</a></li>
-                                  <li><a href="#" value="handle">Handle</a></li>
-                                  <li><a href="#" value="search-term">Search Term</a></li>
+                                  <li data-type='hashtag'><a href="#">Hashtag</a></li>
+                                  <li data-type='handle'><a href="#">Handle</a></li>
+                                  <li data-type='search-term'><a href="#">Search Term</a></li>
                               </ul>
                           </div><!-- /btn-group -->
                       </div><!-- /input-group -->
                   </div><!-- /.col-lg-6 -->
 
               </div><!-- /.row -->
-
+              <br/>
+                                      <div class="well">
+                                <p>Write the term and select type. </p>
+                                <p>You can also write comma separated terms to add multiple items. e.g Aberdeen, WaitingForBus, Office.</p>
+                            </div>
               <div style="margin-top:10px" class="form-group">
                 <!-- Button -->
 
                 <div class="col-sm-12 controls">
-                  <a id="btn-add" href="#" class="btn btn-primary pull-right" onClick='addTerm()'>Add</a>
+                  <a id="btn-add-term" href="#" class="btn btn-primary pull-right" onClick='addTerm()'>Add</a>
 
               </div>
           </div>
@@ -101,7 +105,7 @@ $rawData = '{
 $tempData = json_decode($rawData, true);
 //print_r($dataArray);
 ?>
-<div class="row">
+<div class="row" id="term-list">
     <div class="col-lg-12">
         <div class="panel panel-info">
             <div class="panel-heading">
@@ -120,11 +124,15 @@ $tempData = json_decode($rawData, true);
                         </thead>
                         <tbody>
                             <?php foreach ($dataArray as $key => $value) {
+                                $name = $value->{'name'};
+                                $id = $value->{'id'};
                                 echo '<tr class="gradeA">';
                                 echo '<td class="center"><a href="tracklist-details.php?id='.$value->{'name'}.'">'.$value->{'name'}.'</a></td>';
                                 echo '<td class="center">'.$value->{'type'}.'</td>';
-                                echo"<td class='center'><a href=\"#\" class=\"btn btn-danger btn-sm active\" role=\"button\">Delete</a></td>";
+ //                               echo "<td class=\"center\"><a href=\"#\" class=\"btn btn-danger btn-sm active\" role=\"button\" onClick=\"deleteTerm($id,'$name')\">Delete</a></td>";
+                                echo "<td class=\"center\"><a href=\"122#\" class=\"btn btn-danger btn-sm active\" role=\"button\" data-toggle=\"modal\" data-target=\"#confirm-delete\" data-id=$id data-name=\"'$name'\">Delete</a></td>";
                                 echo '</tr>';
+
                             }?>
                         </tbody>
                     </table>
@@ -139,6 +147,28 @@ $tempData = json_decode($rawData, true);
 </div>
 <!-- /.row -->
 
+
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+                </div>
+            
+                <div class="modal-body">
+                    <p>Are you sure you want to Delete?</p>
+                    <p class="debug-record"></p>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <a href="#" class="btn btn-danger danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 <?php include('footer.php');?>
@@ -155,6 +185,7 @@ $tempData = json_decode($rawData, true);
 <script src="js/sb-admin.js"></script>
 
 <script src="http-calls/add-term.js"></script>
+<script src="http-calls/delete-term.js"></script>
 
 <!-- Data table init -->
 <script>
@@ -165,10 +196,30 @@ $(document).ready(function() {
 <!-- changing drop down title -->
 $('.dropdown-toggle').dropdown();
 $('#dropdown-term-type li').on('click',function(){
-    $('#dropdown-title').text($(this).find('a').text());
-    $('#dropdown-title').append(' '+"<span class='caret'></span>");
-    //$('#dropdown-title').val('');
+    
+    var type = $(this).data('type');
+    //var name = $(this).val();
+    //var type = $(this).find('a').text();
+    var symbol = '@';
 
+    if (type==='hashtag')
+        symbol = '#';
+    if (type ==='search-term')
+        symbol='$';
+
+
+     $('#dropdown-title').text($(this).find('a').text());
+    $('#dropdown-title').append(' '+"<span class='caret'></span>");
+    $('#dropdown-symbol').text(symbol);
+    $('#dropdown-title').val(type); //set hidden value
+    //alert($(this).val());
+});
+
+//show delete confirmation
+$('#confirm-delete').on('show.bs.modal', function(e) {
+    var term_id = $(e.relatedTarget).data('id');
+    $(this).find('.danger').attr('onClick', 'doDelete('+term_id+')');
+    $('.debug-record').html('Delete URL: <strong>' + $(e.relatedTarget).data('name') + '</strong>');
 });
 
 </script>

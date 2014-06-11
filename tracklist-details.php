@@ -1,5 +1,5 @@
 
-<?php //include('header.php');?>
+<?php include('header.php');?>
 
 <?php
     $term_name = $_GET['id'];
@@ -18,19 +18,17 @@
         //print_r($result);
         //die();
 
-        while($myrow = pg_fetch_assoc($result)) { 
-            print_r($myrow);
+  //      while($myrow = pg_fetch_assoc($result)) { 
+           // print_r($myrow);
            // printf ("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>", $myrow['id'], htmlspecialchars($myrow['firstname']), htmlspecialchars($myrow['surname']), htmlspecialchars($myrow['emailaddress']));
-        } 
+    //    } 
 
-        die();
-        ?> 
-
+       // die();
 ?>
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Tracking: <small><?php echo $term_name;?></small></h1>
+            <h1 class="page-header"><small><?php echo 'Tracking: ';?></small><br/><?php echo $term_name;?></h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
