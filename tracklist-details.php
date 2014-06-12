@@ -154,7 +154,7 @@ $tempData = json_decode($rawData, true);
             <!-- /.panel-heading -->
             <div class="panel-body">
                 <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover" id="dataTables-tracklist">
+                    <table class="table table-striped table-bordered table-hover" id="dataTables-tweets">
                         <thead>
                             <tr>
                                 <th>Tweet</th>
@@ -292,5 +292,7 @@ $(function() {
         }                    
     });
 });
+
+$('#dataTables-tweets').dataTable();
 
 </script>
