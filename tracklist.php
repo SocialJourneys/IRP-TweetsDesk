@@ -141,7 +141,7 @@ $tempData = json_decode($rawData, true);
                                 $id = $value->{'id'};
                                 $type = $value->{'type'};
                                 echo '<tr class="gradeA">';
-                                echo '<td class="center"><a href="tracklist-details.php?id='.$value->{'name'}.'">'.$value->{'name'}.'</a></td>';
+                                echo '<td class="center"><a href="tracklist-details.php?term_name='.$value->{'name'}.'&term_type='.$type.'">'.$value->{'name'}.'</a></td>';
                                 echo '<td class="center">'.$value->{'type'}.'</td>';
  //                               echo "<td class=\"center\"><a href=\"#\" class=\"btn btn-danger btn-sm active\" role=\"button\" onClick=\"deleteTerm($id,'$name')\">Delete</a></td>";
                                 echo "<td class=\"center\"><a data-href=\"http-calls/delete-term.php\" class=\"btn btn-danger btn-sm active\" role=\"button\" data-toggle=\"modal\" data-target=\"#confirm-delete\" data-id=$id data-type=\"'$type'\" data-name=\"'$name'\">Delete</a></td>";
