@@ -1,5 +1,4 @@
-<?php include('core/init.core.php');?>
-<?php
+<?php include('core/init.core.php');
 
     //Initialize the errors array:
     $errors = array();
@@ -117,4 +116,3 @@
     </div>
 
 <?php include('footer.php');?>
-

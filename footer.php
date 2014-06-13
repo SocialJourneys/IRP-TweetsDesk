@@ -30,6 +30,9 @@
     <script type="text/javascript" src="js/moment.min.js"> </script>
     <script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"> </script>
 
+    <!--bootbox-->
+    <script type="text/javascript" src="js/bootbox.min.js"> </script>
+
 
 <?php include('dialogs.php');?>
 </body>

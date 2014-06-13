@@ -2,7 +2,9 @@
 
 <?php// include('header.php');?>
 
-<?php header("Location: login.php");?>
+<?php 
+    header('Location: login.php');
+    die();
+?>
 
 <?php //include('footer.php');?>
-

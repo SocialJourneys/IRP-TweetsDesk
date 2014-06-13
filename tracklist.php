@@ -2,13 +2,6 @@
 <?php include('core/init.core.php');?>
 <?php
 
-$isDelete = $_GET['delete'];
-$delete_msg = ''; 
-
-if($isDelete==='YES')
-    $delete_msg = '<strong>Success!</strong> You have successfully deleted.'; 
-else
-    $delete_msg = '<strong>Oops!</strong> There was an error, please try again.'; 
 
 $url = APIURL.'/tracklist';
 $headers = array('Content-Type: application/json',"Authorization: ".$_SESSION['account']['apiKey']);
@@ -38,14 +31,7 @@ $dataArray = $dataArray->{'trackLists'};
   <li class="active">Tracklist</li>
 </ol>
 
-<?php 
-if($isDelete==='YES'){
-    echo '<div class="alert alert-success alert-dismissable">';
-    echo '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
-    echo $delete_msg;
-    echo'</div>';}
-?>
-        <div style="margin-top:50px;" class="mainbox col-lg-6">
+<div style="margin-top:50px;" class="mainbox col-lg-6">
             <div class="panel panel-info" >
                 <div class="panel-heading">
                     <div class="panel-title">Add Track Item</div>
@@ -140,11 +126,11 @@ $tempData = json_decode($rawData, true);
                                 $name = $value->{'name'};
                                 $id = $value->{'id'};
                                 $type = $value->{'type'};
-                                echo '<tr class="gradeA">';
+                                echo '<tr class="gradeA" id="dataTables-tracklist-'.$id.'">';
                                 echo '<td class="center"><a href="tracklist-details.php?term_name='.$value->{'name'}.'&term_type='.$type.'">'.$value->{'name'}.'</a></td>';
                                 echo '<td class="center">'.$value->{'type'}.'</td>';
  //                               echo "<td class=\"center\"><a href=\"#\" class=\"btn btn-danger btn-sm active\" role=\"button\" onClick=\"deleteTerm($id,'$name')\">Delete</a></td>";
-                                echo "<td class=\"center\"><a data-href=\"http-calls/delete-term.php\" class=\"btn btn-danger btn-sm active\" role=\"button\" data-toggle=\"modal\" data-target=\"#confirm-delete\" data-id=$id data-type=\"'$type'\" data-name=\"'$name'\">Delete</a></td>";
+                                echo "<td class=\"center\"><a data-href=\"http-calls/delete-term.php\" onClick='deleteBtnClicked(this);'  class=\"btn btn-danger btn-sm active\" role=\"button\" id=\"#delete-btn\" data-id=$id data-type=\"$type\" data-name=\"$name\">Delete</a></td>";
                                 echo '</tr>';
 
                             }?>
@@ -162,7 +148,8 @@ $tempData = json_decode($rawData, true);
 <!-- /.row -->
 
 
-    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!--delete confirmation modal, not used anymore-->
+    <!--div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
             
@@ -182,7 +169,7 @@ $tempData = json_decode($rawData, true);
                 </div>
             </div>
         </div>
-    </div>
+    </div-->
 
 
 <?php include('footer.php');?>
@@ -219,12 +206,41 @@ $('#dropdown-term-type li').on('click',function(){
 });
 
 //show delete confirmation
-$('#confirm-delete').on('show.bs.modal', function(e) {
+/*$('#confirm-delete').on('show.bs.modal', function(e) {
     var term_id = $(e.relatedTarget).data('id');
     var term_type = $(e.relatedTarget).data('type');
     $(this).find('.danger').attr('href', $(e.relatedTarget).data('href')+'?term_id='+term_id);
     $('.debug-record').html('Delete '+term_type+': <strong>' + $(e.relatedTarget).data('name') + '</strong>');
-});
+});*/
 
+
+function deleteBtnClicked(event){
+    var term_id = $(event).data('id');
+    var term_type = $(event).data('type');
+    var term_name = $(event).data('name');
+
+    
+    bootbox.dialog({
+  message: 'Are you sure want to delete the '+ term_type +':<strong>'+ term_name+'</strong>',
+  title: "Confirmation",
+  buttons: {
+    cancel: {
+      label: "Cancel",
+      className: "btn-primary",
+      callback: function() {
+        //do nothing
+      }
+    },
+    danger: {
+      label: "Delete!",
+      className: "btn-danger",
+      callback: function() {
+        deleteTerm(term_id,term_name);
+        //Example.show("uh oh, look out!");
+      }
+    }
+  }
+});
+}
 </script>
 
