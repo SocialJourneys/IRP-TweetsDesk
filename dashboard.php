@@ -1,10 +1,5 @@
-<?php include('core/init.core.php');?>
+<?php include('core/init.core.php');
 
-<?php// include('header.php');?>
-
-<?php 
-    header('Location: login.php');
+    header('Location: tracklist.php');
     die();
 ?>
-
-<?php //include('footer.php');?>

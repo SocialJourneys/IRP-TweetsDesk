@@ -5,7 +5,7 @@
 
     //If user is already logged in, then it redirects to dashboard:
     if(isset($_SESSION['account'])){
-        header('Location: tracklist.php');
+        header('Location: dashboard.php');
         die();
     }
 
@@ -64,11 +64,15 @@
 
                 //print_r($_SESSION['account']);
                 //Redirect to the dashboard: 
-                header('Location: tracklist.php');
+                header('Location: dashboard.php');
 
                 die();   
             }
+            else
+                echo "error";
         }
+        else
+            echo 'nothing to see here';
     }
 ?>
 <?php include('header.php');?>

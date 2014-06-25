@@ -2,7 +2,6 @@
 <?php include('core/init.core.php');?>
 <?php
 
-
 $url = APIURL.'/tracklist';
 $headers = array('Content-Type: application/json',"Authorization: ".$_SESSION['account']['apiKey']);
 //$headers = array('Content-Type: application/json');
@@ -12,6 +11,12 @@ $dataArray = json_decode($response);
 //print_r($response);
 //die();
 $dataArray = $dataArray->{'trackLists'};
+
+
+if(isset($_POST['track-term'])){
+    echo $_POST['track-term'];
+   // die();
+}
 
 
 ?>
@@ -25,53 +30,50 @@ $dataArray = $dataArray->{'trackLists'};
         <!-- /.col-lg-12 -->
     </div>
     <!-- /.row -->
+    <div class="row">
 
-<ol class="breadcrumb">
-  <li class="active">Tracklist</li>
-</ol>
+        <div style="margin-top:50px;" class="mainbox col-lg-6">
+            <div class="panel panel-info" >
+                <div class="panel-heading">
+                    <div class="panel-title">Add Track Item</div>
+                </div>     
 
+                <div style="padding-top:30px" class="panel-body" >
+                    <form id="add-word-form" class="form-horizontal" role="form">
+                        <div class="row">
+                          <div class="col-lg-10">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="dropdown-symbol">@</span>
+                              <input type="text" class="form-control" id="add-term-input">
+                              <div class="input-group-btn">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" id="dropdown-title" value='0'>Select Type <span class="caret"></span></button>
+                                <ul class="dropdown-menu pull-right" id="dropdown-term-type">
+                                  <li data-type='hashtag'><a href="#">Hashtag</a></li>
+                                  <li data-type='handle'><a href="#">Handle</a></li>
+                                  <li data-type='search-term'><a href="#">Search Term</a></li>
+                              </ul>
+                          </div><!-- /btn-group -->
+                      </div><!-- /input-group -->
+                  </div><!-- /.col-lg-6 -->
 
-<div class="col-lg-9">
-    <div class="panel panel-info" >
-        <div class="panel-heading">
-            <div class="panel-title">Add Track Item</div>
-        </div>     
+              </div><!-- /.row -->
+              <br/>
+                                      <div class="well">
+                                <p>Write the term and select type. </p>
+                                <p>You can also write comma separated terms to add multiple items. e.g Aberdeen, WaitingForBus, Office.</p>
+                            </div>
+              <div style="margin-top:10px" class="form-group">
+                <!-- Button -->
 
-        <div style="padding-top:30px" class="panel-body" >
-            <form id="add-word-form" class="form-horizontal" role="form">
-                <div class="row">
-                  <div class="col-md-6 col-lg-9">
-                    <div class="input-group">
-                      <span class="input-group-addon" id="dropdown-symbol"> </span>
-                      <input type="text" class="form-control" id="add-term-input">
-                      <div class="input-group-btn">
-                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" id="dropdown-title" value='0'>Select Type <span class="caret"></span></button>
-                        <ul class="dropdown-menu pull-right" id="dropdown-term-type">
-                          <li data-type='hashtag'><a href="#">Hashtag</a></li>
-                          <li data-type='handle'><a href="#">Handle</a></li>
-                          <li data-type='search-term'><a href="#">Search Term</a></li>
-                        </ul>
-                      </div><!-- /btn-group -->
-                    </div><!-- /input-group -->
-                 </div><!-- /.col-lg-6 -->
-                 </div><!-- /.row -->
-            <br/>
-             <div class="well">
-                <p>Write the term and select type. </p>
-                 <p>You can also write comma separated terms to add multiple items. e.g Aberdeen, WaitingForBus, Office.</p>
-             </div>
-            <div style="margin-top:10px" class="form-group">
-             <!-- Button -->
                 <div class="col-sm-12 controls">
-                     <a id="btn-add-term" href="#" class="btn btn-primary pull-right" onClick='addTerm()'>Add</a>
-                </div>
-            </div>
-            </form>  
-</div>
-</div>
-</div>
+                  <a id="btn-add-term" href="#" class="btn btn-primary pull-right" onClick='addTerm()'>Add</a>
 
-
+              </div>
+          </div>
+      </form>  
+  </div>
+</div>
+</div>
 
 <?php 
 $rawData = '{
@@ -104,7 +106,7 @@ $tempData = json_decode($rawData, true);
 //print_r($dataArray);
 ?>
 <div class="row" id="term-list">
-    <div class="col-lg-10">
+    <div class="col-lg-12">
         <div class="panel panel-info">
             <div class="panel-heading">
                 Current Track Items
@@ -124,12 +126,11 @@ $tempData = json_decode($rawData, true);
                             <?php foreach ($dataArray as $key => $value) {
                                 $name = $value->{'name'};
                                 $id = $value->{'id'};
-                                $type = $value->{'type'};
-                                echo '<tr class="gradeA" id="dataTables-tracklist-'.$id.'">';
-                                echo '<td class="center"><a href="tracklist-details.php?term_name='.$value->{'name'}.'&term_type='.$type.'">'.$value->{'name'}.'</a></td>';
+                                echo '<tr class="gradeA">';
+                                echo '<td class="center"><a href="tracklist-details.php?id='.$value->{'name'}.'">'.$value->{'name'}.'</a></td>';
                                 echo '<td class="center">'.$value->{'type'}.'</td>';
  //                               echo "<td class=\"center\"><a href=\"#\" class=\"btn btn-danger btn-sm active\" role=\"button\" onClick=\"deleteTerm($id,'$name')\">Delete</a></td>";
-                                echo "<td class=\"center\"><a data-href=\"http-calls/delete-term.php\" onClick='deleteBtnClicked(this);'  class=\"btn btn-danger btn-sm active\" role=\"button\" id=\"#delete-btn\" data-id=$id data-type=\"$type\" data-name=\"$name\">Delete</a></td>";
+                                echo "<td class=\"center\"><a href=\"122#\" class=\"btn btn-danger btn-sm active\" role=\"button\" data-toggle=\"modal\" data-target=\"#confirm-delete\" data-id=$id data-name=\"'$name'\">Delete</a></td>";
                                 echo '</tr>';
 
                             }?>
@@ -145,10 +146,9 @@ $tempData = json_decode($rawData, true);
     <!-- /.col-lg-12 -->
 </div>
 <!-- /.row -->
-</div>
 
-<!--delete confirmation modal, not used anymore-->
-    <!--div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
             
@@ -168,19 +168,30 @@ $tempData = json_decode($rawData, true);
                 </div>
             </div>
         </div>
-    </div-->
+    </div>
 
 
 <?php include('footer.php');?>
+<!-- Core Scripts - Include with every page -->
+<script src="js/jquery-1.10.2.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
 
-<script type="text/javascript" src="http-calls/add-term.js"> </script>
-<script type="text/javascript" src="http-calls/delete-term.js"> </script>
+<!-- Page-Level Plugin Scripts - Tables -->
+<script src="js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
+<!-- JS Scripts - Include with every page -->
+<script src="js/sb-admin.js"></script>
+
+<script src="http-calls/add-term.js"></script>
+<script src="http-calls/delete-term.js"></script>
 
 <!-- Data table init -->
 <script>
-
-$('#dataTables-tracklist').dataTable();
-
+$(document).ready(function() {
+    $('#dataTables-tracklist').dataTable();
+});
 
 <!-- changing drop down title -->
 $('.dropdown-toggle').dropdown();
@@ -205,41 +216,11 @@ $('#dropdown-term-type li').on('click',function(){
 });
 
 //show delete confirmation
-/*$('#confirm-delete').on('show.bs.modal', function(e) {
+$('#confirm-delete').on('show.bs.modal', function(e) {
     var term_id = $(e.relatedTarget).data('id');
-    var term_type = $(e.relatedTarget).data('type');
-    $(this).find('.danger').attr('href', $(e.relatedTarget).data('href')+'?term_id='+term_id);
-    $('.debug-record').html('Delete '+term_type+': <strong>' + $(e.relatedTarget).data('name') + '</strong>');
-});*/
-
-
-function deleteBtnClicked(event){
-    var term_id = $(event).data('id');
-    var term_type = $(event).data('type');
-    var term_name = $(event).data('name');
-
-    
-    bootbox.dialog({
-  message: 'Are you sure want to delete the '+ term_type +':<strong>'+ term_name+'</strong>',
-  title: "Confirmation",
-  buttons: {
-    cancel: {
-      label: "Cancel",
-      className: "btn-primary",
-      callback: function() {
-        //do nothing
-      }
-    },
-    danger: {
-      label: "Delete!",
-      className: "btn-danger",
-      callback: function() {
-        deleteTerm(term_id,term_name);
-        //Example.show("uh oh, look out!");
-      }
-    }
-  }
+    $(this).find('.danger').attr('onClick', 'doDelete('+term_id+')');
+    $('.debug-record').html('Delete URL: <strong>' + $(e.relatedTarget).data('name') + '</strong>');
 });
-}
+
 </script>
 
