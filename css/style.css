@@ -74,3 +74,10 @@ white-space: nowrap;
   margin-bottom: 10px;
   padding: 6px 7px !important;
 }
+
+.review-form-group{
+    padding: 0px;
+      margin-bottom: 0px;
+}
+
+}
