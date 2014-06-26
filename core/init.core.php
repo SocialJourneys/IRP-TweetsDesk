@@ -25,8 +25,8 @@
 	//define("API_APP_KEY","aafa460be460462dcb7e56fda6d2217a");
 
 	//Development mode:
-	define("APIURL","http://139.133.73.55:8081/ecosystem-social-twitter/service");
-	//define("APIURL","http://dtp-24.sncs.abdn.ac.uk:8080/ecosystem-social-twitter/service");
+	//define("APIURL","http://139.133.73.55:8081/ecosystem-social-twitter/service");
+	define("APIURL","http://dtp-24.sncs.abdn.ac.uk:8080/ecosystem-social-twitter/service");
 	
 	define("DB_CONNECTION","host=localhost port=5432 dbname=tweetdesk user=postgres password=5L1ght1y");
 

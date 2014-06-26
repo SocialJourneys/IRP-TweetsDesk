@@ -59,8 +59,8 @@ if (!$result) {
             <table class="table table-bordered">  
                 <thead>
                     <tr>
-                        <th class="text-center">Fields</th>
-                        <th class="text-center">Filters</th>
+                        <th class="text-center"><h4>Fields</h4></th>
+                        <th class="text-center"><h4>Filters</h4></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -121,8 +121,10 @@ if (!$result) {
                     <td>
                         <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-captured-at">
                             <label label-default="" for="review-filter-captured-at">Date Range: </label>
-                            <input type="text" class="form-control review-control" id="review-filter-captured-at-to" placeholder="To">   
-                            <input type="text" class="form-control review-control" id="review-filter-captured-at-from" placeholder="From">  
+                            <input type='text' class="form-control review-control" id="review-filter-captured-at-to-datetimepicker" placeholder="To"/>
+                            <input type='text' class="form-control review-control" id="review-filter-captured-at-from-datetimepicker" placeholder="From"/>
+                            <!--input type="text" class="form-control review-control" id="review-filter-captured-at-to" placeholder="To"-->   
+                            <!--input type="text" class="form-control review-control" id="review-filter-captured-at-from" placeholder="From"-->  
                             <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Date this tweet was captured in our system.">
                                 <i class="fa fa-info"></i>
                             </button> 
@@ -143,8 +145,10 @@ if (!$result) {
                     <td>
                         <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-tweeted-at">
                             <label label-default="" for="review-filter-tweeted-at">Date Range: </label>
-                            <input type="text" class="form-control review-control" id="review-filter-tweeted-at-to" placeholder="To">   
-                            <input type="text" class="form-control review-control" id="review-filter-tweeted-at-from" placeholder="From">   
+                             <input type='text' class="form-control review-control" id="review-filter-tweeted-at-to-datetimepicker" placeholder="To"/>
+                            <input type='text' class="form-control review-control" id="review-filter-tweeted-at-from-datetimepicker" placeholder="From"/>
+                            <!--input type="text" class="form-control review-control" id="review-filter-tweeted-at-to" placeholder="To"-->
+                            <!--input type="text" class="form-control review-control" id="review-filter-tweeted-at-from" placeholder="From"-->
                             <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Date this tweet was tweeted by the author on twitter.">
                             <i class="fa fa-info"></i>
                         </button> 
@@ -191,6 +195,9 @@ if (!$result) {
                           <option><</option>
                       </select>
                       <input type="text" class="form-control review-control" id="review-filter-favourites" placeholder="N/A">   
+                    <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Count of Favourites.">
+                       <i class="fa fa-info"></i>
+                    </button>   
                     </div>
                     </td>
                 </tr><!-- Favourites-->
@@ -213,6 +220,9 @@ if (!$result) {
                           <option><</option>
                       </select>
                       <input type="text" class="form-control review-control" id="review-filter-retweets" placeholder="N/A">   
+                      <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Count of Retweets.">
+                       <i class="fa fa-info"></i>
+                    </button>   
                     </div>
                     </td>
                 </tr><!-- Retweets-->
@@ -227,13 +237,16 @@ if (!$result) {
                     </div>   
                     </td>
                     <td>
-                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-text">
+                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-12" id="filter-text">
                         <label label-default="" for="review-filter-text">Keywords: </label>
                         <select class="form-control review-control" id="review-filter-text-condition">
                           <option>contains</option>
                           <option>exact match</option>
                       </select>
                       <input type="text" class="form-control review-control" id="review-filter-text" placeholder="enter keyword">   
+                       <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Enter a keyword to filter tweet content. e.g rain, office, football">
+                       <i class="fa fa-info"></i>
+                    </button>   
                     </div>
                     </td>
                 </tr><!-- Text-->
@@ -251,6 +264,9 @@ if (!$result) {
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-original-tweet-id">
                         <label label-default="" for="review-filter-original-tweet-id"></label>
                       <input type="text" class="form-control review-control" id="review-filter-original-tweet-id" placeholder="Enter Tweet ID">   
+                         <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="The origianl tweet ID from twitter in numeric form.">
+                       <i class="fa fa-info"></i>
+                    </button>   
                     </div>
                     </td>
                 </tr><!-- Original Tweet ID-->
@@ -268,6 +284,9 @@ if (!$result) {
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-reply-username">
                         <label label-default="" for="review-filter-reply-username"></label>
                       <input type="text" class="form-control review-control" id="review-filter-reply-username" placeholder="@handle">   
+                         <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter handle of the user this tweet is mentioned. e.g @ScotRail">
+                       <i class="fa fa-info"></i>
+                    </button>   
                     </div>
                     </td>
                 </tr><!-- In Reply to Username-->
@@ -285,6 +304,9 @@ if (!$result) {
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-reply-status-id">
                         <label label-default="" for="review-filter-reply-status-id"></label>
                       <input type="text" class="form-control review-control" id="review-filter-reply-status-id" placeholder="Enter Status ID">   
+                         <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter tweet ID for status in numeric form.">
+                       <i class="fa fa-info"></i>
+                    </button>   
                     </div>
                     </td>
                 </tr><!-- In Reply to status ID-->
@@ -302,6 +324,9 @@ if (!$result) {
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-reply-user-id">
                         <label label-default="" for="review-filter-reply-user-id"></label>
                       <input type="text" class="form-control review-control" id="review-filter-reply-user-id" placeholder="Enter User ID">   
+                         <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter user ID in numeric form for the user this tweet is mentioned.">
+                       <i class="fa fa-info"></i>
+                    </button>   
                     </div>
                     </td>
                 </tr><!-- In Reply to User ID-->
@@ -319,6 +344,9 @@ if (!$result) {
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-language-code">
                         <label label-default="" for="review-filter-language-code"></label>
                       <input type="text" class="form-control review-control" id="review-filter-language-code" placeholder="Enter Language Code">   
+                         <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="ISO language code. e.g: en, de">
+                       <i class="fa fa-info"></i>
+                    </button>   
                     </div>
                     </td>
                 </tr><!-- Language Code-->
@@ -336,6 +364,9 @@ if (!$result) {
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-twitter-source">
                         <label label-default="" for="review-filter-twitter-source"></label>
                       <input type="text" class="form-control review-control" id="review-filter-twitter-source" placeholder="Enter Twitter Source">   
+                         <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="The source client used for the tweet. e.g: Twitter for iPhone">
+                       <i class="fa fa-info"></i>
+                    </button>   
                     </div>
                     </td>
                 </tr><!-- Twitter Source-->
@@ -353,6 +384,9 @@ if (!$result) {
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-user-id">
                         <label label-default="" for="review-filter-user-id"></label>
                       <input type="text" class="form-control review-control" id="review-filter-user-id" placeholder="Enter Numeric User ID">   
+                         <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter user ID for this author of tweet in numeric form.">
+                       <i class="fa fa-info"></i>
+                    </button>                       
                     </div>
                     </td>
                 </tr><!-- User Numeric ID-->
@@ -375,7 +409,27 @@ if (!$result) {
                       </select>
                     </div>
                     </td>
-                </tr><!-- Text-->
+                </tr><!-- Stakeholder-->
+
+                <tr><!-- Filt Split-->
+                    <td>
+                    <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
+                        <label label-default="" for="review-field-split">
+                          <input type="checkbox" name="review-checkbox" id="split">   
+                          <strong>Split output file:</strong>
+                      </label>
+                    </div>   
+                    </td>
+                    <td>
+                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-split">
+                    <input type="text" class="form-control review-control" id="review-filter-split" placeholder="Enter value">   
+                    <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Enter number of records per file. e.g 10000, 25000">
+                       <i class="fa fa-info"></i>
+                    </button>   
+                    
+                    </div>
+                    </td>
+                </tr><!-- Stakeholder-->
 
             </tbody>
 
@@ -394,6 +448,11 @@ if (!$result) {
 <?php include('footer.php');?>
 <script type="text/javascript">
 
+$('#review-filter-captured-at-to-datetimepicker').datetimepicker();
+$('#review-filter-captured-at-from-datetimepicker').datetimepicker();
+
+$('#review-filter-tweeted-at-to-datetimepicker').datetimepicker();
+$('#review-filter-tweeted-at-from-datetimepicker').datetimepicker();
 
 //show hide surcharge fields depending on selection in passenger eligibility
 
