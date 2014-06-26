@@ -79,5 +79,7 @@ white-space: nowrap;
     padding: 0px;
       margin-bottom: 0px;
 }
-
+.review-info-btn{
+    margin-bottom: 10px;
+}
 }

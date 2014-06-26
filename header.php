@@ -26,6 +26,7 @@
     <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 
     <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"> 
 
 </head>
 

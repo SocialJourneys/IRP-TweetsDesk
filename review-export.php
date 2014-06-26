@@ -77,7 +77,11 @@ if (!$result) {
                         <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-no-of-records">
                          <label label-default="" for="review-filter-no-of-records"></label>
                          <input type="text" class="form-control review-control" id="review-filter-no-of-records" placeholder="Count">   
-                         </div>
+                    
+                        <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Overall records you want to fetch. e.g: 0,10,1000">
+                            <i class="fa fa-info"></i>
+                        </button>
+                    </div>
                     </td>
                     </tr><!-- Number of Records-->
                     
@@ -95,30 +99,79 @@ if (!$result) {
                         <div class="review-form-group review-filters form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-id">
                             <label label-default="" for="review-filter-id">
                             </label> 
-                            <input type="text" class="form-control review-control" id="review-filter-id" placeholder="Identifier">   
+                            <input type="text" class="form-control review-control" id="review-filter-id" placeholder="Identifier"> 
+                            <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Database ID for this record. e.g: 0,10,1000">
+                                 <i class="fa fa-info"></i>
+                            </button>
+                      
                         </div>
                     </td>
                 </tr><!-- ID-->
 
 
-                <tr><!-- Created At-->
+                <tr><!-- Captured At-->
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
-                        <label label-default="" for="review-field-created-at">
-                          <input type="checkbox" name="review-checkbox" id="created-at">
-                          <strong>Created At:</strong>
+                        <label label-default="" for="review-field-captured-at">
+                          <input type="checkbox" name="review-checkbox" id="captured-at">
+                          <strong>Captured At:</strong>
                       </label> 
                     </div>   
                     </td>
                     <td>
-                        <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-created-at">
-                            <label label-default="" for="review-filter-created-at">Date Range: </label>
-                            <input type="text" class="form-control review-control" id="review-filter-created-at-to" placeholder="To">   
-                            <input type="text" class="form-control review-control" id="review-filter-created-at-from" placeholder="From">   
+                        <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-captured-at">
+                            <label label-default="" for="review-filter-captured-at">Date Range: </label>
+                            <input type="text" class="form-control review-control" id="review-filter-captured-at-to" placeholder="To">   
+                            <input type="text" class="form-control review-control" id="review-filter-captured-at-from" placeholder="From">  
+                            <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Date this tweet was captured in our system.">
+                                <i class="fa fa-info"></i>
+                            </button> 
                         </div>
                     </td>
-                </tr><!-- Created At-->
+                </tr><!-- Captured At-->
 
+
+                <tr><!-- Tweeted At-->
+                    <td>
+                    <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
+                        <label label-default="" for="review-field-tweeted-at">
+                          <input type="checkbox" name="review-checkbox" id="tweeted-at">
+                          <strong>Tweeted At:</strong>
+                      </label> 
+                    </div>   
+                    </td>
+                    <td>
+                        <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-tweeted-at">
+                            <label label-default="" for="review-filter-tweeted-at">Date Range: </label>
+                            <input type="text" class="form-control review-control" id="review-filter-tweeted-at-to" placeholder="To">   
+                            <input type="text" class="form-control review-control" id="review-filter-tweeted-at-from" placeholder="From">   
+                            <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Date this tweet was tweeted by the author on twitter.">
+                            <i class="fa fa-info"></i>
+                        </button> 
+                        </div>
+                    </td>
+                </tr><!-- Tweeted At-->
+
+
+                <tr><!-- Tweet Author-->
+                    <td>
+                    <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
+                        <label label-default="" for="review-field-author">
+                          <input type="checkbox" name="review-checkbox" id="author">   
+                          <strong>Author:</strong>
+                      </label>
+                    </div>   
+                    </td>
+                    <td>
+                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-author">
+                        <label label-default="" for="review-filter-author"></label>
+                      <input type="text" class="form-control review-control" id="review-filter-author" placeholder="@handle"> 
+                      <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter handle of the author. e.g @FirstAberdeen">
+                       <i class="fa fa-info"></i>
+                    </button>   
+                    </div>
+                    </td>
+                </tr><!-- Tweet Author-->
 
                 <tr><!-- Favourites-->
                     <td>
@@ -206,7 +259,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-reply-username">
-                          <input type="checkbox" name="review-checkbox" id="reply-user">   
+                          <input type="checkbox" name="review-checkbox" id="reply-username">   
                           <strong>In Reply to Username:</strong>
                       </label>
                     </div>   
@@ -290,19 +343,39 @@ if (!$result) {
                 <tr><!-- User Numeric ID-->
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
-                        <label label-default="" for="review-field-twitter-source">
-                          <input type="checkbox" name="review-checkbox" id="twitter-source">   
-                          <strong>Twitter Source:</strong>
+                        <label label-default="" for="review-field-user-id">
+                          <input type="checkbox" name="review-checkbox" id="user-id">   
+                          <strong>Twitter User ID:</strong>
                       </label>
                     </div>   
                     </td>
                     <td>
-                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-twitter-source">
-                        <label label-default="" for="review-filter-twitter-source"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-twitter-source" placeholder="Enter Twitter Source">   
+                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-user-id">
+                        <label label-default="" for="review-filter-user-id"></label>
+                      <input type="text" class="form-control review-control" id="review-filter-user-id" placeholder="Enter Numeric User ID">   
                     </div>
                     </td>
                 </tr><!-- User Numeric ID-->
+
+                <tr><!-- Stakeholder-->
+                    <td>
+                    <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
+                        <label label-default="" for="review-field-stakeholder">
+                          <input type="checkbox" name="review-checkbox" id="stakeholder">   
+                          <strong>Stakeholder:</strong>
+                      </label>
+                    </div>   
+                    </td>
+                    <td>
+                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-stakeholder">
+                        <select class="form-control review-control" id="review-filter-stakeholder">
+                          <option>Select</option>
+                          <option>True</option>
+                          <option>False</option>
+                      </select>
+                    </div>
+                    </td>
+                </tr><!-- Text-->
 
             </tbody>
 
@@ -355,5 +428,8 @@ $("input[name='review-checkbox']").each( function () {
 
     }
 });
+
+        
+        $('[data-toggle="tooltip"]').tooltip();
 
    </script>
