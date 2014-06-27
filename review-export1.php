@@ -14,7 +14,7 @@ if($term_type==='search-term')
 //http://dtp-24.sncs.abdn.ac.uk/phpPgAdmin/
 $db = pg_connect('host=localhost port=5432 dbname=tweetdesk user=postgres password=5L1ght1y'); 
 
-$query = "SELECT * FROM track_list"; 
+$query = "SELECT * FROM tweet"; 
 
 $result = pg_query($db,$query); 
 if (!$result) { 
@@ -56,6 +56,7 @@ if (!$result) {
    
     <div class="panel-body">
         <!-- table- -->
+        <form class="myform">
             <table class="table table-bordered">  
                 <thead>
                     <tr>
@@ -413,21 +414,10 @@ if (!$result) {
 
                 <tr><!-- Filt Split-->
                     <td>
-                    <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
-                        <label label-default="" for="review-field-split">
-                          <input type="checkbox" name="review-checkbox" id="split">   
-                          <strong>Split output file:</strong>
-                      </label>
-                    </div>   
+ 
                     </td>
                     <td>
-                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-split">
-                    <input type="text" class="form-control review-control" id="review-filter-split" placeholder="Enter value">   
-                    <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Enter number of records per file. e.g 10000, 25000">
-                       <i class="fa fa-info"></i>
-                    </button>   
-                    
-                    </div>
+
                     </td>
                 </tr><!-- Stakeholder-->
 
@@ -435,9 +425,28 @@ if (!$result) {
 
         </table>
         <!--export button-->
-        <div class="input-group pull-right">
-            <button type="button" class="btn btn-success dropdown-toggle header-button"><span class="fa fa-download fa-fw"></span> Export CSV</button>
+        <div class="input-group">
+
+                              <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
+                        <label label-default="" for="review-field-split">
+                          <input type="checkbox" name="review-checkbox" id="split">   
+                          <strong>Split output file:</strong>
+                                              <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Enter number of records per file. e.g 10000, 25000">
+                       <i class="fa fa-info"></i>
+                    </button>  
+                      </label>
+                    </div>  
+
+                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-5 col-md-4 col-lg-4" id="filter-split">
+                    <input type="text" class="form-control review-control" id="review-filter-split" placeholder="Enter value">   
+ 
+                    </div>
+            
+            <div class="review-form-group col-xs-12 col-sm-12 col-lg-12" style="padding-top:10px;">
+            <button type="submit" class="btn btn-success"><span class="fa fa-download fa-fw"></span> Export CSV</button>
+            </div>
         </div><!--export button-->
+      </form>
 
 </div>      <!--div class="panel-body"-->
 
@@ -462,14 +471,14 @@ $("input[name='review-checkbox']").each( function () {
         $(this).prop('checked', true);
     });
 
-   $("input[name='review-checkbox']").each( function () {
+   /*$("input[name='review-checkbox']").each( function () {
     var value = $(this).attr('id');
     var passenger_elig_id = 'tab-surcharge-structure-pt-group-'+value;
     if(this.checked)
       $('#'+passenger_elig_id).hide();
   else
       $('#'+passenger_elig_id).show();
-    });
+    });*/
 
 
    $("input[name='review-checkbox']").click(function() {
