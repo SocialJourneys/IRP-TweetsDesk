@@ -2,14 +2,66 @@
 <?php //include('core/init.core.php');?>
 <?php include('header.php');?>
 <?php
-$term_name = $_GET['term_name'];
-$term_type = $_GET['term_type'];
-if($term_type==='handle')
-  $term_type='@';
-if($term_type==='hashtag')
-  $term_type='#';
-if($term_type==='search-term')
-  $term_type='$';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+      //echo "<br/><br/><br/><br/><br/><br/>";
+      $query = 'SELECT';
+      $table = 'tweet';
+
+      if(isset($_POST['no-of-records']))
+        $num_of_records = trim($_POST['no-of-records']);
+      if(isset($_POST['id']))
+        $id = trim($_POST['id']);
+      if(isset($_POST['captured-at-from']))
+        $captured_at_from = trim($_POST['captured-at-from']);
+      if(isset($_POST['captured-at-to']))
+        $captured_at_to = trim($_POST['captured-at-to']);
+      if(isset($_POST['tweeted-at-from']))
+        $tweeted_at_from = trim($_POST['tweeted-at-from']);
+      if(isset($_POST['tweeted-at-from']))
+        $tweeted_at_to = trim($_POST['tweeted-at-to']);
+      if(isset($_POST['author']))
+        $author = trim($_POST['author']);
+      if(isset($_POST['favourites']))
+        $favourites = trim($_POST['favourites']);
+      if(isset($_POST['favourites-condition']))
+        $favourites_condition = trim($_POST['favourites-condition']);
+      if(isset($_POST['retweets']))
+        $retweets = trim($_POST['retweets']);
+      if(isset($_POST['retweets-condition']))
+        $retweets_condition = trim($_POST['retweets-condition']);
+      if(isset($_POST['text']))
+        $text = trim($_POST['text']);
+      if(isset($_POST['original-tweet-id']))
+        $original_tweet_id = trim($_POST['original-tweet-id']);
+      if(isset($_POST['reply-username']))
+        $reply_username = trim($_POST['reply-username']);   
+      if(isset($_POST['reply-status-id']))
+        $reply_status_id = trim($_POST['reply-status-id']);  
+      if(isset($_POST['reply-tweet-id']))
+        $reply_tweet_id = trim($_POST['reply-tweet-id']);  
+      if(isset($_POST['language-code']))
+        $language_code = trim($_POST['language-code']);                                  
+      //id
+      //captured-at-from,captured-at-to
+      //tweeted-at-from,tweeted-at-to
+      //author 
+      //favourites, favourites-condition
+      //retweets,retweets-condition
+      //text
+      //original-tweet-id
+      //reply-username
+      //reply-status-id
+      //reply-tweet-id
+      //language-code
+      //twitter-source
+      //reply-user-id
+      //stakeholder
+
+      //if(isset($_POST['no-of-records']))
+      //print_r('this is'.$_POST['no-of-records']);
+      //exit();
+  }
 
 //http://dtp-24.sncs.abdn.ac.uk/phpPgAdmin/
 $db = pg_connect('host=localhost port=5432 dbname=tweetdesk user=postgres password=5L1ght1y'); 
@@ -56,7 +108,7 @@ if (!$result) {
    
     <div class="panel-body">
         <!-- table- -->
-        <form class="myform">
+        <form class="myform" role ="form" method="post" action="review-export1.php">
             <table class="table table-bordered">  
                 <thead>
                     <tr>
@@ -77,7 +129,7 @@ if (!$result) {
                     <td>
                         <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-no-of-records">
                          <label label-default="" for="review-filter-no-of-records"></label>
-                         <input type="text" class="form-control review-control" id="review-filter-no-of-records" placeholder="Count">   
+                         <input type="number" class="form-control review-control" id="review-filter-no-of-records" name="no-of-records" placeholder="Count">   
                     
                         <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Overall records you want to fetch. e.g: 0,10,1000">
                             <i class="fa fa-info"></i>
@@ -100,7 +152,7 @@ if (!$result) {
                         <div class="review-form-group review-filters form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-id">
                             <label label-default="" for="review-filter-id">
                             </label> 
-                            <input type="text" class="form-control review-control" id="review-filter-id" placeholder="Identifier"> 
+                            <input type="number" class="form-control review-control" id="review-filter-id" name="id" placeholder="Identifier"> 
                             <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Database ID for this record. e.g: 0,10,1000">
                                  <i class="fa fa-info"></i>
                             </button>
@@ -122,8 +174,8 @@ if (!$result) {
                     <td>
                         <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-captured-at">
                             <label label-default="" for="review-filter-captured-at">Date Range: </label>
-                            <input type='text' class="form-control review-control" id="review-filter-captured-at-to-datetimepicker" placeholder="To"/>
-                            <input type='text' class="form-control review-control" id="review-filter-captured-at-from-datetimepicker" placeholder="From"/>
+                            <input type='text' readonly="readonly" class="form-control review-control" id="review-filter-captured-at-from-datetimepicker" name="captured-at-from" placeholder="From"/>
+                            <input type='text' readonly="readonly" class="form-control review-control" id="review-filter-captured-at-to-datetimepicker" name="captured-at-to" placeholder="To"/>
                             <!--input type="text" class="form-control review-control" id="review-filter-captured-at-to" placeholder="To"-->   
                             <!--input type="text" class="form-control review-control" id="review-filter-captured-at-from" placeholder="From"-->  
                             <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Date this tweet was captured in our system.">
@@ -146,8 +198,8 @@ if (!$result) {
                     <td>
                         <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-tweeted-at">
                             <label label-default="" for="review-filter-tweeted-at">Date Range: </label>
-                             <input type='text' class="form-control review-control" id="review-filter-tweeted-at-to-datetimepicker" placeholder="To"/>
-                            <input type='text' class="form-control review-control" id="review-filter-tweeted-at-from-datetimepicker" placeholder="From"/>
+                             <input type='text' readonly="readonly" class="form-control review-control" id="review-filter-tweeted-at-from-datetimepicker" name="tweeted-at-from" placeholder="From"/>
+                            <input type='text' readonly="readonly" class="form-control review-control" id="review-filter-tweeted-at-to-datetimepicker" name="tweeted-at-to" placeholder="To"/>
                             <!--input type="text" class="form-control review-control" id="review-filter-tweeted-at-to" placeholder="To"-->
                             <!--input type="text" class="form-control review-control" id="review-filter-tweeted-at-from" placeholder="From"-->
                             <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Date this tweet was tweeted by the author on twitter.">
@@ -170,7 +222,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-author">
                         <label label-default="" for="review-filter-author"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-author" placeholder="@handle"> 
+                      <input type="text" class="form-control review-control" id="review-filter-author" placeholder="@handle" name="author"> 
                       <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter handle of the author. e.g @FirstAberdeen">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -190,12 +242,12 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-favourites">
                         <label label-default="" for="review-filter-favourites">Count: </label>
-                        <select class="form-control review-control" id="review-filter-favourites-condition">
+                        <select class="form-control review-control" id="review-filter-favourites-condition" name="favourites-condition">
                           <option>=</option>
                           <option>></option>
                           <option><</option>
                       </select>
-                      <input type="text" class="form-control review-control" id="review-filter-favourites" placeholder="N/A">   
+                      <input type="number" class="form-control review-control" id="review-filter-favourites" placeholder="N/A" name="favourites">   
                     <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Count of Favourites.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -215,12 +267,12 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-retweets">
                         <label label-default="" for="review-filter-retweets">Count: </label>
-                        <select class="form-control review-control" id="review-filter-retweets-condition">
+                        <select class="form-control review-control" id="review-filter-retweets-condition" name="retweets-condition">
                           <option>=</option>
                           <option>></option>
                           <option><</option>
                       </select>
-                      <input type="text" class="form-control review-control" id="review-filter-retweets" placeholder="N/A">   
+                      <input type="number" class="form-control review-control" id="review-filter-retweets" placeholder="N/A" name="retweets">   
                       <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Count of Retweets.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -240,11 +292,11 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-12" id="filter-text">
                         <label label-default="" for="review-filter-text">Keywords: </label>
-                        <select class="form-control review-control" id="review-filter-text-condition">
+                        <select class="form-control review-control" id="review-filter-text-condition" name="text-condition">
                           <option>contains</option>
                           <option>exact match</option>
                       </select>
-                      <input type="text" class="form-control review-control" id="review-filter-text" placeholder="enter keyword">   
+                      <input type="text" class="form-control review-control" id="review-filter-text" name="text" placeholder="enter keyword">   
                        <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Enter a keyword to filter tweet content. e.g rain, office, football">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -264,7 +316,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-original-tweet-id">
                         <label label-default="" for="review-filter-original-tweet-id"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-original-tweet-id" placeholder="Enter Tweet ID">   
+                      <input type="number" class="form-control review-control" id="review-filter-original-tweet-id" name="original-tweet-id" placeholder="Enter Tweet ID">   
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="The origianl tweet ID from twitter in numeric form.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -284,7 +336,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-reply-username">
                         <label label-default="" for="review-filter-reply-username"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-reply-username" placeholder="@handle">   
+                      <input type="text" class="form-control review-control" id="review-filter-reply-username" name="reply-username" placeholder="@handle">   
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter handle of the user this tweet is mentioned. e.g @ScotRail">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -304,7 +356,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-reply-status-id">
                         <label label-default="" for="review-filter-reply-status-id"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-reply-status-id" placeholder="Enter Status ID">   
+                      <input type="number" class="form-control review-control" id="review-filter-reply-status-id" name="reply-status-id" placeholder="Enter Status ID">   
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter tweet ID for status in numeric form.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -324,7 +376,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-reply-user-id">
                         <label label-default="" for="review-filter-reply-user-id"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-reply-user-id" placeholder="Enter User ID">   
+                      <input type="number" class="form-control review-control" id="review-filter-reply-user-id" name="reply-user-id" placeholder="Enter User ID">   
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter user ID in numeric form for the user this tweet is mentioned.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -344,7 +396,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-language-code">
                         <label label-default="" for="review-filter-language-code"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-language-code" placeholder="Enter Language Code">   
+                      <input type="text" class="form-control review-control" id="review-filter-language-code" name="language-code" placeholder="Enter Language Code">   
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="ISO language code. e.g: en, de">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -364,7 +416,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-twitter-source">
                         <label label-default="" for="review-filter-twitter-source"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-twitter-source" placeholder="Enter Twitter Source">   
+                      <input type="text" class="form-control review-control" id="review-filter-twitter-source" name="twitter-source" placeholder="Enter Twitter Source">   
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="The source client used for the tweet. e.g: Twitter for iPhone">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -384,7 +436,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-user-id">
                         <label label-default="" for="review-filter-user-id"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-user-id" placeholder="Enter Numeric User ID">   
+                      <input type="number" class="form-control review-control" id="review-filter-user-id" name="user-id" placeholder="Enter Numeric User ID">   
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter user ID for this author of tweet in numeric form.">
                        <i class="fa fa-info"></i>
                     </button>                       
@@ -403,7 +455,7 @@ if (!$result) {
                     </td>
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-stakeholder">
-                        <select class="form-control review-control" id="review-filter-stakeholder">
+                        <select class="form-control review-control" id="review-filter-stakeholder" name="stakeholder">
                           <option>Select</option>
                           <option>True</option>
                           <option>False</option>
@@ -443,7 +495,7 @@ if (!$result) {
                     </div>
             
             <div class="review-form-group col-xs-12 col-sm-12 col-lg-12" style="padding-top:10px;">
-            <button type="submit" class="btn btn-success"><span class="fa fa-download fa-fw"></span> Export CSV</button>
+              <button type="submit" class="btn btn-success"><span class="fa fa-download fa-fw"></span> Export CSV</button>
             </div>
         </div><!--export button-->
       </form>

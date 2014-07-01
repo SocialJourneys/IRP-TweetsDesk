@@ -26,8 +26,9 @@ $result = pg_query($db,$query);
 
 
 $result = pg_exec($db, "select * from track_list");
-  $numrows = pg_num_rows($result);
-  echo "<p>link = $link<br>
+$numrows = pg_num_rows($result);
+  
+  /*echo "<p>link = $link<br>
   result = $result<br>
   numrows = $numrows</p>
   ";
@@ -46,8 +47,8 @@ $result = pg_exec($db, "select * from track_list");
    for($ri = 0; $ri < $numrows; $ri++) {
     echo "<tr>\n";
     $row = pg_fetch_array($result, $ri);
-    echo " <td>", $row["fname"], "</td>
-   <td>", $row["lname"], "</td>
+    echo " <td>", $row["type"], "</td>
+   <td>", $row["name"], "</td>
    <td>", $row["id"], "</td>
   </tr>
   ";
@@ -55,53 +56,48 @@ $result = pg_exec($db, "select * from track_list");
    pg_close($link);
    echo "</table>";
 
+*/
 
 
-
-
-
-
-   
-
-
-if (!$result) { 
+/*if (!$result) { 
     echo "Problem with query " . $query . "<br/>"; 
     echo pg_last_error(); 
     exit(); 
-} 
+} */
 
-print_r('results: '.$result);
-exit();
-
-pg_close($db);
+//pg_close($db);
 
 // create empty variable to be filled with export data
 $csv_export = '';
 
 // query to get data from database
 
-$field = pg_num_fields($query);
-echo $field;
+$field = pg_num_fields($result);
+//echo $numrows;
+//exit();
+
 // create line with field names
 for($i = 0; $i < $field; $i++) {
-	$csv_export.= pg_field_name($query,$i).';';
+
+	$csv_export.= pg_field_name($result,$i).',';
 }
+
 // newline (seems to work both on Linux & Windows servers)
 $csv_export.= '
 ';
 
 // loop through database query and fill export variable
-while($row = pg_fetch_array($query)) {
+while($row = pg_fetch_array($result)) {
   // create line with field values
   for($i = 0; $i < $field; $i++) {
-    $csv_export.= '"'.$row[pg_field_name($query,$i)].'";';
+    $csv_export.= '"'.$row[pg_field_name($result,$i)].'",';
   }	
   $csv_export.= '
 ';	
 }
 
 // Export the data and prompt a csv file for download
-//header("Content-type: text/x-csv");
-//header("Content-Disposition: attachment; filename=".$csv_filename."");
-//echo($csv_export);
+header("Content-type: text/x-csv");
+header("Content-Disposition: attachment; filename=".$csv_filename."");
+echo($csv_export);
 ?>
