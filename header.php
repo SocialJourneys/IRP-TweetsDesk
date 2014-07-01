@@ -5,10 +5,10 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <meta name="description" content="Tweets Desk for Social Journeys">
+    <meta name="description" content="Twitter Monitoring Infrastructure">
     <meta name="author" content="Mujtaba Mehdi">
 
-    <title>Tweets Desk for Social Journeys</title>
+    <title>Twitter Monitoring Infrastructure</title>
 
     <!-- Core CSS - Include with every page -->
     <link href="css/bootstrap.css" rel="stylesheet">

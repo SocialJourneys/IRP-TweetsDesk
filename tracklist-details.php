@@ -20,7 +20,7 @@ $result = pg_query($db,$query);
 if (!$result) { 
     echo "Problem with query " . $query . "<br/>"; 
     echo pg_last_error(); 
-    exit(); 
+    //exit(); 
 } 
 
         //print_r($result);

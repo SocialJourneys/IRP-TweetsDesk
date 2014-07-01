@@ -6,7 +6,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.php">Tweets Desk</a>
+                <a class="navbar-brand" href="index.php">TMI</a>
             </div>
             <!-- /.navbar-header -->
 

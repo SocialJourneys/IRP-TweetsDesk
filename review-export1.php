@@ -4,8 +4,9 @@
 <?php
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-      //echo "<br/><br/><br/><br/><br/><br/>";
+      echo "<br/><br/><br/><br/><br/><br/>";
       $query = 'SELECT';
+      $fields;
       $table = 'tweet';
 
       if(isset($_POST['no-of-records']))
@@ -41,7 +42,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
       if(isset($_POST['reply-tweet-id']))
         $reply_tweet_id = trim($_POST['reply-tweet-id']);  
       if(isset($_POST['language-code']))
-        $language_code = trim($_POST['language-code']);                                  
+        $language_code = trim($_POST['language-code']);   
+
+
+        foreach($_POST['review-checkbox'] as $checkbox) {
+        // eg. "I have a grapefruit!"
+            //echo 'checking: ' . $checkbox;
+            if($fields)
+              $fields = $fields.', '.$checkbox;
+            else
+              $fields = $checkbox;
+            //echo '<br/>';
+            // -- insert into database call might go here
+        }
+        echo $fields;
+                               
       //id
       //captured-at-from,captured-at-to
       //tweeted-at-from,tweeted-at-to
@@ -121,7 +136,7 @@ if (!$result) {
                     <td>          
                         <div class="review-form-group form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <label label-default="" for="review-field-no-of-records">
-                              <input type="checkbox" name="review-checkbox" id="no-of-records">   
+                              <input type="checkbox" name="review-checkbox[]" value="no-of-records" id="no-of-records">   
                               <strong> Number of Records:</strong>
                           </label>   
                       </div> 
@@ -143,7 +158,7 @@ if (!$result) {
                         <td>
                             <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                             <label label-default="" for="review-field-id">
-                            <input type="checkbox" name="review-checkbox" id="id">
+                            <input type="checkbox" name="review-checkbox[]" value="id" id="id">
                             <strong> ID:</strong>
                             </label>
                         </div>
@@ -166,7 +181,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-captured-at">
-                          <input type="checkbox" name="review-checkbox" id="captured-at">
+                          <input type="checkbox" name="review-checkbox[]" value="captured-at" id="captured-at">
                           <strong>Captured At:</strong>
                       </label> 
                     </div>   
@@ -190,7 +205,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-tweeted-at">
-                          <input type="checkbox" name="review-checkbox" id="tweeted-at">
+                          <input type="checkbox" name="review-checkbox[]" value="tweeted-at" id="tweeted-at">
                           <strong>Tweeted At:</strong>
                       </label> 
                     </div>   
@@ -214,7 +229,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-author">
-                          <input type="checkbox" name="review-checkbox" id="author">   
+                          <input type="checkbox" name="review-checkbox[]" value="author" id="author">   
                           <strong>Author:</strong>
                       </label>
                     </div>   
@@ -234,7 +249,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-favourites">
-                          <input type="checkbox" name="review-checkbox" id="favourites">   
+                          <input type="checkbox" name="review-checkbox[]" value="favourites" id="favourites">   
                           <strong>Favourites Count:</strong>
                       </label>
                     </div>   
@@ -259,7 +274,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-retweets">
-                          <input type="checkbox" name="review-checkbox" id="retweets">   
+                          <input type="checkbox" name="review-checkbox[]" value="retweets" id="retweets">   
                           <strong>Retweets Count:</strong>
                       </label>
                     </div>   
@@ -284,7 +299,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-text">
-                          <input type="checkbox" name="review-checkbox" id="text">   
+                          <input type="checkbox" name="review-checkbox[]" value="text" id="text">   
                           <strong>Text:</strong>
                       </label>
                     </div>   
@@ -308,7 +323,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-original-tweet-id">
-                          <input type="checkbox" name="review-checkbox" id="original-tweet-id">   
+                          <input type="checkbox" name="review-checkbox[]" value="original-tweet-id" id="original-tweet-id">   
                           <strong>Original Tweet ID:</strong>
                       </label>
                     </div>   
@@ -328,7 +343,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-reply-username">
-                          <input type="checkbox" name="review-checkbox" id="reply-username">   
+                          <input type="checkbox" name="review-checkbox[]" value="reply-username" id="reply-username">   
                           <strong>In Reply to Username:</strong>
                       </label>
                     </div>   
@@ -348,7 +363,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-reply-status-id">
-                          <input type="checkbox" name="review-checkbox" id="reply-status-id">   
+                          <input type="checkbox" name="review-checkbox[]" value="reply-status-id" id="reply-status-id">   
                           <strong>In Reply to Status ID:</strong>
                       </label>
                     </div>   
@@ -368,7 +383,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-reply-user-id">
-                          <input type="checkbox" name="review-checkbox" id="reply-user-id">   
+                          <input type="checkbox" name="review-checkbox[]" value="reply-user-id" id="reply-user-id">   
                           <strong>In Reply to User ID:</strong>
                       </label>
                     </div>   
@@ -388,7 +403,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-language-code">
-                          <input type="checkbox" name="review-checkbox" id="language-code">   
+                          <input type="checkbox" name="review-checkbox[]" value="language-code" id="language-code">   
                           <strong>Language Code:</strong>
                       </label>
                     </div>   
@@ -408,7 +423,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-twitter-source">
-                          <input type="checkbox" name="review-checkbox" id="twitter-source">   
+                          <input type="checkbox" name="review-checkbox[]" value="twitter-source" id="twitter-source">   
                           <strong>Twitter Source:</strong>
                       </label>
                     </div>   
@@ -428,7 +443,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-user-id">
-                          <input type="checkbox" name="review-checkbox" id="user-id">   
+                          <input type="checkbox" name="review-checkbox[]" value="user-id" id="user-id">   
                           <strong>Twitter User ID:</strong>
                       </label>
                     </div>   
@@ -448,7 +463,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-stakeholder">
-                          <input type="checkbox" name="review-checkbox" id="stakeholder">   
+                          <input type="checkbox" name="review-checkbox[]" value="stakeholder" id="stakeholder">   
                           <strong>Stakeholder:</strong>
                       </label>
                     </div>   
@@ -519,7 +534,7 @@ $('#review-filter-tweeted-at-from-datetimepicker').datetimepicker();
 
 //show hide surcharge fields depending on selection in passenger eligibility
 
-$("input[name='review-checkbox']").each( function () {
+$("input[name='review-checkbox[]']").each( function () {
         $(this).prop('checked', true);
     });
 
@@ -533,7 +548,7 @@ $("input[name='review-checkbox']").each( function () {
     });*/
 
 
-   $("input[name='review-checkbox']").click(function() {
+   $("input[name='review-checkbox[]']").click(function() {
 
          // $("#review-field-no-records" ).addClass("review-filters-disabled");
 
