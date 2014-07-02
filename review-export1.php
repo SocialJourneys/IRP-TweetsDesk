@@ -5,7 +5,7 @@
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
       echo "<br/><br/><br/><br/><br/><br/>";
-      $query = 'SELECT';
+      $query = 'SELECT ';
       $where = '';
       $fields= '';
       $table = 'tweet';
@@ -50,11 +50,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         // eg. "I have a grapefruit!"
             //echo 'checking: ' . $checkbox;
         
+        if($checkbox==='limit' && isset($_POST['limit']))
+              $limit = ' LIMIT '.$_POST[$checkbox];
+            else
+            {
         //handling first comma
            if($fields) 
                 $fields = $fields.', '.$checkbox;
            else
               $fields = $checkbox;
+          }
 
            switch ($checkbox) {
              case 'id':{
@@ -91,6 +96,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                # code...
                break;
              }
+
+             case 'time_stamp':{
+             if(isset($_POST[$checkbox.'_from']) || isset($_POST[$checkbox.'_to'])){
+
+              if($where)
+                $where = $where . ' AND ';
+
+              $where = $where.' (';
+                
+              //$_POST[$checkbox.'_from'] = DateTime::createFromFormat('d/m/Y h:i A', $_POST[$checkbox.'_from'])->format('Y-m-d');
+
+              if(isset($_POST[$checkbox.'_from']))
+                $where = $where.$checkbox.'>='.$_POST[$checkbox.'_from'];
+              if(isset($_POST[$checkbox.'_to'])){
+                if(isset($_POST[$checkbox.'_from']))
+                     $where = $where . ' AND ';
+                $where = $where.$checkbox.'>='.$_POST[$checkbox.'_to'];
+              }
+
+                $where = $where.' )';
+              }
+               # code...
+               break;
+             }
+
              default:
                # code...
                break;
@@ -123,10 +153,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             // -- insert into database call might go here
         }
 
-        echo $fields;
-        echo "<br/>";
-        echo $where;
         //echo $fields;
+        echo "<br/>";
+        //echo $where;
+        $query = $query .$fields.' from '. $table. ' WHERE '.$where.$limit;
+
+        echo $query;
                                
       //id
       //captured-at-from,captured-at-to
@@ -247,7 +279,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-captured-at">
-                          <input type="checkbox" name="review-checkbox[]" value="captured_at" id="captured-at">
+                          <input type="checkbox" name="review-checkbox[]" value="time_stamp" id="captured-at">
                           <strong>Captured At:</strong>
                       </label> 
                     </div>   
@@ -255,8 +287,8 @@ if (!$result) {
                     <td>
                         <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-captured-at">
                             <label label-default="" for="review-filter-captured-at">Date Range: </label>
-                            <input type='text' class="form-control review-control" name="captured_at_from" id="review-filter-captured-at-from" placeholder="From" value="<?php echo isset($_POST['captured_at_from'])?$_POST['captured_at_from'] :''?>"/>
-                            <input type='text' class="form-control review-control" name="captured_at_to" id="review-filter-captured-at-to" placeholder="To" value="<?php echo isset($_POST['captured_at_to'])?$_POST['captured_at_to'] :''?>"/>
+                            <input type='text' class="form-control review-control" name="time_stamp_from" id="review-filter-captured-at-from" data-date-format="YYYY/DD/MM hh:mm:ss" placeholder="From" value="<?php echo isset($_POST['time_stamp_from'])?$_POST['time_stamp_from'] :''?>"/>
+                            <input type='text' class="form-control review-control" name="time_stamp_to" id="review-filter-captured-at-to" data-date-format="YYYY/DD/MM hh:mm:ss" placeholder="To" value="<?php echo isset($_POST['time_stamp_to'])?$_POST['time_stamp_to'] :''?>"/>
                             <!--input type="text" class="form-control review-control" id="review-filter-captured-at-to" placeholder="To"-->   
                             <!--input type="text" class="form-control review-control" id="review-filter-captured-at-from" placeholder="From"-->  
                             <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Date this tweet was captured in our system.">
@@ -271,7 +303,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-tweeted-at">
-                          <input type="checkbox" name="review-checkbox[]" value="time_stamp" id="tweeted-at">
+                          <input type="checkbox" name="review-checkbox[]" value="created_at" id="tweeted-at">
                           <strong>Tweeted At:</strong>
                       </label> 
                     </div>   
@@ -279,8 +311,8 @@ if (!$result) {
                     <td>
                         <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-tweeted-at">
                             <label label-default="" for="review-filter-tweeted-at">Date Range: </label>
-                             <input type='text' readonly="readonly" class="form-control review-control" name="time_stamp_from" id="review-filter-tweeted-at-from" placeholder="From" value="<?php echo isset($_POST['time_stamp_from'])?$_POST['time_stamp_from'] :''?>"/>
-                            <input type='text' readonly="readonly" class="form-control review-control" name="time_stamp_to" id="review-filter-tweeted-at-to" placeholder="To" value="<?php echo isset($_POST['time_stamp_to'])?$_POST['time_stamp_to'] :''?>"/>
+                             <input type='text' class="form-control review-control" name="created_at_from" id="review-filter-tweeted-at-from" data-date-format="YYYY/DD/MM" placeholder="From" value="<?php echo isset($_POST['created_at_from'])?$_POST['created_at_from'] :''?>"/>
+                            <input type='text' class="form-control review-control" name="created_at_to" id="review-filter-tweeted-at-to" data-date-format="YYYY/DD/MM" placeholder="To" value="<?php echo isset($_POST['created_at_to'])?$_POST['created_at_to'] :''?>"/>
                             <!--input type="text" class="form-control review-control" id="review-filter-tweeted-at-to" placeholder="To"-->
                             <!--input type="text" class="form-control review-control" id="review-filter-tweeted-at-from" placeholder="From"-->
                             <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Date this tweet was tweeted by the author on twitter.">
@@ -612,11 +644,33 @@ if (!$result) {
 
 <script type="text/javascript">
 
+
+
 $('#review-filter-captured-at-to').datetimepicker();
 $('#review-filter-captured-at-from').datetimepicker();
 
-$('#review-filter-tweet-at-to').datetimepicker();
-$('#review-filter-tweet-at-from').datetimepicker();
+$("#review-filter-captured-at-from").on("dp.change",function (e) {
+  $('#review-filter-captured-at-to').data("DateTimePicker").setMinDate(e.date);
+});
+$("#review-filter-captured-at-to").on("dp.change",function (e) {
+   $('#review-filter-captured-at-from').data("DateTimePicker").setMaxDate(e.date);
+});
+
+
+$('#review-filter-tweeted-at-to').datetimepicker({
+  pickTime: false
+});
+
+$('#review-filter-tweeted-at-from').datetimepicker({
+  pickTime: false
+});
+
+$("#review-filter-tweeted-at-from").on("dp.change",function (e) {
+  $('#review-filter-tweeted-at-to').data("DateTimePicker").setMinDate(e.date);
+});
+$("#review-filter-tweeted-at-to").on("dp.change",function (e) {
+   $('#review-filter-tweeted-at-from').data("DateTimePicker").setMaxDate(e.date);
+});
 
 //show hide surcharge fields depending on selection in passenger eligibility
 
