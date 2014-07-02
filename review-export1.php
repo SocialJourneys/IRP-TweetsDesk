@@ -121,6 +121,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                break;
              }
 
+             case 'favourites':{
+              if(isset($_POST[$checkbox])){
+                
+                if($where)
+                  $where = $where . ' AND ';
+
+                $where = $where.' '.$checkbox. $_POST[$checkbox.'_condition'].$_POST[$checkbox];
+              }
+               break;
+             }
+
              default:
                # code...
                break;
