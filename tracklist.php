@@ -1,4 +1,3 @@
-
 <?php include('core/init.core.php');?>
 <?php
 

@@ -12,16 +12,16 @@ if($term_type==='search-term')
     $term_type='$';
 
 //http://dtp-24.sncs.abdn.ac.uk/phpPgAdmin/
-$db = pg_connect('host=localhost port=5432 dbname=tweetdesk user=postgres password=5L1ght1y'); 
+//$db = pg_connect('host=http://dtp-24.sncs.abdn.ac.uk port=5432 dbname=tweetdesk user=postgres password=5L1ght1y'); 
 
-$query = "SELECT * FROM track_list"; 
+//$query = "SELECT * FROM track_list"; 
 
-$result = pg_query($db,$query); 
-if (!$result) { 
-    echo "Problem with query " . $query . "<br/>"; 
-    echo pg_last_error(); 
+//$result = pg_query($db,$query); 
+//if (!$result) { 
+  //  echo "Problem with query " . $query . "<br/>"; 
+    //echo pg_last_error(); 
     //exit(); 
-} 
+//} 
 
         //print_r($result);
         //die();

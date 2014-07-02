@@ -14,8 +14,8 @@
 	$statusobj = json_decode($status);
 
 //temporary
-	$_SESSION = array();
-	 session_destroy();
+	//$_SESSION = array();
+	 //session_destroy();
 
 	//Clear the session object: 
 	if($statusobj==="LOGOUT_SUCCESSFUL" || $statusobj==="LOGOUT_FAILED"){
