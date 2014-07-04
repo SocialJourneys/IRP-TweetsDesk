@@ -217,8 +217,7 @@ function deleteBtnClicked(event){
     var term_type = $(event).data('type');
     var term_name = $(event).data('name');
 
-    
-    bootbox.dialog({
+bootbox.dialog({
   message: 'Are you sure want to delete the '+ term_type +':<strong>'+ term_name+'</strong>',
   title: "Confirmation",
   buttons: {

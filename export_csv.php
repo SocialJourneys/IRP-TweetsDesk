@@ -1,11 +1,13 @@
 <?php
+
+function dbExport($query,$split){
+
 /* vars for export */
 // database record to be exported
-$db_record = 'track_list';
+$table = 'track_list';
 // optional where query
-$where = 'WHERE 1 ORDER BY 1';
 // filename for export
-$csv_filename = 'db_export_'.$db_record.'_'.date('Y-m-d').'.csv';
+$csv_filename = 'db_exports/db_export_'.$table.'_'.date('Y-m-d');
 
 // database variables
 $hostname = "localhost";
@@ -17,87 +19,88 @@ $database = "tweetdesk";
 //$db = pg_connect('host=localhost port=5432 dbname=tweetdesk user=postgres password=5L1ght1y'); 
 //http://dtp-24.sncs.abdn.ac.uk
 
-$db = pg_connect('host=localhost port=5432 dbname=tweetdesk user=postgres password=5L1ght1y')
+$db = pg_connect('host='.$hostname.' port='.$port.' dbname='.$database.' user='.$user.' password='.$password)
 or die('Could not connect database!');
 
-$query = 'SELECT * FROM track_list'; 
-
-$result = pg_query($db,$query); 
+//$query = 'SELECT * FROM track_list'; 
 
 
-$result = pg_exec($db, "select * from track_list");
-$numrows = pg_num_rows($result);
-  
-  /*echo "<p>link = $link<br>
-  result = $result<br>
-  numrows = $numrows</p>
-  ";
-  ?>
-
-  <table border="1">
-  <tr>
-   <th>Last name</th>
-   <th>First name</th>
-   <th>ID</th>
-  </tr>
-  <?
-
-   // Loop on rows in the result set.
-
-   for($ri = 0; $ri < $numrows; $ri++) {
-    echo "<tr>\n";
-    $row = pg_fetch_array($result, $ri);
-    echo " <td>", $row["type"], "</td>
-   <td>", $row["name"], "</td>
-   <td>", $row["id"], "</td>
-  </tr>
-  ";
-   }
-   pg_close($link);
-   echo "</table>";
-
-*/
-
-
-/*if (!$result) { 
-    echo "Problem with query " . $query . "<br/>"; 
-    echo pg_last_error(); 
-    exit(); 
-} */
-
-//pg_close($db);
+//echo "<br/><br/>query in exporter: ".$query;
+$result = pg_exec($db, $query);
+ 
 
 // create empty variable to be filled with export data
-$csv_export = '';
+
 
 // query to get data from database
 
 $field = pg_num_fields($result);
+
 //echo $numrows;
 //exit();
+//$fields_array = array();
+$limit = pg_num_rows($result);
 
-// create line with field names
-for($i = 0; $i < $field; $i++) {
+$loop = ceil($limit/$split);
+$curr_loop = 0;
+$curr_split = 1;
+$file_names=array();
 
-	$csv_export.= pg_field_name($result,$i).',';
+//echo "<br/><br/>query in exporter: ".$query. ' split : '.$split. ' loop : '.$loop;
+
+while($curr_split<=$split){
+	$csv_export = '';
+		// create line with field names
+		for($i = 0; $i < $field; $i++) {
+		//	$fields_array[]=pg_field_name($result,$i);
+			$csv_export.= pg_field_name($result,$i).',';
+		}
+
+		// newline (seems to work both on Linux & Windows servers)
+		$csv_export.= '
+		';
+
+		// loop through database query and fill export variable
+		while($curr_loop<$loop && ($row=pg_fetch_array($result))) {	
+		  // create line with field values
+		  for($i = 0; $i < $field; $i++) {
+		    $csv_export.= '"'.$row[pg_field_name($result,$i)].'",';
+		  }	
+		    $csv_export.= '
+		';	
+		  echo "<br/>curr loop: ".$curr_loop;
+		$curr_loop=$curr_loop+1;
+		}
+
+		if($split>1)
+			$file = $csv_filename.'-part'.$curr_split.'.csv';
+		else
+			$file = $csv_filename.'.csv';
+		// Open the file to get existing content
+		// Write the contents back to the file
+		file_put_contents($file, $csv_export);
+		$file_names[]=$file;
+
+
+		$curr_loop=0;
+		$curr_split=$curr_split+1;
 }
 
-// newline (seems to work both on Linux & Windows servers)
-$csv_export.= '
-';
-
-// loop through database query and fill export variable
-while($row = pg_fetch_array($result)) {
-  // create line with field values
-  for($i = 0; $i < $field; $i++) {
-    $csv_export.= '"'.$row[pg_field_name($result,$i)].'",';
-  }	
-  $csv_export.= '
-';	
+$zipname = $csv_filename.'.zip';
+$zip = new ZipArchive;
+$zip->open($zipname, ZipArchive::CREATE);
+foreach ($file_names as $file) {
+  $zip->addFile($file);
 }
+$zip->close();
+
+//fclose($fp);
+pg_close();
 
 // Export the data and prompt a csv file for download
-header("Content-type: text/x-csv");
+/*header("Content-type: text/x-csv");
 header("Content-Disposition: attachment; filename=".$csv_filename."");
-echo($csv_export);
+echo($csv_export);*/
+return $zipname;
+}
 ?>
