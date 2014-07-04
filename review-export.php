@@ -813,7 +813,8 @@ $('[data-toggle="tooltip"]').tooltip();
 <?php if($zipname){
     if(file_exists($zipname)==true){
         $message = '<h2>Your exported file is ready.</h2><br/>';
-        $message.="<strong>Click <a href='".$zipname."'>here</a> to download.</strong>";
+//       $message.="<strong>Click <a href='".$zipname."'>here</a> to download.</strong>";
+        $message.="<button id='hidden-btn' href='".$zipname."'></button>";
     }
     else{
         $message = '<h2>There was an error.</h2><br/>';
@@ -822,7 +823,10 @@ $('[data-toggle="tooltip"]').tooltip();
   ?>
 <script>
 var some_html = "<?php echo $message; ?>";
-bootbox.alert(some_html);
+var box = bootbox.alert(some_html);
+box.find(".btn-primary").attr("href",$("#hidden-btn").attr('href'));
+box.find(".btn-primary").removeClass("data-bb-handler");
+box.find(".btn-primary").text("Download");
 </script>
   <?php
 }
