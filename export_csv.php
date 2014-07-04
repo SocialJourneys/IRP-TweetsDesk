@@ -1,5 +1,4 @@
 <?php
-
 function dbExport($query,$split){
 
 /* vars for export */
@@ -7,7 +6,7 @@ function dbExport($query,$split){
 $table = 'track_list';
 // optional where query
 // filename for export
-$csv_filename = 'db_exports/db_export_'.$table.'_'.date('Y-m-d');
+$csv_filename = 'db_exports/TMI_export_'.'_'.date('Y-m-d_H.i.s');
 
 // database variables
 $hostname = "localhost";
@@ -68,7 +67,7 @@ while($curr_split<=$split){
 		  }	
 		    $csv_export.= '
 		';	
-		  echo "<br/>curr loop: ".$curr_loop;
+		  //echo "<br/>curr loop: ".$curr_loop;
 		$curr_loop=$curr_loop+1;
 		}
 

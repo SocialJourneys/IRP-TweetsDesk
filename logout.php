@@ -8,6 +8,9 @@
 	//Data array of the API:
 	$data = array();
 
+	//echo 'key: '. $_SESSION['account']['apiKey'];
+	//die();
+
 	//REST call:
 	$status = rest_post($url, $data, $headers);
 	//Decode the response:

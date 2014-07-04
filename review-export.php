@@ -1,37 +1,235 @@
-
-<?php //include('core/init.core.php');?>
+<?php include('core/init.core.php');?>
 <?php include('header.php');?>
+<?php include('export_csv.php');?>
+?>
 <?php
-$term_name = $_GET['term_name'];
-$term_type = $_GET['term_type'];
-if($term_type==='handle')
-  $term_type='@';
-if($term_type==='hashtag')
-  $term_type='#';
-if($term_type==='search-term')
-  $term_type='$';
+if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+      //echo "<br/><br/><br/><br/><br/><br/>";
+      $query = 'SELECT ';
+      $where = '';
+      $fields= '';
+      $table = 'tweet';
 
-//http://dtp-24.sncs.abdn.ac.uk/phpPgAdmin/
-$db = pg_connect('host=localhost port=5432 dbname=tweetdesk user=postgres password=5L1ght1y'); 
+      /*if(isset($_POST['no-of-records']))
+        $num_of_records = trim($_POST['no-of-records']);
+      if(isset($_POST['id']))
+        $id = trim($_POST['id']);
+      if(isset($_POST['captured-at-from']))
+        $captured_at_from = trim($_POST['captured-at-from']);
+      if(isset($_POST['captured-at-to']))
+        $captured_at_to = trim($_POST['captured-at-to']);
+      if(isset($_POST['tweeted-at-from']))
+        $tweeted_at_from = trim($_POST['tweeted-at-from']);
+      if(isset($_POST['tweeted-at-from']))
+        $tweeted_at_to = trim($_POST['tweeted-at-to']);
+      if(isset($_POST['author']))
+        $author = trim($_POST['author']);
+      if(isset($_POST['favourites']))
+        $favourites = trim($_POST['favourites']);
+      if(isset($_POST['favourites-condition']))
+        $favourites_condition = trim($_POST['favourites-condition']);
+      if(isset($_POST['retweets']))
+        $retweets = trim($_POST['retweets']);
+      if(isset($_POST['retweets-condition']))
+        $retweets_condition = trim($_POST['retweets-condition']);
+      if(isset($_POST['text']))
+        $text = trim($_POST['text']);
+      if(isset($_POST['original-tweet-id']))
+        $original_tweet_id = trim($_POST['original-tweet-id']);
+      if(isset($_POST['reply-username']))
+        $reply_username = trim($_POST['reply-username']);   
+      if(isset($_POST['reply-status-id']))
+        $reply_status_id = trim($_POST['reply-status-id']);  
+      if(isset($_POST['reply-tweet-id']))
+        $reply_tweet_id = trim($_POST['reply-tweet-id']);  
+      if(isset($_POST['language-code']))
+        $language_code = trim($_POST['language-code']);   
+*/
 
-$query = "SELECT * FROM track_list"; 
+      foreach($_POST['review-checkbox'] as $checkbox) {
 
-$result = pg_query($db,$query); 
-if (!$result) { 
-  echo "Problem with query " . $query . "<br/>"; 
-  echo pg_last_error(); 
-   // exit(); 
-} 
+          //$checkbox is the table field and $_POST[$checkbox] is the value
 
-        //print_r($result);
-        //die();
+        
+        //get all the field names
+        /*if($checkbox==='limit' && (!empty($_POST['limit'])))
+              $limit = ' LIMIT '.$_POST[$checkbox];
+        elseif($checkbox!='limit')*/
+          {
+        //handling first comma
+           if($fields) 
+                $fields = $fields.', '.$checkbox;
+           else
+              $fields = $checkbox;
+          }
 
-  //      while($myrow = pg_fetch_assoc($result)) { 
-           // print_r($myrow);
-           // printf ("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>", $myrow['id'], htmlspecialchars($myrow['firstname']), htmlspecialchars($myrow['surname']), htmlspecialchars($myrow['emailaddress']));
-    //    } 
+          //build the where clause
+           switch ($checkbox) {
+            case 'id':{
+              if(!empty($_POST[$checkbox])){
+                
+                if($where)
+                  $where = $where . ' AND ';
 
-       // die();
+                $where = $where.' '.$checkbox. ' = '.trim($_POST[$checkbox]);
+              }
+               break;
+             }
+             case 'created_at':{
+             if(!empty($_POST[$checkbox.'_from']) || !empty($_POST[$checkbox.'_to'])){
+
+              // add AND if where already exists, otherwise its a new where clause
+              if($where)
+                $where = $where . ' AND ';
+
+              //being Where
+              $where = $where.' (';
+                
+              //$_POST[$checkbox.'_from'] = DateTime::createFromFormat('d/m/Y h:i A', $_POST[$checkbox.'_from'])->format('Y-m-d');
+
+                //from date
+              if(!empty($_POST[$checkbox.'_from'])){
+                //add commas to string
+                //$_POST[$checkbox.'_from'] = "'".trim($_POST[$checkbox.'_from'])."'";
+                $from = "'".trim($_POST[$checkbox.'_from'])."'";
+                //create where clause
+                $where = $where.$checkbox.' >= '.$from;
+              }
+              //to date
+              if(!empty($_POST[$checkbox.'_to'])){
+                //if from date set, create AND clause
+                if(!empty($_POST[$checkbox.'_from']))
+                     $where = $where . ' AND ';
+
+                //add commas to string
+                //$_POST[$checkbox.'_to'] = "'".trim($_POST[$checkbox.'_to'])."'";
+                $to = "'".trim($_POST[$checkbox.'_to'])."'";
+                //create where clause
+                $where = $where.$checkbox.' <= '.$to;
+              }
+
+              //close Where
+                $where = $where.' )';
+              }
+               # code...
+               break;
+             }
+
+             case 'time_stamp':{
+             if(!empty($_POST[$checkbox.'_from']) || !empty($_POST[$checkbox.'_to'])){
+
+              if($where)
+                $where = $where . ' AND ';
+
+              $where = $where.' (';
+                
+              //$_POST[$checkbox.'_from'] = DateTime::createFromFormat('d/m/Y h:i A', $_POST[$checkbox.'_from'])->format('Y-m-d');
+
+              if(!empty($_POST[$checkbox.'_from'])){
+//                $_POST[$checkbox.'_from'] = "'".trim($_POST[$checkbox.'_from'])."'";
+                $from = "'".trim($_POST[$checkbox.'_from'])."'";
+                $where = $where.$checkbox.'>='.$from;
+              }
+              if(!empty($_POST[$checkbox.'_to'])){
+                if(!empty($_POST[$checkbox.'_from']))
+                     $where = $where . ' AND ';
+
+                //$_POST[$checkbox.'_to'] = "'".trim($_POST[$checkbox.'_to'])."'";
+                $to = "'".trim($_POST[$checkbox.'_to'])."'";
+                $where = $where.$checkbox.'<='.$to;
+              }
+
+                $where = $where.' )';
+              }
+               # code...
+               break;
+             }
+
+             case 'favourites':{
+              if(!empty($_POST[$checkbox])){
+                
+                if($where)
+                  $where = $where . ' AND ';
+
+                $where = $where.' '.$checkbox. $_POST[$checkbox.'_condition'].trim($_POST[$checkbox]);
+              }
+               break;
+             }
+
+             case 're_tweeet_count':{
+              if(!empty($_POST[$checkbox])){
+                
+                if($where)
+                  $where = $where . ' AND ';
+
+                $where = $where.' '.$checkbox. $_POST[$checkbox.'_condition'].trim($_POST[$checkbox]);
+              }
+               break;
+             }
+
+             case 'text':{
+              if(!empty($_POST[$checkbox])){
+                
+                if($where)
+                  $where = $where . ' AND ';
+
+                if($_POST[$checkbox.'_condition']==='LIKE')
+              //    $_POST[$checkbox] = "'%".trim($_POST[$checkbox])."%'";
+                    $text = "'%".trim($_POST[$checkbox])."%'"; 
+                $where = $where.' '.$checkbox.' '.$_POST[$checkbox.'_condition'].' '.$text;
+              }
+               break;
+             }
+
+             default:{
+              if(!empty($_POST[$checkbox])){
+                
+                $inpval = trim($_POST[$checkbox]);
+
+
+                if($checkbox==='in_reply_to_screen_name' || $checkbox==='iso_language_code' || $checkbox==='source' || $checkbox==='author')
+                  //$_POST[$checkbox] = "'".trim($_POST[$checkbox])."'";
+                    $inpval = "'".$inpval."'";
+                
+                if($where)
+                  $where = $where . ' AND ';
+
+                $where = $where.' '.$checkbox. '='.$inpval;
+              }
+               break;
+             }
+           }
+
+        } // for loop
+
+        //echo $fields;
+        //echo "<br/>";
+        //echo $where;
+        if(empty($fields))
+          $fields = '*';
+        if(!empty($where))
+          $where = ' WHERE '.$where;
+        
+        if(!empty($_POST['split']))
+            $split = trim(($_POST['split']));
+        else
+            $split = 1;
+        
+        if(!empty($_POST['limit']))
+          $limit = ' LIMIT '.trim($_POST['limit']);
+
+        $query = $query .$fields.' from '. $table.$where.$limit;
+
+
+        $zipname = dbExport($query,intval($split));               
+        //$csv_filename = 'TMI_db_export'.'_'.date('Y-m-d').'.csv';
+
+  //      header('Content-Type: application/zip');
+//header('Content-disposition: attachment; filename=filename.zip');
+//header('Content-Length: ' . filesize($zipname));
+//readfile($zipname);
+  }
+//value represents database field name
 ?>
 <div id="page-wrapper">
   <div class="row">
@@ -56,10 +254,11 @@ if (!$result) {
    
     <div class="panel-body">
         <!-- table- -->
+        <form class="myform" role ="form" method="post" action="">
             <table class="table table-bordered">  
                 <thead>
                     <tr>
-                        <th class="text-center"><h4>Fields</h4></th>
+                        <th class="text-center"><h4>Fields</h4><button type="button" class="btn btn-xs btn-info" onClick="selectAll()">Select All</button><button type="button" style="margin-left:5px;" class="btn btn-xs btn-warning" onClick="uncheckAll()">Uncheck All</button></th>
                         <th class="text-center"><h4>Filters</h4></th>
                     </tr>
                 </thead>
@@ -68,17 +267,17 @@ if (!$result) {
                     <td>          
                         <div class="review-form-group form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <label label-default="" for="review-field-no-of-records">
-                              <input type="checkbox" name="review-checkbox" id="no-of-records">   
-                              <strong> Number of Records:</strong>
+                              <!--input type="checkbox" name="review-checkbox[]" value="limit" id="no-of-records" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("limit", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> -->   
+                              <strong> Number of Records*:</strong>
                           </label>   
                       </div> 
                   </td>
                     <td>
                         <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-no-of-records">
                          <label label-default="" for="review-filter-no-of-records"></label>
-                         <input type="text" class="form-control review-control" id="review-filter-no-of-records" placeholder="Count">   
+                         <input type="number" class="form-control review-control" name="limit" id="review-filter-no-of-records" placeholder="Count" value="<?php echo isset($_POST['limit'])?$_POST['limit'] :'1000'?>" required/>   
                     
-                        <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Overall records you want to fetch. e.g: 0,10,1000">
+                        <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Overall records you want to fetch. e.g: 0,10,1000. This field is required.">
                             <i class="fa fa-info"></i>
                         </button>
                     </div>
@@ -90,16 +289,16 @@ if (!$result) {
                         <td>
                             <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                             <label label-default="" for="review-field-id">
-                            <input type="checkbox" name="review-checkbox" id="id">
+                            <input type="checkbox" name="review-checkbox[]" value="id" id="db-id" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("id", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >
                             <strong> ID:</strong>
                             </label>
                         </div>
                     </td>
                     <td>
-                        <div class="review-form-group review-filters form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-id">
-                            <label label-default="" for="review-filter-id">
+                        <div class="review-form-group review-filters form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-db-id">
+                            <label label-default="" for="review-filter-db-id">
                             </label> 
-                            <input type="text" class="form-control review-control" id="review-filter-id" placeholder="Identifier"> 
+                            <input type="number" class="form-control review-control" name="id" id="review-filter-db-id" placeholder="Identifier" value="<?php echo isset($_POST['id'])?$_POST['id'] :''?>" /> 
                             <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Database ID for this record. e.g: 0,10,1000">
                                  <i class="fa fa-info"></i>
                             </button>
@@ -113,7 +312,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-captured-at">
-                          <input type="checkbox" name="review-checkbox" id="captured-at">
+                          <input type="checkbox" name="review-checkbox[]" value="time_stamp" id="captured-at" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("time_stamp", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >
                           <strong>Captured At:</strong>
                       </label> 
                     </div>   
@@ -121,8 +320,8 @@ if (!$result) {
                     <td>
                         <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-captured-at">
                             <label label-default="" for="review-filter-captured-at">Date Range: </label>
-                            <input type='text' class="form-control review-control" id="review-filter-captured-at-to-datetimepicker" placeholder="To"/>
-                            <input type='text' class="form-control review-control" id="review-filter-captured-at-from-datetimepicker" placeholder="From"/>
+                            <input type='text' class="form-control review-control" name="time_stamp_from" id="review-filter-captured-at-from" data-date-format="YYYY-MM-DD hh:mm:ss" placeholder="From" value="<?php echo isset($_POST['time_stamp_from'])?$_POST['time_stamp_from'] :''?>"/>
+                            <input type='text' class="form-control review-control" name="time_stamp_to" id="review-filter-captured-at-to" data-date-format="YYYY-MM-DD hh:mm:ss" placeholder="To" value="<?php echo isset($_POST['time_stamp_to'])?$_POST['time_stamp_to'] :''?>"/>
                             <!--input type="text" class="form-control review-control" id="review-filter-captured-at-to" placeholder="To"-->   
                             <!--input type="text" class="form-control review-control" id="review-filter-captured-at-from" placeholder="From"-->  
                             <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Date this tweet was captured in our system.">
@@ -137,7 +336,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-tweeted-at">
-                          <input type="checkbox" name="review-checkbox" id="tweeted-at">
+                          <input type="checkbox" name="review-checkbox[]" value="created_at" id="tweeted-at" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("created_at", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >
                           <strong>Tweeted At:</strong>
                       </label> 
                     </div>   
@@ -145,8 +344,8 @@ if (!$result) {
                     <td>
                         <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-tweeted-at">
                             <label label-default="" for="review-filter-tweeted-at">Date Range: </label>
-                             <input type='text' class="form-control review-control" id="review-filter-tweeted-at-to-datetimepicker" placeholder="To"/>
-                            <input type='text' class="form-control review-control" id="review-filter-tweeted-at-from-datetimepicker" placeholder="From"/>
+                             <input type='text' class="form-control review-control" name="created_at_from" id="review-filter-tweeted-at-from" data-date-format="YYYY-MM-DD" placeholder="From" value="<?php echo isset($_POST['created_at_from'])?$_POST['created_at_from'] :''?>"/>
+                            <input type='text' class="form-control review-control" name="created_at_to" id="review-filter-tweeted-at-to" data-date-format="YYYY-MM-DD" placeholder="To" value="<?php echo isset($_POST['created_at_to'])?$_POST['created_at_to'] :''?>"/>
                             <!--input type="text" class="form-control review-control" id="review-filter-tweeted-at-to" placeholder="To"-->
                             <!--input type="text" class="form-control review-control" id="review-filter-tweeted-at-from" placeholder="From"-->
                             <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Date this tweet was tweeted by the author on twitter.">
@@ -161,15 +360,15 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-author">
-                          <input type="checkbox" name="review-checkbox" id="author">   
+                          <input type="checkbox" name="review-checkbox[]" value="author" id="tweet-author" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("author", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >   
                           <strong>Author:</strong>
                       </label>
                     </div>   
                     </td>
                     <td>
-                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-author">
-                        <label label-default="" for="review-filter-author"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-author" placeholder="@handle"> 
+                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-tweet-author">
+                        <label label-default="" for="review-filter-tweet-author"></label>
+                      <input type="text" class="form-control review-control" name="author" placeholder="@handle" id="review-filter-tweet-author" value="<?php echo isset($_POST['author'])?$_POST['author'] :''?>"/>
                       <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter handle of the author. e.g @FirstAberdeen">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -181,7 +380,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-favourites">
-                          <input type="checkbox" name="review-checkbox" id="favourites">   
+                          <input type="checkbox" name="review-checkbox[]" value="favourite_count" id="favourites" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("favourite_count", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >     
                           <strong>Favourites Count:</strong>
                       </label>
                     </div>   
@@ -189,12 +388,12 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-favourites">
                         <label label-default="" for="review-filter-favourites">Count: </label>
-                        <select class="form-control review-control" id="review-filter-favourites-condition">
-                          <option>=</option>
-                          <option>></option>
-                          <option><</option>
+                        <select class="form-control review-control" name="favourite_count_condition" id="review-filter-favourites-condition"/>
+                          <option value="=" <?php if($_POST['favourite_count_condition'] == "=") echo "selected";?> >=</option>
+                          <option value=">" <?php if($_POST['favourite_count_condition'] == ">") echo "selected";?> >></option>
+                          <option value="<" <?php if($_POST['favourite_count_condition'] == "<") echo "selected";?> ><</option>
                       </select>
-                      <input type="text" class="form-control review-control" id="review-filter-favourites" placeholder="N/A">   
+                      <input type="number" class="form-control review-control" name="favourite_count" placeholder="N/A" id="review-filter-favourites" value="<?php echo isset($_POST['favourite_count'])?$_POST['favourite_count'] :''?>"/> 
                     <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Count of Favourites.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -206,7 +405,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-retweets">
-                          <input type="checkbox" name="review-checkbox" id="retweets">   
+                          <input type="checkbox" name="review-checkbox[]" value="re_tweeet_count" id="retweets" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("re_tweeet_count", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >        
                           <strong>Retweets Count:</strong>
                       </label>
                     </div>   
@@ -214,12 +413,12 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-retweets">
                         <label label-default="" for="review-filter-retweets">Count: </label>
-                        <select class="form-control review-control" id="review-filter-retweets-condition">
-                          <option>=</option>
-                          <option>></option>
-                          <option><</option>
+                        <select class="form-control review-control" name="re_tweeet_count_condition" id="review-filter-retweets-condition">
+                          <option value="=" <?php if($_POST['re_tweeet_count_condition'] == "=") echo "selected";?> >=</option>
+                          <option value=">" <?php if($_POST['re_tweeet_count_condition'] == ">") echo "selected";?> >></option>
+                          <option value="<" <?php if($_POST['re_tweeet_count_condition'] == "<") echo "selected";?> ><</option>
                       </select>
-                      <input type="text" class="form-control review-control" id="review-filter-retweets" placeholder="N/A">   
+                      <input type="number" class="form-control review-control" name="re_tweeet_count" placeholder="N/A" id="review-filter-retweets" value="<?php echo isset($_POST['re_tweeet_count'])?$_POST['re_tweeet_count'] :''?>"/>   
                       <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Count of Retweets.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -231,19 +430,19 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-text">
-                          <input type="checkbox" name="review-checkbox" id="text">   
-                          <strong>Text:</strong>
+                          <input type="checkbox" name="review-checkbox[]" value="text" id="tweet-content" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("text", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >          
+                          <strong>Tweet Content:</strong>
                       </label>
                     </div>   
                     </td>
                     <td>
-                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-12" id="filter-text">
-                        <label label-default="" for="review-filter-text">Keywords: </label>
-                        <select class="form-control review-control" id="review-filter-text-condition">
-                          <option>contains</option>
-                          <option>exact match</option>
+                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-12" id="filter-tweet-content">
+                        <label label-default="" for="review-filter-tweet-content">Keywords: </label>
+                        <select class="form-control review-control" name="text_condition" id="review-filter-tweet-content-condition">
+                          <option value="LIKE" <?php if($_POST['text_condition'] == "LIKE") echo "selected";?> >contains</option>
+                          <option value="=" <?php if($_POST['text_condition'] == "=") echo "selected";?> >exact match</option>
                       </select>
-                      <input type="text" class="form-control review-control" id="review-filter-text" placeholder="enter keyword">   
+                      <input type="text" class="form-control review-control" name="text" id="review-filter-tweet-content" placeholder="enter keyword" value="<?php echo isset($_POST['text'])?$_POST['text'] :''?>"/>   
                        <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Enter a keyword to filter tweet content. e.g rain, office, football">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -255,7 +454,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-original-tweet-id">
-                          <input type="checkbox" name="review-checkbox" id="original-tweet-id">   
+                          <input type="checkbox" name="review-checkbox[]" value="original_tweet_id" id="original-tweet-id" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("original_tweet_id", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >           
                           <strong>Original Tweet ID:</strong>
                       </label>
                     </div>   
@@ -263,7 +462,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-original-tweet-id">
                         <label label-default="" for="review-filter-original-tweet-id"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-original-tweet-id" placeholder="Enter Tweet ID">   
+                      <input type="number" class="form-control review-control" name="original_tweet_id" id="review-filter-original-tweet-id" placeholder="Enter Tweet ID" value="<?php echo isset($_POST['original_tweet_id'])?$_POST['original_tweet_id'] :''?>"/>      
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="The origianl tweet ID from twitter in numeric form.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -275,7 +474,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-reply-username">
-                          <input type="checkbox" name="review-checkbox" id="reply-username">   
+                          <input type="checkbox" name="review-checkbox[]" value="in_reply_to_screen_name" id="reply-username" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("in_reply_to_screen_name", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >  
                           <strong>In Reply to Username:</strong>
                       </label>
                     </div>   
@@ -283,7 +482,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-reply-username">
                         <label label-default="" for="review-filter-reply-username"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-reply-username" placeholder="@handle">   
+                      <input type="text" class="form-control review-control" name="in_reply_to_screen_name" id="review-filter-reply-username" placeholder="@handle" value="<?php echo isset($_POST['in_reply_to_screen_name'])?$_POST['in_reply_to_screen_name'] :''?>"/>   
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter handle of the user this tweet is mentioned. e.g @ScotRail">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -295,7 +494,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-reply-status-id">
-                          <input type="checkbox" name="review-checkbox" id="reply-status-id">   
+                          <input type="checkbox" name="review-checkbox[]" value="in_reply_to_status_id" id="reply-status-id" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("in_reply_to_status_id", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >  
                           <strong>In Reply to Status ID:</strong>
                       </label>
                     </div>   
@@ -303,7 +502,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-reply-status-id">
                         <label label-default="" for="review-filter-reply-status-id"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-reply-status-id" placeholder="Enter Status ID">   
+                      <input type="number" class="form-control review-control" name="in_reply_to_status_id" id="review-filter-reply-status-id" placeholder="Enter Status ID" value="<?php echo isset($_POST['in_reply_to_status_id'])?$_POST['in_reply_to_status_id'] :''?>"/> 
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter tweet ID for status in numeric form.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -315,7 +514,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-reply-user-id">
-                          <input type="checkbox" name="review-checkbox" id="reply-user-id">   
+                          <input type="checkbox" name="review-checkbox[]" value="in_reply_to_user_id" id="reply-user-id" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("in_reply_to_user_id", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >
                           <strong>In Reply to User ID:</strong>
                       </label>
                     </div>   
@@ -323,7 +522,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-reply-user-id">
                         <label label-default="" for="review-filter-reply-user-id"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-reply-user-id" placeholder="Enter User ID">   
+                      <input type="number" class="form-control review-control" name="in_reply_to_user_id" id="review-filter-reply-user-id" placeholder="Enter User ID" value="<?php echo isset($_POST['in_reply_to_user_id'])?$_POST['in_reply_to_user_id'] :''?>"/>    
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter user ID in numeric form for the user this tweet is mentioned.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -335,7 +534,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-language-code">
-                          <input type="checkbox" name="review-checkbox" id="language-code">   
+                          <input type="checkbox" name="review-checkbox[]" value="iso_language_code" id="language-code" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("iso_language_code", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >  
                           <strong>Language Code:</strong>
                       </label>
                     </div>   
@@ -343,7 +542,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-language-code">
                         <label label-default="" for="review-filter-language-code"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-language-code" placeholder="Enter Language Code">   
+                      <input type="text" class="form-control review-control" name="iso_language_code" id="review-filter-language-code" placeholder="Enter Language Code" value="<?php echo isset($_POST['iso_language_code'])?$_POST['iso_language_code'] :''?>"/>   
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="ISO language code. e.g: en, de">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -355,7 +554,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-twitter-source">
-                          <input type="checkbox" name="review-checkbox" id="twitter-source">   
+                          <input type="checkbox" name="review-checkbox[]" value="source" id="twitter-source" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("source", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >   
                           <strong>Twitter Source:</strong>
                       </label>
                     </div>   
@@ -363,7 +562,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-twitter-source">
                         <label label-default="" for="review-filter-twitter-source"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-twitter-source" placeholder="Enter Twitter Source">   
+                      <input type="text" class="form-control review-control" name="source" id="review-filter-twitter-source" placeholder="Enter Twitter Source" value="<?php echo isset($_POST['source'])?$_POST['source'] :''?>"/>      
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="The source client used for the tweet. e.g: Twitter for iPhone">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -375,7 +574,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-user-id">
-                          <input type="checkbox" name="review-checkbox" id="user-id">   
+                          <input type="checkbox" name="review-checkbox[]" value="user_id" id="user-id" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("user_id", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >   
                           <strong>Twitter User ID:</strong>
                       </label>
                     </div>   
@@ -383,7 +582,7 @@ if (!$result) {
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-user-id">
                         <label label-default="" for="review-filter-user-id"></label>
-                      <input type="text" class="form-control review-control" id="review-filter-user-id" placeholder="Enter Numeric User ID">   
+                      <input type="number" class="form-control review-control" name="user_id" id="review-filter-user-id" placeholder="Enter Numeric User ID" value="<?php echo isset($_POST['user_id'])?$_POST['user_id'] :''?>"/>  
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter user ID for this author of tweet in numeric form.">
                        <i class="fa fa-info"></i>
                     </button>                       
@@ -391,21 +590,41 @@ if (!$result) {
                     </td>
                 </tr><!-- User Numeric ID-->
 
+                <tr><!-- Conversation ID-->
+                    <td>
+                    <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
+                        <label label-default="" for="review-field-coversation-id">
+                          <input type="checkbox" name="review-checkbox[]" value="conversation_id" id="conversation-id" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("conversation_id", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >   
+                          <strong>Conversation ID:</strong>
+                      </label>
+                    </div>   
+                    </td>
+                    <td>
+                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-conversation-id">
+                        <label label-default="" for="review-filter-conversation-id"></label>
+                      <input type="number" class="form-control review-control" name="conversation_id" id="review-filter-conversation-id" placeholder="Enter Numeric Conversation ID" value="<?php echo isset($_POST['conversation_id'])?$_POST['conversation_id'] :''?>"/>     
+                         <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Conversation ID for this tweet in numeric form.">
+                       <i class="fa fa-info"></i>
+                    </button>                       
+                    </div>
+                    </td>
+                </tr><!-- Conversation ID-->
+
                 <tr><!-- Stakeholder-->
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-stakeholder">
-                          <input type="checkbox" name="review-checkbox" id="stakeholder">   
+                          <input type="checkbox" name="review-checkbox[]" value="stake_holder" id="stakeholder" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("stake_holder", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >   
                           <strong>Stakeholder:</strong>
                       </label>
                     </div>   
                     </td>
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-stakeholder">
-                        <select class="form-control review-control" id="review-filter-stakeholder">
-                          <option>Select</option>
-                          <option>True</option>
-                          <option>False</option>
+                        <select class="form-control review-control" name="stake_holder" id="review-filter-stakeholder">
+                          <option value="" <?php if($_POST['stake_holder'] == "") echo "selected";?> ></option>
+                          <option value="True" <?php if($_POST['stake_holder'] == "True") echo "selected";?> >True</option>
+                          <option value="False" <?php if($_POST['stake_holder'] == "False") echo "selected";?> >False</option>
                       </select>
                     </div>
                     </td>
@@ -413,21 +632,10 @@ if (!$result) {
 
                 <tr><!-- Filt Split-->
                     <td>
-                    <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
-                        <label label-default="" for="review-field-split">
-                          <input type="checkbox" name="review-checkbox" id="split">   
-                          <strong>Split output file:</strong>
-                      </label>
-                    </div>   
+ 
                     </td>
                     <td>
-                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-split">
-                    <input type="text" class="form-control review-control" id="review-filter-split" placeholder="Enter value">   
-                    <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Enter number of records per file. e.g 10000, 25000">
-                       <i class="fa fa-info"></i>
-                    </button>   
-                    
-                    </div>
+
                     </td>
                 </tr><!-- Stakeholder-->
 
@@ -435,9 +643,28 @@ if (!$result) {
 
         </table>
         <!--export button-->
-        <div class="input-group pull-right">
-            <button type="button" class="btn btn-success dropdown-toggle header-button"><span class="fa fa-download fa-fw"></span> Export CSV</button>
+        <div class="input-group">
+
+                              <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
+                        <label label-default="" for="review-field-split">
+                          <input type="checkbox" name="split-checkbox[]" id="split" value= "split" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("split", $_POST['split-checkbox'])) echo "checked";}else echo "checked";?> >     
+                          <strong>Split output file:</strong>
+                            <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Enter number of records per file. e.g 10000, 25000">
+                       <i class="fa fa-info"></i>
+                    </button>  
+                      </label>
+                    </div>  
+
+                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-5 col-md-4 col-lg-4" id="filter-split">
+                    <input type="number" class="form-control review-control" name="split" id="review-filter-split" placeholder="Enter value" value="<?php echo isset($_POST['split'])?$_POST['split'] :''?>"/>       
+ 
+                    </div>
+            
+            <div class="review-form-group col-xs-12 col-sm-12 col-lg-12" style="padding-top:10px;">
+              <button type="submit" class="btn btn-success"><span class="fa fa-download fa-fw"></span> Export CSV</button>
+            </div>
         </div><!--export button-->
+      </form>
 
 </div>      <!--div class="panel-body"-->
 
@@ -450,29 +677,76 @@ if (!$result) {
 
 <script type="text/javascript">
 
-$('#review-filter-captured-at-to-datetimepicker').datetimepicker();
-$('#review-filter-captured-at-from-datetimepicker').datetimepicker();
 
-$('#review-filter-tweeted-at-to-datetimepicker').datetimepicker();
-$('#review-filter-tweeted-at-from-datetimepicker').datetimepicker();
+
+$('#review-filter-captured-at-to').datetimepicker();
+$('#review-filter-captured-at-from').datetimepicker();
+
+$("#review-filter-captured-at-from").on("dp.change",function (e) {
+  $('#review-filter-captured-at-to').data("DateTimePicker").setMinDate(e.date);
+});
+$("#review-filter-captured-at-to").on("dp.change",function (e) {
+   $('#review-filter-captured-at-from').data("DateTimePicker").setMaxDate(e.date);
+});
+
+
+$('#review-filter-tweeted-at-to').datetimepicker({
+  pickTime: false
+});
+
+$('#review-filter-tweeted-at-from').datetimepicker({
+  pickTime: false
+});
+
+$("#review-filter-tweeted-at-from").on("dp.change",function (e) {
+  $('#review-filter-tweeted-at-to').data("DateTimePicker").setMinDate(e.date);
+});
+$("#review-filter-tweeted-at-to").on("dp.change",function (e) {
+   $('#review-filter-tweeted-at-from').data("DateTimePicker").setMaxDate(e.date);
+});
 
 //show hide surcharge fields depending on selection in passenger eligibility
 
-$("input[name='review-checkbox']").each( function () {
+//check all
+function selectAll(){
+$("input[name='review-checkbox[]']").each( function () {
         $(this).prop('checked', true);
+        var field_id = $(this).attr('id');
+         var filters_div = 'filter-'+field_id;
+         $("#"+filters_div).removeClass("review-filters-disabled");
+         $("#"+filters_div+" :input").attr("disabled", false);
+    });
+}
+
+function uncheckAll(){
+$("input[name='review-checkbox[]']").each( function () {
+        $(this).prop('checked', false);
+         var field_id = $(this).attr('id');
+         var filters_div = 'filter-'+field_id;
+         $("#"+filters_div).addClass("review-filters-disabled");
+         $("#"+filters_div+" :input").attr("disabled", true);
+    });
+}
+
+//loop through each checkbox and disable, enable divs
+   $("input[name='review-checkbox[]']").each( function () {
+         var field_id = $(this).attr('id');
+         var filters_div = 'filter-'+field_id;
+         if(this.checked){
+
+            //grey out
+                $("#"+filters_div).removeClass("review-filters-disabled");
+
+                //disable inputs inside parent div
+                $("#"+filters_div+" :input").attr("disabled", false);
+            }
+        else{
+                $("#"+filters_div).addClass("review-filters-disabled");
+                $("#"+filters_div+" :input").attr("disabled", true);
+            }
     });
 
-   $("input[name='review-checkbox']").each( function () {
-    var value = $(this).attr('id');
-    var passenger_elig_id = 'tab-surcharge-structure-pt-group-'+value;
-    if(this.checked)
-      $('#'+passenger_elig_id).hide();
-  else
-      $('#'+passenger_elig_id).show();
-    });
-
-
-   $("input[name='review-checkbox']").click(function() {
+   $("input[name='review-checkbox[]']").click(function() {
 
          // $("#review-field-no-records" ).addClass("review-filters-disabled");
 
@@ -486,7 +760,48 @@ $("input[name='review-checkbox']").each( function () {
                 //disable inputs inside parent div
                 $("#"+filters_div+" :input").attr("disabled", false);
             }
-            else{
+        else{
+                $("#"+filters_div).addClass("review-filters-disabled");
+                $("#"+filters_div+" :input").attr("disabled", true);
+            }
+        });
+
+
+   //check for split checkbox status
+
+   $("input[name='split-checkbox[]']").each( function () {
+         var field_id = $(this).attr('id');
+         var filters_div = 'filter-'+field_id;
+         if(this.checked){
+
+            //grey out
+                $("#"+filters_div).removeClass("review-filters-disabled");
+
+                //disable inputs inside parent div
+                $("#"+filters_div+" :input").attr("disabled", false);
+            }
+        else{
+                $("#"+filters_div).addClass("review-filters-disabled");
+                $("#"+filters_div+" :input").attr("disabled", true);
+            }
+    });
+
+
+        //disable enable split checkbox and input
+      $("input[name='split-checkbox[]']").click(function() {
+         // $("#review-field-no-records" ).addClass("review-filters-disabled");
+
+         var field_id = $(this).attr('id');
+         var filters_div = 'filter-'+field_id;
+         if(this.checked){
+
+            //grey out
+                $("#"+filters_div).removeClass("review-filters-disabled");
+
+                //disable inputs inside parent div
+                $("#"+filters_div+" :input").attr("disabled", false);
+            }
+        else{
                 $("#"+filters_div).addClass("review-filters-disabled");
                 $("#"+filters_div+" :input").attr("disabled", true);
             }
@@ -494,5 +809,20 @@ $("input[name='review-checkbox']").each( function () {
 
 //info button tooltip initializer        
 $('[data-toggle="tooltip"]').tooltip();
-
-   </script>
+</script>
+<?php if($zipname){
+    if(file_exists($zipname)==true){
+        $message = '<h2>Your exported file is ready.</h2><br/>';
+        $message.="<strong>Click <a href='".$zipname."'>here</a> to download.</strong>";
+    }
+    else{
+        $message = '<h2>There was an error.</h2><br/>';
+        $message.='<strong>Please try again.</strong>';
+    }
+  ?>
+<script>
+var some_html = "<?php echo $message; ?>";
+bootbox.alert(some_html);
+</script>
+  <?php
+}
