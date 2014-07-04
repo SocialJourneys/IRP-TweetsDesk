@@ -814,7 +814,7 @@ $('[data-toggle="tooltip"]').tooltip();
     if(file_exists($zipname)==true){
         $message = '<h2>Your exported file is ready.</h2><br/>';
 //       $message.="<strong>Click <a href='".$zipname."'>here</a> to download.</strong>";
-        $message.="<button id='hidden-btn' href='".$zipname."'></button>";
+        //$message.="<button id='hidden-btn' href='".$zipname."'></button>";
     }
     else{
         $message = '<h2>There was an error.</h2><br/>';
@@ -822,11 +822,17 @@ $('[data-toggle="tooltip"]').tooltip();
     }
   ?>
 <script>
+var check = "<?php echo file_exists($zipname); ?>";
+
 var some_html = "<?php echo $message; ?>";
+var link = "<?php echo $zipname; ?>";
 var box = bootbox.alert(some_html);
-box.find(".btn-primary").attr("href",$("#hidden-btn").attr('href'));
-box.find(".btn-primary").removeClass("data-bb-handler");
-box.find(".btn-primary").text("Download");
+//box.find(".btn-primary").(attr("href",$("#hidden-btn").attr('href')));
+if(check==true){
+    box.find(".btn-primary").remove();
+    box.find(".modal-footer").append("<a href='"+link+"' class='btn btn-primary' type='button' id='file-download-btn'>Download</a>");
+}
+//box.find("#file-download-btn").attr("data-bb-handler","ok");
 </script>
   <?php
 }
