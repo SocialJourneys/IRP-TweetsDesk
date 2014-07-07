@@ -156,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                break;
              }
 
-             case 're_tweeet_count':{
+             case 're_tweet_count':{
               if(!empty($_POST[$checkbox])){
                 
                 if($where)
@@ -176,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 if($_POST[$checkbox.'_condition']==='LIKE')
               //    $_POST[$checkbox] = "'%".trim($_POST[$checkbox])."%'";
                     $text = "'%".trim($_POST[$checkbox])."%'"; 
-                $where = $where.' '.$checkbox.' '.$_POST[$checkbox.'_condition'].' '.$text;
+                $where = $where.' LOWER('.$checkbox.') '.$_POST[$checkbox.'_condition'].' '.$text;
               }
                break;
              }
@@ -185,16 +185,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
               if(!empty($_POST[$checkbox])){
                 
                 $inpval = trim($_POST[$checkbox]);
+                $condition = " = ";
 
-
-                if($checkbox==='in_reply_to_screen_name' || $checkbox==='iso_language_code' || $checkbox==='source' || $checkbox==='author')
+                if($checkbox==='in_reply_to_screen_name' || $checkbox==='iso_language_code' || $checkbox==='source' || $checkbox==='author'){
                   //$_POST[$checkbox] = "'".trim($_POST[$checkbox])."'";
-                    $inpval = "'".$inpval."'";
+                    $inpval = "'%".$inpval."%'";
+                    $condition = " LIKE ";
+                  }
                 
                 if($where)
                   $where = $where . ' AND ';
 
-                $where = $where.' '.$checkbox. '='.$inpval;
+                $where = $where.' LOWER('.$checkbox.')'.$condition.$inpval;
               }
                break;
              }
@@ -259,7 +261,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 <thead>
                     <tr>
                         <th class="text-center"><h4>Fields</h4><button type="button" class="btn btn-xs btn-info" onClick="selectAll()">Select All</button><button type="button" style="margin-left:5px;" class="btn btn-xs btn-warning" onClick="uncheckAll()">Uncheck All</button></th>
-                        <th class="text-center"><h4>Filters</h4></th>
+                        <th class="text-center"><h4>Filters</h4><div class="control-group">
+                          <label class="control-label">Combination criteria:</label>
+                          <label class="radio" style="display:inline-block;">
+                            <input type="radio" name="filters_criteria[]" id="filters_criteria_all" value="AND" checked>All of these
+                          </label>
+                          <label class="radio" style="display:inline-block;">
+                            <input type="radio" name="filters_criteria[]" id="filters_criteria_any" value="OR">Any of these</label>
+                      </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -268,7 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         <div class="review-form-group form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <label label-default="" for="review-field-no-of-records">
                               <!--input type="checkbox" name="review-checkbox[]" value="limit" id="no-of-records" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("limit", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> -->   
-                              <strong> Number of Records*:</strong>
+                              <strong> Number of Records<span style="color:Red;">*</span>:</strong>
                           </label>   
                       </div> 
                   </td>
@@ -319,7 +328,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     </td>
                     <td>
                         <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-captured-at">
-                            <label label-default="" for="review-filter-captured-at">Date Range: </label>
+                            <label label-default="" for="review-filter-captured-at" style="display:block;">Date Range: </label>
                             <input type='text' class="form-control review-control" name="time_stamp_from" id="review-filter-captured-at-from" data-date-format="YYYY-MM-DD hh:mm:ss" placeholder="From" value="<?php echo isset($_POST['time_stamp_from'])?$_POST['time_stamp_from'] :''?>"/>
                             <input type='text' class="form-control review-control" name="time_stamp_to" id="review-filter-captured-at-to" data-date-format="YYYY-MM-DD hh:mm:ss" placeholder="To" value="<?php echo isset($_POST['time_stamp_to'])?$_POST['time_stamp_to'] :''?>"/>
                             <!--input type="text" class="form-control review-control" id="review-filter-captured-at-to" placeholder="To"-->   
@@ -343,7 +352,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     </td>
                     <td>
                         <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-tweeted-at">
-                            <label label-default="" for="review-filter-tweeted-at">Date Range: </label>
+                            <label label-default="" for="review-filter-tweeted-at" style="display:block;">Date Range: </label>
                              <input type='text' class="form-control review-control" name="created_at_from" id="review-filter-tweeted-at-from" data-date-format="YYYY-MM-DD" placeholder="From" value="<?php echo isset($_POST['created_at_from'])?$_POST['created_at_from'] :''?>"/>
                             <input type='text' class="form-control review-control" name="created_at_to" id="review-filter-tweeted-at-to" data-date-format="YYYY-MM-DD" placeholder="To" value="<?php echo isset($_POST['created_at_to'])?$_POST['created_at_to'] :''?>"/>
                             <!--input type="text" class="form-control review-control" id="review-filter-tweeted-at-to" placeholder="To"-->
@@ -387,7 +396,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     </td>
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-favourites">
-                        <label label-default="" for="review-filter-favourites">Count: </label>
+                        <label label-default="" for="review-filter-favourites" style="display:block;">Count: </label>
                         <select class="form-control review-control" name="favourite_count_condition" id="review-filter-favourites-condition"/>
                           <option value="=" <?php if($_POST['favourite_count_condition'] == "=") echo "selected";?> >=</option>
                           <option value=">" <?php if($_POST['favourite_count_condition'] == ">") echo "selected";?> >></option>
@@ -405,20 +414,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-retweets">
-                          <input type="checkbox" name="review-checkbox[]" value="re_tweeet_count" id="retweets" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("re_tweeet_count", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >        
+                          <input type="checkbox" name="review-checkbox[]" value="re_tweet_count" id="retweets" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("re_tweet_count", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >        
                           <strong>Retweets Count:</strong>
                       </label>
                     </div>   
                     </td>
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-retweets">
-                        <label label-default="" for="review-filter-retweets">Count: </label>
-                        <select class="form-control review-control" name="re_tweeet_count_condition" id="review-filter-retweets-condition">
-                          <option value="=" <?php if($_POST['re_tweeet_count_condition'] == "=") echo "selected";?> >=</option>
-                          <option value=">" <?php if($_POST['re_tweeet_count_condition'] == ">") echo "selected";?> >></option>
-                          <option value="<" <?php if($_POST['re_tweeet_count_condition'] == "<") echo "selected";?> ><</option>
+                        <label label-default="" for="review-filter-retweets" style="display:block;">Count: </label>
+                        <select class="form-control review-control" name="re_tweet_count_condition" id="review-filter-retweets-condition">
+                          <option value="=" <?php if($_POST['re_tweet_count_condition'] == "=") echo "selected";?> >=</option>
+                          <option value=">" <?php if($_POST['re_tweet_count_condition'] == ">") echo "selected";?> >></option>
+                          <option value="<" <?php if($_POST['re_tweet_count_condition'] == "<") echo "selected";?> ><</option>
                       </select>
-                      <input type="number" class="form-control review-control" name="re_tweeet_count" placeholder="N/A" id="review-filter-retweets" value="<?php echo isset($_POST['re_tweeet_count'])?$_POST['re_tweeet_count'] :''?>"/>   
+                      <input type="number" class="form-control review-control" name="re_tweet_count" placeholder="N/A" id="review-filter-retweets" value="<?php echo isset($_POST['re_tweet_count'])?$_POST['re_tweet_count'] :''?>"/>   
                       <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Count of Retweets.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -436,8 +445,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     </div>   
                     </td>
                     <td>
-                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-12" id="filter-tweet-content">
-                        <label label-default="" for="review-filter-tweet-content">Keywords: </label>
+                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-tweet-content">
+                        <label label-default="" for="review-filter-tweet-content" style="display:block;">Keywords: </label>
                         <select class="form-control review-control" name="text_condition" id="review-filter-tweet-content-condition">
                           <option value="LIKE" <?php if($_POST['text_condition'] == "LIKE") echo "selected";?> >contains</option>
                           <option value="=" <?php if($_POST['text_condition'] == "=") echo "selected";?> >exact match</option>
@@ -630,16 +639,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     </td>
                 </tr><!-- Stakeholder-->
 
-                <tr><!-- Filt Split-->
-                    <td>
+                <tr><!-- Field Split-->
+                    <td style="border:0px;">
  
-                    </td>
-                    <td>
+               <p> <span style="color:Red;">*</span> fields are required.
+ </p> 
 
                     </td>
                 </tr><!-- Stakeholder-->
 
             </tbody>
+
 
         </table>
         <!--export button-->

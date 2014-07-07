@@ -45,7 +45,7 @@ $curr_loop = 0;
 $curr_split = 1;
 $file_names=array();
 
-//echo "<br/><br/>query in exporter: ".$query. ' split : '.$split. ' loop : '.$loop;
+echo "<br/><br/>query in exporter: ".$query. ' split : '.$split. ' loop : '.$loop;
 
 while($curr_split<=$split){
 	$csv_export = '';
