@@ -223,7 +223,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         $query = $query .$fields.' from '. $table.$where.$limit;
 
 
-        $zipname = dbExport($query,intval($split));               
+        $returnArray = dbExport($query,intval($split));               
+        $zipname = $returnArray[0];
+        $records = $returnArray[1];
         //$csv_filename = 'TMI_db_export'.'_'.date('Y-m-d').'.csv';
 
   //      header('Content-Type: application/zip');
@@ -823,6 +825,7 @@ $('[data-toggle="tooltip"]').tooltip();
 <?php if($zipname){
     if(file_exists($zipname)==true){
         $message = '<h2>Your exported file is ready.</h2><br/>';
+        $message.='<p>Total number of records: <strong>'. $records .'</strong></p>';
 //       $message.="<strong>Click <a href='".$zipname."'>here</a> to download.</strong>";
         //$message.="<button id='hidden-btn' href='".$zipname."'></button>";
     }

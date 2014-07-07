@@ -96,10 +96,11 @@ $zip->close();
 //fclose($fp);
 pg_close();
 
+$returnArray = array('1'=>$zipname, '0'=>$limit);
 // Export the data and prompt a csv file for download
 /*header("Content-type: text/x-csv");
 header("Content-Disposition: attachment; filename=".$csv_filename."");
 echo($csv_export);*/
-return $zipname;
+return  $returnArray;
 }
 ?>
