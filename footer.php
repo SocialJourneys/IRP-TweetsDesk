@@ -34,11 +34,6 @@
     <!--bootbox-->
     <script type="text/javascript" src="js/bootbox.min.js"> </script>
 
-
 <?php include('dialogs.php');?>
 </body>
 </html>
-
-
-
-

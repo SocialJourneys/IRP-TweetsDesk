@@ -46,6 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         $language_code = trim($_POST['language-code']);   
 */
 
+      $comb_criteria = ' '.$_POST['filters_criteria'].' '; //AND or OR
+
       foreach($_POST['review-checkbox'] as $checkbox) {
 
           //$checkbox is the table field and $_POST[$checkbox] is the value
@@ -66,17 +68,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
           //build the where clause
            switch ($checkbox) {
             case 'id':{
-              if(!empty($_POST[$checkbox])){
+              if(trim($_POST[$checkbox])!=""){
                 
                 if($where)
-                  $where = $where . ' AND ';
+                  $where = $where . $comb_criteria;
 
                 $where = $where.' '.$checkbox. ' = '.trim($_POST[$checkbox]);
               }
                break;
              }
              case 'created_at':{
-             if(!empty($_POST[$checkbox.'_from']) || !empty($_POST[$checkbox.'_to'])){
+             if(trim($_POST[$checkbox.'_from'])!="" || trim($_POST[$checkbox.'_to'])!=""){
 
               // add AND if where already exists, otherwise its a new where clause
               if($where)
@@ -88,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
               //$_POST[$checkbox.'_from'] = DateTime::createFromFormat('d/m/Y h:i A', $_POST[$checkbox.'_from'])->format('Y-m-d');
 
                 //from date
-              if(!empty($_POST[$checkbox.'_from'])){
+              if(trim($_POST[$checkbox.'_from'])!=""){
                 //add commas to string
                 //$_POST[$checkbox.'_from'] = "'".trim($_POST[$checkbox.'_from'])."'";
                 $from = "'".trim($_POST[$checkbox.'_from'])."'";
@@ -96,9 +98,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $where = $where.$checkbox.' >= '.$from;
               }
               //to date
-              if(!empty($_POST[$checkbox.'_to'])){
+              if(trim($_POST[$checkbox.'_to'])!=""){
                 //if from date set, create AND clause
-                if(!empty($_POST[$checkbox.'_from']))
+                if(trim($_POST[$checkbox.'_from'])!="")
                      $where = $where . ' AND ';
 
                 //add commas to string
@@ -116,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
              }
 
              case 'time_stamp':{
-             if(!empty($_POST[$checkbox.'_from']) || !empty($_POST[$checkbox.'_to'])){
+             if(trim($_POST[$checkbox.'_from'])!="" || trim($_POST[$checkbox.'_to'])!=""){
 
               if($where)
                 $where = $where . ' AND ';
@@ -125,13 +127,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 
               //$_POST[$checkbox.'_from'] = DateTime::createFromFormat('d/m/Y h:i A', $_POST[$checkbox.'_from'])->format('Y-m-d');
 
-              if(!empty($_POST[$checkbox.'_from'])){
+              if(trim($_POST[$checkbox.'_from'])!=""){
 //                $_POST[$checkbox.'_from'] = "'".trim($_POST[$checkbox.'_from'])."'";
                 $from = "'".trim($_POST[$checkbox.'_from'])."'";
                 $where = $where.$checkbox.'>='.$from;
               }
-              if(!empty($_POST[$checkbox.'_to'])){
-                if(!empty($_POST[$checkbox.'_from']))
+              if(trim($_POST[$checkbox.'_to'])!=""){
+                if(trim($_POST[$checkbox.'_from'])!="")
                      $where = $where . ' AND ';
 
                 //$_POST[$checkbox.'_to'] = "'".trim($_POST[$checkbox.'_to'])."'";
@@ -145,22 +147,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                break;
              }
 
-             case 'favourites':{
-              if(!empty($_POST[$checkbox])){
-                
+             case 'favourite_count':{
+              if(trim($_POST[$checkbox])!=""){
+               // die();
                 if($where)
-                  $where = $where . ' AND ';
+                  $where = $where . $comb_criteria;
 
                 $where = $where.' '.$checkbox. $_POST[$checkbox.'_condition'].trim($_POST[$checkbox]);
               }
                break;
              }
 
-             case 're_tweet_count':{
-              if(!empty($_POST[$checkbox])){
+             case 're_tweeet_count':{
+              if(trim($_POST[$checkbox])!=""){
                 
                 if($where)
-                  $where = $where . ' AND ';
+                  $where = $where . $comb_criteria;
 
                 $where = $where.' '.$checkbox. $_POST[$checkbox.'_condition'].trim($_POST[$checkbox]);
               }
@@ -168,21 +170,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
              }
 
              case 'text':{
-              if(!empty($_POST[$checkbox])){
+              $keywords = get_form_data_kv('textKeyword_condition_','text_');
+              $text_comb_criteria = ' '.$_POST['textFilters_criteria'].' '; //AND or OR                
+
+              if(trim($_POST[$checkbox])!="" || sizeof($keywords)>0){
                 
                 if($where)
-                  $where = $where . ' AND ';
+                  $where = $where . $comb_criteria;
 
-                if($_POST[$checkbox.'_condition']==='LIKE')
-              //    $_POST[$checkbox] = "'%".trim($_POST[$checkbox])."%'";
-                    $text = "'%".trim($_POST[$checkbox])."%'"; 
-                $where = $where.' LOWER('.$checkbox.') '.$_POST[$checkbox.'_condition'].' '.$text;
+                $where = $where.' (';
+
+                if(trim($_POST[$checkbox])!=""){
+                    if($_POST[$checkbox.'Keyword_condition']==='LIKE')
+                  //    $_POST[$checkbox] = "'%".trim($_POST[$checkbox])."%'";
+                        $text = "'%".trim($_POST[$checkbox])."%'"; 
+
+                    $where = $where.' LOWER('.$checkbox.') '.$_POST[$checkbox.'Keyword_condition'].' '.$text;
+                }
+
+                //loop through dynamic boxes
+                foreach ($keywords as $key => $value) {
+                  if($value!=""){
+                    //extract the condition from key :e.g k1_LIKE
+                    $condition = explode("_", $key);
+                    $condition = $condition[1];
+                    if(trim($text)!="")
+                      $where = $where.$text_comb_criteria;
+
+                    if($condition==='LIKE')
+                        $text = "'%".trim($value)."%'"; 
+
+                    $where = $where.' LOWER('.$checkbox.') '.$condition.' '.$text;
+                  }
+                       // echo( 'condition: ' . $key.', value:'.$value.'<br/>' );
+                    //    echo sizeof($keywords);
+                }
+
+                $where = $where.' )';
+
+              //  die();
               }
                break;
              }
 
              default:{
-              if(!empty($_POST[$checkbox])){
+              if(trim($_POST[$checkbox])!=""){
                 
                 $inpval = trim($_POST[$checkbox]);
                 $condition = " = ";
@@ -194,7 +226,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                   }
                 
                 if($where)
-                  $where = $where . ' AND ';
+                  $where = $where . $comb_criteria;
 
                 $where = $where.' LOWER('.$checkbox.')'.$condition.$inpval;
               }
@@ -212,7 +244,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         if(!empty($where))
           $where = ' WHERE '.$where;
         
-        if(!empty($_POST['split']))
+        if(trim($_POST['split'])!="")
             $split = trim(($_POST['split']));
         else
             $split = 1;
@@ -226,6 +258,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         $returnArray = dbExport($query,intval($split));               
         $zipname = $returnArray[0];
         $records = $returnArray[1];
+
+        //echo 'records: '.$records;
         //$csv_filename = 'TMI_db_export'.'_'.date('Y-m-d').'.csv';
 
   //      header('Content-Type: application/zip');
@@ -263,13 +297,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 <thead>
                     <tr>
                         <th class="text-center"><h4>Fields</h4><button type="button" class="btn btn-xs btn-info" onClick="selectAll()">Select All</button><button type="button" style="margin-left:5px;" class="btn btn-xs btn-warning" onClick="uncheckAll()">Uncheck All</button></th>
-                        <th class="text-center"><h4>Filters</h4><div class="control-group">
-                          <label class="control-label">Combination criteria:</label>
-                          <label class="radio" style="display:inline-block;">
-                            <input type="radio" name="filters_criteria[]" id="filters_criteria_all" value="AND" checked>All of these
+                        <th class="text-center"><h4>Filters</h4>
+
+                          <label class="control-label" style="font-size:14px; font-weight:normal; margin-bottom: 0; margin-top: 0;">Combination criteria:</label>
+                          <label class="radio" style="display:inline-block; font-size:14px; font-weight:normal; margin-bottom: 0; margin-top: 0; min-height: 20px; padding-left: 25px;">
+                            <input type="radio" name="filters_criteria" id="filters_criteria_all" value="AND" checked>All of these
                           </label>
-                          <label class="radio" style="display:inline-block;">
-                            <input type="radio" name="filters_criteria[]" id="filters_criteria_any" value="OR">Any of these</label>
+                          <label class="radio" style="display:inline-block; font-size:14px; font-weight:normal; margin-bottom: 0; margin-top: 0; min-height: 20px; padding-left: 25px;">
+                            <input type="radio" name="filters_criteria" id="filters_criteria_any" value="OR">Any of these</label>
                       </th>
                     </tr>
                 </thead>
@@ -416,7 +451,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <td>
                     <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-retweets">
-                          <input type="checkbox" name="review-checkbox[]" value="re_tweet_count" id="retweets" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("re_tweet_count", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >        
+                          <input type="checkbox" name="review-checkbox[]" value="re_tweeet_count" id="retweets" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("re_tweeet_count", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >        
                           <strong>Retweets Count:</strong>
                       </label>
                     </div>   
@@ -424,12 +459,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-retweets">
                         <label label-default="" for="review-filter-retweets" style="display:block;">Count: </label>
-                        <select class="form-control review-control" name="re_tweet_count_condition" id="review-filter-retweets-condition">
-                          <option value="=" <?php if($_POST['re_tweet_count_condition'] == "=") echo "selected";?> >=</option>
-                          <option value=">" <?php if($_POST['re_tweet_count_condition'] == ">") echo "selected";?> >></option>
-                          <option value="<" <?php if($_POST['re_tweet_count_condition'] == "<") echo "selected";?> ><</option>
+                        <select class="form-control review-control" name="re_tweeet_count_condition" id="review-filter-retweets-condition">
+                          <option value="=" <?php if($_POST['re_tweeet_count_condition'] == "=") echo "selected";?> >=</option>
+                          <option value=">" <?php if($_POST['re_tweeet_count_condition'] == ">") echo "selected";?> >></option>
+                          <option value="<" <?php if($_POST['re_tweeet_count_condition'] == "<") echo "selected";?> ><</option>
                       </select>
-                      <input type="number" class="form-control review-control" name="re_tweet_count" placeholder="N/A" id="review-filter-retweets" value="<?php echo isset($_POST['re_tweet_count'])?$_POST['re_tweet_count'] :''?>"/>   
+                      <input type="number" class="form-control review-control" name="re_tweeet_count" placeholder="N/A" id="review-filter-retweets" value="<?php echo isset($_POST['re_tweeet_count'])?$_POST['re_tweeet_count'] :''?>"/>   
                       <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Count of Retweets.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -448,15 +483,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     </td>
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-tweet-content">
-                        <label label-default="" for="review-filter-tweet-content" style="display:block;">Keywords: </label>
-                        <select class="form-control review-control" name="text_condition" id="review-filter-tweet-content-condition">
-                          <option value="LIKE" <?php if($_POST['text_condition'] == "LIKE") echo "selected";?> >contains</option>
-                          <option value="=" <?php if($_POST['text_condition'] == "=") echo "selected";?> >exact match</option>
-                      </select>
-                      <input type="text" class="form-control review-control" name="text" id="review-filter-tweet-content" placeholder="enter keyword" value="<?php echo isset($_POST['text'])?$_POST['text'] :''?>"/>   
-                       <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Enter a keyword to filter tweet content. e.g rain, office, football">
+                        <label label-default="" for="review-filter-tweet-content" style="display:block;">Keywords: 
+                        <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Enter a keyword to filter tweet content. e.g rain, office, football">
                        <i class="fa fa-info"></i>
-                    </button>   
+                    </button> 
+                          <label class="radio" style="display:inline-block; font-size:14px; font-weight:normal; margin-bottom: 0; margin-top: 0; min-height: 20px; padding-left: 25px;">
+                            <input type="radio" name="textFilters_criteria" id="textFilters_criteria_any" value="OR" checked>Any of these
+                          </label>
+                          <label class="radio" style="display:inline-block; font-size:14px; font-weight:normal; margin-bottom: 0; margin-top: 0; min-height: 20px; padding-left: 25px;">
+                            <input type="radio" name="textFilters_criteria" id="textFilters_criteria_all" value="AND">All of these
+                              </label>
+                        </label>
+
+                        <select class="form-control review-control" name="textKeyword_condition" id="review-filter-tweet-content-condition">
+                          <option value="LIKE" <?php if($_POST['textKeyword_condition'] == "LIKE") echo "selected";?> >contains</option>
+                          <option value="=" <?php if($_POST['textKeyword_condition'] == "=") echo "selected";?> >exact match</option>
+                      </select>
+                      <input type="text" class="form-control review-control" name="text" id="review-filter-tweet-content" placeholder="enter keyword" value="<?php echo isset($_POST['text'])?$_POST['text'] :''?>"/>    
+
+
+                      <button type="button" class="btn btn-xs btn-primary" id="add-keyword" style="margin-bottom: 5px;">Add Keyword</button>
+
+                      <div class="multiple-keywords">
+                        <?php
+                          $keywords = get_form_data_kv('textKeyword_condition_','text_');
+                          $fieldCount = 1;
+                          foreach ($keywords as $key => $value) {
+                                        echo('<div class="form-group-keyword"><select class="form-control review-control" name="textKeyword_condition_'.$fieldCount.'"id="textKeyword_condition_'.$fieldCount.'"><option value="LIKE">contains</option><option value="=">exact match</option></select><input type="text" class="form-control review-control" name="text_'.$fieldCount.'"id="text_'.$fieldCount.'" placeholder="enter keyword"/> <a href="#" class="removeclass5">&times;</a></div>');
+                                        $fieldCount++;
+                          }?>
+                      </div>
                     </div>
                     </td>
                 </tr><!-- Text-->
@@ -659,7 +715,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
                               <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
                         <label label-default="" for="review-field-split">
-                          <input type="checkbox" name="split-checkbox[]" id="split" value= "split" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("split", $_POST['split-checkbox'])) echo "checked";}else echo "checked";?> >     
+                          <input type="checkbox" name="split-checkbox[]" id="split" value= "split" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("split", $_POST['split-checkbox'])) echo "checked";}else echo "";?> >     
                           <strong>Split output file:</strong>
                             <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Enter number of records per file. e.g 10000, 25000">
                        <i class="fa fa-info"></i>
@@ -686,10 +742,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 <?php include('footer.php');?>
 
-
 <script type="text/javascript">
-
-
 
 $('#review-filter-captured-at-to').datetimepicker();
 $('#review-filter-captured-at-from').datetimepicker();
@@ -848,4 +901,6 @@ if(check==true){
 //box.find("#file-download-btn").attr("data-bb-handler","ok");
 </script>
   <?php
-}
+}?>
+
+<script type="text/javascript" src="js/tmi.js"></script>

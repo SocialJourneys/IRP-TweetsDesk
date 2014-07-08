@@ -38,7 +38,9 @@ $field = pg_num_fields($result);
 //echo $numrows;
 //exit();
 //$fields_array = array();
-$limit = pg_num_rows($result);
+$limit=0;
+if($result)
+	$limit = pg_num_rows($result);
 
 $loop = ceil($limit/$split);
 $curr_loop = 0;
@@ -96,7 +98,8 @@ $zip->close();
 //fclose($fp);
 pg_close();
 
-$returnArray = array('1'=>$zipname, '0'=>$limit);
+$returnArray = array($zipname,$limit);
+
 // Export the data and prompt a csv file for download
 /*header("Content-type: text/x-csv");
 header("Content-Disposition: attachment; filename=".$csv_filename."");
