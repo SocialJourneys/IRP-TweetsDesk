@@ -509,7 +509,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                           $keywords = get_form_data_kv('textKeyword_condition_','text_');
                           $fieldCount = 1;
                           foreach ($keywords as $key => $value) {
-                                        echo('<div class="form-group-keyword"><select class="form-control review-control" name="textKeyword_condition_'.$fieldCount.'"id="textKeyword_condition_'.$fieldCount.'"><option value="LIKE">contains</option><option value="=">exact match</option></select><input type="text" class="form-control review-control" name="text_'.$fieldCount.'"id="text_'.$fieldCount.'" placeholder="enter keyword"/> <a href="#" class="removeclass5">&times;</a></div>');
+                                  $condition = explode("_", $key);
+                                  $condition = $condition[1];
+                                        echo'<div class="form-group-keyword"><select class="form-control review-control" name="textKeyword_condition_'.$fieldCount.'"id="textKeyword_condition_'.$fieldCount.'"><option value="LIKE" '; if($condition==='LIKE')echo "selected"; echo'>contains</option><option value="=" ';if($condition==='=') echo "selected"; echo '>exact match</option></select><input type="text" class="form-control review-control" name="text_'.$fieldCount.'"id="text_'.$fieldCount.'" placeholder="enter keyword" '; echo 'value='.$value; echo '> <a href="#" class="removeclass5">&times;</a></div>';
                                         $fieldCount++;
                           }?>
                       </div>
