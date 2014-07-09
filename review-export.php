@@ -4,47 +4,11 @@
 ?>
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-      //echo "<br/><br/><br/><br/><br/><br/>";
+
       $query = 'SELECT ';
       $where = '';
       $fields= '';
       $table = 'tweet';
-
-      /*if(isset($_POST['no-of-records']))
-        $num_of_records = trim($_POST['no-of-records']);
-      if(isset($_POST['id']))
-        $id = trim($_POST['id']);
-      if(isset($_POST['captured-at-from']))
-        $captured_at_from = trim($_POST['captured-at-from']);
-      if(isset($_POST['captured-at-to']))
-        $captured_at_to = trim($_POST['captured-at-to']);
-      if(isset($_POST['tweeted-at-from']))
-        $tweeted_at_from = trim($_POST['tweeted-at-from']);
-      if(isset($_POST['tweeted-at-from']))
-        $tweeted_at_to = trim($_POST['tweeted-at-to']);
-      if(isset($_POST['author']))
-        $author = trim($_POST['author']);
-      if(isset($_POST['favourites']))
-        $favourites = trim($_POST['favourites']);
-      if(isset($_POST['favourites-condition']))
-        $favourites_condition = trim($_POST['favourites-condition']);
-      if(isset($_POST['retweets']))
-        $retweets = trim($_POST['retweets']);
-      if(isset($_POST['retweets-condition']))
-        $retweets_condition = trim($_POST['retweets-condition']);
-      if(isset($_POST['text']))
-        $text = trim($_POST['text']);
-      if(isset($_POST['original-tweet-id']))
-        $original_tweet_id = trim($_POST['original-tweet-id']);
-      if(isset($_POST['reply-username']))
-        $reply_username = trim($_POST['reply-username']);   
-      if(isset($_POST['reply-status-id']))
-        $reply_status_id = trim($_POST['reply-status-id']);  
-      if(isset($_POST['reply-tweet-id']))
-        $reply_tweet_id = trim($_POST['reply-tweet-id']);  
-      if(isset($_POST['language-code']))
-        $language_code = trim($_POST['language-code']);   
-*/
 
       $comb_criteria = ' '.$_POST['filters_criteria'].' '; //AND or OR
 
