@@ -35,7 +35,6 @@
 			$formArray['k'.$i.'_'.$keys[$i]]=$values[$i];
 		}
 		//echo 'forms array size: '.sizeof($formArray);
-		//echo $i;
 		return $formArray;
 	}
 

@@ -185,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                   //    $_POST[$checkbox] = "'%".trim($_POST[$checkbox])."%'";
                         $text = "'%".trim($_POST[$checkbox])."%'"; 
 
-                    $where = $where.' LOWER('.$checkbox.') '.$_POST[$checkbox.'Keyword_condition'].' '.$text;
+                    $where = $where.' LOWER('.$checkbox.') '.$_POST[$checkbox.'Keyword_condition'].' LOWER('.$text.')';
                 }
 
                 //loop through dynamic boxes
@@ -200,7 +200,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     if($condition==='LIKE')
                         $text = "'%".trim($value)."%'"; 
 
-                    $where = $where.' LOWER('.$checkbox.') '.$condition.' '.$text;
+                    $where = $where.' LOWER('.$checkbox.') '.$condition.' '.'LOWER('.$text.')';
                   }
                        // echo( 'condition: ' . $key.', value:'.$value.'<br/>' );
                     //    echo sizeof($keywords);
@@ -228,7 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 if($where)
                   $where = $where . $comb_criteria;
 
-                $where = $where.' LOWER('.$checkbox.')'.$condition.$inpval;
+                $where = $where.' LOWER('.$checkbox.')'.$condition.'LOWER('.$inpval.')';
               }
                break;
              }
@@ -294,12 +294,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         <!-- table- -->
         <form class="myform" role ="form" method="post" action="">
             <table class="table table-bordered">  
-                <thead>
+                <thead> 
+               <p> <span style="color:Red;">*</span> fields are required.
+ </p> 
+
+                    </td>
+                </tr><!-- required text Split-->
                     <tr>
                         <th class="text-center"><h4>Fields</h4><button type="button" class="btn btn-xs btn-info" onClick="selectAll()">Select All</button><button type="button" style="margin-left:5px;" class="btn btn-xs btn-warning" onClick="uncheckAll()">Uncheck All</button></th>
                         <th class="text-center"><h4>Filters</h4>
 
-                          <label class="control-label" style="font-size:14px; font-weight:normal; margin-bottom: 0; margin-top: 0;">Combination criteria:</label>
+                          <label class="control-label" style="font-size:14px; font-weight:normal; margin-bottom: 0; margin-top: 0;"><strong>Criteria:</strong></label>
                           <label class="radio" style="display:inline-block; font-size:14px; font-weight:normal; margin-bottom: 0; margin-top: 0; min-height: 20px; padding-left: 25px;">
                             <input type="radio" name="filters_criteria" id="filters_criteria_all" value="AND" checked>All of these
                           </label>
@@ -699,14 +704,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     </td>
                 </tr><!-- Stakeholder-->
 
-                <tr><!-- Field Split-->
+                <tr><!-- required text Split-->
                     <td style="border:0px;">
  
-               <p> <span style="color:Red;">*</span> fields are required.
- </p> 
+               <!--p> <span style="color:Red;">*</span> fields are required.
+ </p--> 
 
                     </td>
-                </tr><!-- Stakeholder-->
+                </tr><!-- required text Split-->
 
             </tbody>
 
