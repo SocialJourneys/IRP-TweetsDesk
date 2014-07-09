@@ -2,6 +2,8 @@
 	//Start session:
 	session_start();
 
+	//echo 'key: '. $_SESSION['account']['apiKey'];
+	//die();
 	//Create an exception page array:
 	$exceptions = array('register','login');
 

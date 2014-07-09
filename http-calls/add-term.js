@@ -21,13 +21,29 @@ function addTerm(){
         type:"GET",
         url:"http-calls/add-term.php",
         dataType:"json",
+        contentType:"application/json",
         data:"term_name="+term_name+"&term_type="+term_type,
 
         success:function(response){
+        var tracklistArr = response.trackLists; //array
+        var values='';
+       // alert(tracklistArr);
+        for(var i = 0; i < tracklistArr.length; i++) {
+    		//console.log(response.trackLists[i].name);
+    		if(values.length)
+    			values=values+','+tracklistArr[i].name;
+	    	else
+	    		values=tracklistArr[i].name;
+
+    		
+    		addrow(tracklistArr[i]);
+		}
+
         //alert (response.photos[0]);
 		//	console.log(JSON.stringify(response));
-		addrow(response);
-        bootbox.alert("Successfully Added: " + response.name);
+        //bootbox.alert("Successfully Added: " + response.name);
+
+			bootbox.alert("Successfully Added: </strong>" + values +"</strong>");
 
         //TODO append in the UI
         
@@ -45,7 +61,6 @@ function addTerm(){
 
 //add newly added data in table
 function addrow(response) {
-
 
     var row = $('#dataTables-tracklist').dataTable().fnAddData( [
         '<a href="tracklist-details.php?term_name='+response.name+'&term_type='+response.type+'">'+response.name+'</a>',

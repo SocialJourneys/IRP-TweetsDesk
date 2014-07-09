@@ -21,7 +21,7 @@
 	//echo "<br/><br/>query in db_fetch: ".$query;
 	$result = pg_exec($db, $query);
 	// query to get data from database
-
+	
 	$field = pg_num_fields($result);
 
 	while($row=pg_fetch_array($result)){	

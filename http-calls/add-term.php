@@ -1,5 +1,6 @@
 <?php include('../core/init.core.php');?>
 <?php
+header("Content-Type: application/json");
 $term_name = $_GET['term_name'];
 $term_type = $_GET['term_type'];
 
@@ -24,13 +25,14 @@ $response  = rest_post($url,$data,$headers);
 
 $userobj = json_decode($response);
 
-if($status && $status!=200){
+if($status && $status!=201){
 	$errors[] = $userobj->{'errors'}[0];
 	$errors[] = $userobj->{'moreInfo'};
 }
-
-if(empty($errors))
+if(empty($errors)){
+	http_response_code(200);
 	echo $response;
+}
 else
 	echo $errors;
 ?>
