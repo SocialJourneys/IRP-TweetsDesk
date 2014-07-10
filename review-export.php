@@ -335,8 +335,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <td>
                         <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-captured-at">
                             <label label-default="" for="review-filter-captured-at" style="display:block;">Date Range: </label>
-                            <input type='text' class="form-control review-control" name="time_stamp_from" id="review-filter-captured-at-from" data-date-format="YYYY-MM-DD hh:mm:ss" placeholder="From" value="<?php echo isset($_POST['time_stamp_from'])?$_POST['time_stamp_from'] :''?>"/>
-                            <input type='text' class="form-control review-control" name="time_stamp_to" id="review-filter-captured-at-to" data-date-format="YYYY-MM-DD hh:mm:ss" placeholder="To" value="<?php echo isset($_POST['time_stamp_to'])?$_POST['time_stamp_to'] :''?>"/>
+                            <input type='text' class="form-control review-control" name="time_stamp_from" id="review-filter-captured-at-from" data-date-format="YYYY-MM-DD HH:mm:ss" placeholder="From" value="<?php echo isset($_POST['time_stamp_from'])?$_POST['time_stamp_from'] :''?>"/>
+                            <input type='text' class="form-control review-control" name="time_stamp_to" id="review-filter-captured-at-to" data-date-format="YYYY-MM-DD HH:mm:ss" placeholder="To" value="<?php echo isset($_POST['time_stamp_to'])?$_POST['time_stamp_to'] :''?>"/>
                             <!--input type="text" class="form-control review-control" id="review-filter-captured-at-to" placeholder="To"-->   
                             <!--input type="text" class="form-control review-control" id="review-filter-captured-at-from" placeholder="From"-->  
                             <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Date this tweet was captured in our system.">
@@ -359,8 +359,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <td>
                         <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-12 col-lg-12" id="filter-tweeted-at">
                             <label label-default="" for="review-filter-tweeted-at" style="display:block;">Date Range: </label>
-                             <input type='text' class="form-control review-control" name="created_at_from" id="review-filter-tweeted-at-from" data-date-format="YYYY-MM-DD" placeholder="From" value="<?php echo isset($_POST['created_at_from'])?$_POST['created_at_from'] :''?>"/>
-                            <input type='text' class="form-control review-control" name="created_at_to" id="review-filter-tweeted-at-to" data-date-format="YYYY-MM-DD" placeholder="To" value="<?php echo isset($_POST['created_at_to'])?$_POST['created_at_to'] :''?>"/>
+                             <input type='text' class="form-control review-control" name="created_at_from" id="review-filter-tweeted-at-from" data-date-format="YYYY-MM-DD HH:mm:ss" placeholder="From" value="<?php echo isset($_POST['created_at_from'])?$_POST['created_at_from'] :''?>"/>
+                            <input type='text' class="form-control review-control" name="created_at_to" id="review-filter-tweeted-at-to" data-date-format="YYYY-MM-DD HH:mm:ss" placeholder="To" value="<?php echo isset($_POST['created_at_to'])?$_POST['created_at_to'] :''?>"/>
                             <!--input type="text" class="form-control review-control" id="review-filter-tweeted-at-to" placeholder="To"-->
                             <!--input type="text" class="form-control review-control" id="review-filter-tweeted-at-from" placeholder="From"-->
                             <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Date this tweet was tweeted by the author on twitter.">
@@ -727,11 +727,11 @@ $("#review-filter-captured-at-to").on("dp.change",function (e) {
 
 
 $('#review-filter-tweeted-at-to').datetimepicker({
-  pickTime: false
+  //pickTime: false
 });
 
 $('#review-filter-tweeted-at-from').datetimepicker({
-  pickTime: false
+  //pickTime: false
 });
 
 $("#review-filter-tweeted-at-from").on("dp.change",function (e) {
@@ -847,7 +847,7 @@ $("input[name='review-checkbox[]']").each( function () {
 $('[data-toggle="tooltip"]').tooltip();
 </script>
 <?php if($zipname){
-    if(file_exists($zipname)==true){
+    if($zipname!=-1){
         $message = '<h2>Your exported file is ready.</h2><br/>';
         $message.='<p>Total number of records: <strong>'. $records .'</strong></p>';
 //       $message.="<strong>Click <a href='".$zipname."'>here</a> to download.</strong>";
@@ -859,13 +859,13 @@ $('[data-toggle="tooltip"]').tooltip();
     }
   ?>
 <script>
-var check = "<?php echo file_exists($zipname); ?>";
+var check = "<?php echo $zipname; ?>";
 
 var some_html = "<?php echo $message; ?>";
 var link = "<?php echo $zipname; ?>";
 var box = bootbox.alert(some_html);
 //box.find(".btn-primary").(attr("href",$("#hidden-btn").attr('href')));
-if(check==true){
+if(check!=1){
     box.find(".btn-primary").remove();
     box.find(".modal-footer").append("<a href='"+link+"' class='btn btn-primary' type='button' id='file-download-btn'>Download</a>");
 }
@@ -873,5 +873,3 @@ if(check==true){
 </script>
   <?php
 }?>
-
-<script type="text/javascript" src="js/tmi.js"></script>

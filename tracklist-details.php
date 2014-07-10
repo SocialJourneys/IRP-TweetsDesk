@@ -1,5 +1,4 @@
-<?php //include('core/init.core.php');?>
-<?php include('core/inc/db-connector.inc.php');?>
+<?php include('core/init.core.php');?>
 <?php include('header.php');?>
 <?php
 
@@ -19,13 +18,19 @@ if($term_type==='search-term'){
     $where = "WHERE text LIKE %'".$term_name."'%";
 }
 
-$db_results = db_fetch('SELECT text,time_stamp,author,original_tweet_id from tweet '.$where.' LIMIT 100');
+$select = 'SELECT text,created_at,author,original_tweet_id from tweet ';
+$limit =' LIMIT 100';
+$query = $select.$where.' ORDER BY created_at '.$limit;
 
-for($ri = 0; $ri < pg_num_rows($db_results); $ri++) {
+$_SESSION['tweets_query'] = $select.$where;
+
+$db_results = db_fetch($query);
+
+/*for($ri = 0; $ri < pg_num_rows($db_results); $ri++) {
     
     $row = pg_fetch_array($db_results, $ri);
 //    echo "time_stamp: ". $row['time_stamp'];
-}
+}*/
 
 
 //http://dtp-24.sncs.abdn.ac.uk/phpPgAdmin/
@@ -100,11 +105,6 @@ for($ri = 0; $ri < pg_num_rows($db_results); $ri++) {
 </div>
 <!-- /.row -->
 
-<div class="alert alert-success alert-dismissable col-lg-6">
-  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-  <strong>Heads up!</strong> Use the search fitlers to customise the table below.
-</div>
-
 <?php 
 
     //"0":{"id":10,"tweet":"@ChrisMitchell26 Hi there has been some disruption on that route due to an earlier signal fault. Please contact the help point","user":"ScotRail"},
@@ -113,7 +113,7 @@ for($ri = 0; $ri < pg_num_rows($db_results); $ri++) {
     //"3":{"id":13,"tweet":"the winter treatment plan for tonight http://t.co/Gky6BnggDn","user":"trafficscotland"},
 
 
-$rawData = '{
+/*$rawData = '{
     "0":{"id":10,"tweet":"@ChrisMitchell26 Hi there has been some disruption on that route due to an earlier signal fault. Please contact the help point","user":"ScotRail"},
     "1":{"id":11,"tweet":"@SusanDumbleton HI Falkirk High or Ghmston and where are you travelling to please?","user":"ScotRail"},
     "2":{"id":12,"tweet":"@ScotRail Trains seem to be running again  but there\'s a huge queue elsewhere waiting for a replacement bus","user":"DeanandMay"},
@@ -122,10 +122,8 @@ $rawData = '{
     "5":{"id":15,"tweet":"Does Robocop reboot live up to cult classic? You have 20 seconds to comply http://t.co/kcmFYh5MVi","user":"AberdeenCity"},
     "6":{"id":16,"tweet":"Glasgow South - Dumbreck Road between Urrdale Road and Nithsdale Road (Ward 5): Dates: These works will take place… http://t.co/b3rWzeGdmM","user":"GlasgowRoads"}
 }';
-
-//echo $dataArray;
-$tempData = json_decode($rawData, true);
-//print_r($dataArray);
+*/
+//$tempData = json_decode($rawData, true);
 ?>
 <div class="row" id="term-list">
     <div class="col-lg-10">
@@ -155,14 +153,14 @@ $tempData = json_decode($rawData, true);
     
                                 $row = pg_fetch_array($db_results, $ri);
                                 $text = $row['text'];
-                                $time_stamp = $row['time_stamp'];
+                                $created_at = $row['created_at'];
                                 $author = $row['author'];
                                 $tweet_id = $row['original_tweet_id'];
                                 $tweet_link = 'http://twitter.com/'.$author.'/status/'.$tweet_id;
                                 $author_link = 'http://twitter.com/'.$author;
                                 echo '<tr class="gradeA">';
                                 echo '<td class="center"><a href="'.$tweet_link.'">'.$text.'</a></td>';
-                                echo '<td class="center">'.$time_stamp.'</td>';
+                                echo '<td class="center">'.$created_at.'</td>';
                                 echo '<td class="center"><a href="'.$author_link.'">'.$author.'</a></td>';
  //                               echo "<td class=\"center\"><a href=\"#\" class=\"btn btn-danger btn-sm active\" role=\"button\" onClick=\"deleteTerm($id,'$name')\">Delete</a></td>";
                                 echo '</tr>';
@@ -181,6 +179,51 @@ $tempData = json_decode($rawData, true);
 </div>
 <!-- /.row -->
 
+<!-- /.row -->
+<div class="row">
+    <div class="col-lg-10">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Tweets Per Hour
+                <div class='col-sm-4 pull-right'>
+                   <div class="form-group-row">
+                    <label for="inputType" class="col-sm-4 control-label">To: </label>
+                    <div class='datetimepicker-input-group date'>
+                        <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" name='chart_datetimepicker_from' id='chart_datetimepicker_from'/>
+                    </div>
+                </div>
+            </div>
+
+            <div class='col-sm-4 pull-right'>
+               <div class="form-group-row">
+                <label for="inputType" class="col-sm-4 control-label">From: </label>
+                <div class='datetimepicker-input-group date'>
+                    <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" name='chart_datetimepicker_to' id='chart_datetimepicker_to' />
+                </div>
+            </div>
+        </div>
+
+            <div class='pull-right'>
+               <div class="form-group-row">
+                <div class='datetimepicker-input-group date'>
+                    <button type='button'class="btn btn-primary datetimepicker-form-control" onclick="add_chart_data()">Refresh</button>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body">
+        <div id="morris-tmi-chart"></div>
+    </div>
+    <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+</div>
+</div> <!-- /.row -->
+
 
 <!-- /.row -->
 <div class="row">
@@ -193,8 +236,8 @@ $tempData = json_decode($rawData, true);
                 <div class='col-sm-4 pull-right'>
                    <div class="form-group-row">
                     <label for="inputType" class="col-sm-4 control-label">To: </label>
-                    <div class='datetimepicker-input-group date' id='datetimepicker1'>
-                        <input type='text' class="datetimepicker-form-control" />
+                    <div class='datetimepicker-input-group date'>
+                        <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" />
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                     </div>
                 </div>
@@ -203,15 +246,12 @@ $tempData = json_decode($rawData, true);
             <div class='col-sm-4 pull-right'>
                <div class="form-group-row">
                 <label for="inputType" class="col-sm-4 control-label">From: </label>
-                <div class='datetimepicker-input-group date' id='datetimepicker2'>
-                    <input type='text' class="datetimepicker-form-control" />
+                <div class='datetimepicker-input-group date'>
+                    <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control"/>
                     <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                 </div>
             </div>
         </div>
-
-
-
 
     </div>
     <!-- /.panel-heading -->
@@ -265,11 +305,21 @@ $tempData = json_decode($rawData, true);
 
 <?php include('footer.php');?>
 
+<script type="text/javascript" src="http-calls/chart-data.js"> </script>
+
 <script type="text/javascript">
 
 //init date pickers
-$('#datetimepicker1').datetimepicker();
-$('#datetimepicker2').datetimepicker();
+$('#chart_datetimepicker_from').datetimepicker();
+$('#chart_datetimepicker_to').datetimepicker();
+
+$("#chart_datetimepicker_from").on("dp.change",function (e) {
+  $('#chart_datetimepicker_to').data("DateTimePicker").setMinDate(e.date);
+});
+$("#chart_datetimepicker_to").on("dp.change",function (e) {
+  $('#chart_datetimepicker_from').data("DateTimePicker").setMinDate(e.date);
+});
+
 $('#datetimepicker3').datetimepicker();
 $('#datetimepicker4').datetimepicker();
 

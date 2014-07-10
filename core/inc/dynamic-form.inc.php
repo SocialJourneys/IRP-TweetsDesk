@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	* Process dynamic forms into arrays with nominal keys and values for easier manipulation.
 	* @param   $inputLabel  - String   - The name of the label input;
@@ -56,5 +55,4 @@
 
 		return $values;
 	}
-
 ?>

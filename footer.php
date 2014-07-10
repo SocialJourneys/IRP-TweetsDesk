@@ -33,6 +33,8 @@
 
     <!--bootbox-->
     <script type="text/javascript" src="js/bootbox.min.js"> </script>
+    
+    <script type="text/javascript" src="js/tmi.js"></script>
 
 <?php include('dialogs.php');?>
 </body>

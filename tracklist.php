@@ -1,7 +1,5 @@
 <?php include('core/init.core.php');?>
 <?php
-
-
 $url = APIURL.'/tracklist';
 $headers = array('Content-Type: application/json',"Authorization: ".$_SESSION['account']['apiKey']);
 //$headers = array('Content-Type: application/json');
@@ -15,7 +13,6 @@ $dataArray = $dataArray->{'trackLists'};
 
 ?>
 <?php include('header.php');?>
-
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
@@ -240,4 +237,3 @@ bootbox.dialog({
 });
 }
 </script>
-

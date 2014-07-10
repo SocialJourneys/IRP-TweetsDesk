@@ -9,7 +9,8 @@ $table = 'track_list';
 $csv_filename = 'db_exports/TMI_export_'.'_'.date('Y-m-d_H.i.s');
 
 // database variables
-$hostname = "localhost";
+//$hostname = "localhost";
+$hostname = 'dtp-24.sncs.abdn.ac.uk';
 $port = '5432';
 $user = "postgres";
 $password = "5L1ght1y";
@@ -47,7 +48,7 @@ $curr_loop = 0;
 $curr_split = 1;
 $file_names=array();
 
-echo "<br/><br/>query in exporter: ".$query. ' split : '.$split. ' loop : '.$loop;
+//echo "<br/><br/>query in exporter: ".$query. ' split : '.$split. ' loop : '.$loop;
 
 while($curr_split<=$split){
 	$csv_export = '';
@@ -90,9 +91,14 @@ while($curr_split<=$split){
 $zipname = $csv_filename.'.zip';
 $zip = new ZipArchive;
 $zip->open($zipname, ZipArchive::CREATE);
+
+if(!$zip)
+	$zipname=-1;
+
 foreach ($file_names as $file) {
   $zip->addFile($file);
 }
+
 $zip->close();
 
 //fclose($fp);

@@ -37,5 +37,7 @@
 	//Path to file:
 	include dirname(__FILE__)."/inc/rest.inc.php";
 	include dirname(__FILE__)."/inc/dynamic-form.inc.php";
+	include dirname(__FILE__)."/inc/db-connector.inc.php";
+
 	// include dirname(__FILE__)."/inc/user.inc.php";
 ?>
