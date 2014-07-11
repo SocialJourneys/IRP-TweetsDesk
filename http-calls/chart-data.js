@@ -37,7 +37,7 @@ function reload_chart(response){
     var t_data = [];
 
     for(var i=0; i<=response.length;i++){
-        var timestamp = String(response[i].timestamp);
+        var timestamp = (response[i].timestamp).toString();
         var tweets_count = parseInt(response[i].tweets_count);
         var authors_count = parseInt(response[i].authors_count);
         
