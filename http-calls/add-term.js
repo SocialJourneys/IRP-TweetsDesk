@@ -1,4 +1,4 @@
-function addTerm(){  
+function addTerm(userRole){  
 
 	var term_name = $('#add-term-input').val();
 	var term_type = $('#dropdown-title').val();
@@ -36,7 +36,7 @@ function addTerm(){
 	    		values=tracklistArr[i].name;
 
     		
-    		addrow(tracklistArr[i]);
+    		addrow(tracklistArr[i],userRole);
 		}
 
         //alert (response.photos[0]);
@@ -60,12 +60,16 @@ function addTerm(){
 }
 
 //add newly added data in table
-function addrow(response) {
+function addrow(response,userRole) {
 
-    var row = $('#dataTables-tracklist').dataTable().fnAddData( [
+  var deleteBtnRow='';  
+    if(userRole==='Admin ||' userRole==='Super Admin')
+      deleteBtnRow = '<a data-href="http-calls/delete-term.php" class="btn btn-danger btn-sm active" role="button" onClick="deleteBtnClicked(this);" id="delete-btn" data-id='+response.id+' data-type='+response.type+' data-name='+response.name+'>Delete</a>';
+    
+  var row = $('#dataTables-tracklist').dataTable().fnAddData( [
         '<a href="tracklist-details.php?term_name='+response.name+'&term_type='+response.type+'">'+response.name+'</a>',
         response.type,
-        '<a data-href="http-calls/delete-term.php" class="btn btn-danger btn-sm active" role="button" onClick="deleteBtnClicked(this);" id="delete-btn" data-id='+response.id+' data-type='+response.type+' data-name='+response.name+'>Delete</a>'] );
+        deleteBtnRow] );
   //  '<a href="#" class="btn btn-danger btn-sm active" role="button" data-toggle="modal" data-target="#confirm-delete" data-id='+response.id+' data-name='+response.name+'>Delete</a>'] );
 
 

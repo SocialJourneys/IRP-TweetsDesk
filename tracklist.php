@@ -38,7 +38,7 @@ $dataArray = $dataArray->{'trackLists'};
   <li class="active">Tracklist</li>
 </ol>
 
-
+<?php if($_SESSION['account']['userRole']=='Admin'||$_SESSION['account']['userRole']=='Super Admin'){?>
 <div class="col-lg-9">
     <div class="panel panel-info" >
         <div class="panel-heading">
@@ -71,15 +71,16 @@ $dataArray = $dataArray->{'trackLists'};
             <div style="margin-top:10px" class="form-group">
              <!-- Button -->
                 <div class="col-sm-12 controls">
-                     <a id="btn-add-term" href="#" class="btn btn-primary pull-right" onClick='addTerm()'>Add</a>
+                     <a id="btn-add-term" href="#" class="btn btn-primary pull-right" onClick='addTerm(<?php echo '"'.$_SESSION['account']['userRole'].'"';?>)'>Add</a>
                 </div>
             </div>
             </form>  
 </div>
 </div>
 </div>
-
-
+<?php
+}
+?>
 
 <?php 
 $rawData = '{
@@ -137,7 +138,10 @@ $tempData = json_decode($rawData, true);
                                 echo '<td class="center"><a href="tracklist-details.php?term_name='.$value->{'name'}.'&term_type='.$type.'">'.$value->{'name'}.'</a></td>';
                                 echo '<td class="center">'.$value->{'type'}.'</td>';
  //                               echo "<td class=\"center\"><a href=\"#\" class=\"btn btn-danger btn-sm active\" role=\"button\" onClick=\"deleteTerm($id,'$name')\">Delete</a></td>";
-                                echo "<td class=\"center\"><a data-href=\"http-calls/delete-term.php\" onClick='deleteBtnClicked(this);'  class=\"btn btn-danger btn-sm active\" role=\"button\" id=\"#delete-btn\" data-id=$id data-type=\"$type\" data-name=\"$name\">Delete</a></td>";
+                                echo "<td class=\"center\">";
+                                    if($_SESSION['account']['userRole']=='Admin'||$_SESSION['account']['userRole']=='Super Admin')
+                                        echo "<a data-href=\"http-calls/delete-term.php\" onClick='deleteBtnClicked(this);'  class=\"btn btn-danger btn-sm active\" role=\"button\" id=\"#delete-btn\" data-id=$id data-type=\"$type\" data-name=\"$name\">Delete</a>";
+                                    echo"</td>";
                                 echo '</tr>';
 
                             }?>

@@ -57,7 +57,7 @@
                 $_SESSION['account'] = array('email'  => $userobj->{'email'},
                                              'apiKey' => $userobj->{'userApiKey'},
                                              'name'   => $userobj->{'userFullName'},
-                                             'accountType' => $userobj->{'accountType'});
+                                             'userRole' => $userobj->{'userRole'});
                 
 
 
