@@ -17,7 +17,7 @@ else{
 $ret_array = array("query"=>$tweets_query);
 $ret_array = json_encode($ret_array);
 
-$select = "SELECT text,time_stamp,author,original_tweet_id from tweet WHERE time_stamp>= '2014-07-08 19:56:43' LIMIT 10000";
+$select = "SELECT text,time_stamp,author,original_tweet_id from tweet WHERE time_stamp>= '2014-02-01 13:56:43' ORDER BY time_stamp LIMIT 10000";
 
 //$db_results = db_fetch($tweets_query);
 $db_results = db_fetch($select);
@@ -43,12 +43,74 @@ for($ri = 0; $ri < pg_num_rows($db_results); $ri++) {
 $begin = strtotime($timestamps[0]);
 $end = strtotime($timestamps[count($timestamps)-1]);
 
+$seconds = ($end-$begin);
+$hours = ($end-$begin)/3600;
+$days = ($end-$begin)/86400;
+
 echo 'count: '. count($timestamps);
 echo '<br/>first row date: '.($timestamps[0]);
 echo '<br/>last row date: '.($timestamps[count($timestamps)-1]);
-echo '<br/>time difference in seconds : '.($end-$begin);
-echo '<br/>time difference in hours : '.($end-$begin)/3600;
-echo '<br/>time difference in days : '.($end-$begin)/86400;
+echo '<br/>time difference in seconds : '.$seconds;
+echo '<br/>time difference in hours : '.$hours;
+echo '<br/>time difference in days : '.$days;
+
+
+
+$interval = $seconds/23; //graph scale
+$loop_time = $begin; //initiale with begining timestamp
+$intervals=array();
+$tweets_users=array();
+
+//$loop_time = $loop_time+$interval;
+
+
+while($loop_time<$end){
+	//$intervals[]=date('Y-m-d H:i:s',$loop_time);
+
+	//echo '<br/>time: '.	date('Y-m-d H:i:s',$loop_time);
+	//echo '<br/>time: '.	gmdate('Y-m-d H:i:s',);
+
+	$authors_query = "SELECT author from tweet WHERE time_stamp>="."'".date('Y-m-d H:i:s',$loop_time-$interval)."'"." AND ".
+	"time_stamp<="."'".date('Y-m-d H:i:s',$loop_time)."'"
+	."GROUP BY author LIMIT 1000";
+
+	$db_results = db_fetch($authors_query);
+	$author_count=pg_num_rows($db_results);
+	
+	$tweets_query = "SELECT count(text) from tweet WHERE time_stamp>="."'".date('Y-m-d H:i:s',$loop_time-$interval)."'"." AND ".
+	"time_stamp<="."'".date('Y-m-d H:i:s',$loop_time)."'";
+	$db_results = db_fetch($tweets_query);
+	$tweets_count=pg_fetch_result($db_results, 0);
+
+	//echo $tweets_query;
+	//echo 'tweets_count'.$tweets_count;	
+	$intervals[date('Y-m-d H:i:s',$loop_time)] = $author_count.','.$tweets_count;
+
+	$loop_time = $loop_time+$interval;
+}
+
+foreach ($intervals as $key => $value) {
+	echo '<br/>time: '.	$key. ' values: '.$value;
+
+}
+
+function calculate_tweets_authors($from,$to){
+
+}
+
+/*if($seconds<=60){
+	$interval = 6;
+}
+
+else if($seconds<=3600){
+	$interval=$seconds/60;
+	if($interval<=10) //go back to seconds interal, if less than 10 minutes
+		$interval= 6 
+	else
+		$interval=60;
+		//end
+}
+*/
 
 die();
 
