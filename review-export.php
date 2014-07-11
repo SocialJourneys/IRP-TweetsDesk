@@ -3,6 +3,9 @@
 <?php include('export_csv.php');?>
 ?>
 <?php
+
+$db_count = db_count();
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
       $query = 'SELECT ';
@@ -252,7 +255,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     
     <div class="panel panel-info">
       
-    <div class="panel-heading">Review</div>
+    <div class="panel-heading">Review
+      <span class="pull-right" style="padding-bottom:10px;"><strong>Available records: <span style="color:green;"><?php echo $db_count?></span></strong></span>
+  </div>
    
     <div class="panel-body">
         <!-- table- -->
@@ -288,7 +293,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                       </div> 
                   </td>
                     <td>
-                        <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-no-of-records">
+                        <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-10" id="filter-no-of-records">
                          <label label-default="" for="review-filter-no-of-records"></label>
                          <input type="number" class="form-control review-control" name="limit" id="review-filter-no-of-records" placeholder="Count" value="<?php echo isset($_POST['limit'])?$_POST['limit'] :'1000'?>" required/>   
                     

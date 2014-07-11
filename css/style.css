@@ -35,17 +35,18 @@
   padding:6px 12px;
   width:100%;
 }
-
+.heading-menu{
+  margin-top: -7px;
+}
 
 .datetimepicker-input-group {
   border-collapse:separate;
-  display:table;
+  display:inline-block;
   position:relative;
-  margin-top: -5px;
 }
 
-.datetimepicker-search-input-group{
- margin-top: 8px;   
+.datetimepicker-input-select{
+  bottom: 12px;
 }
 
 .header-button{

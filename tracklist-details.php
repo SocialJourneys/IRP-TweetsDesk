@@ -11,49 +11,22 @@ if($term_type==='handle'){
 }
 if($term_type==='hashtag'){
     $term_type='#';
-    $where = "WHERE text LIKE %'#".$term_name."'%";
+    $where = "WHERE text LIKE '%#".$term_name."%'";
 }
 if($term_type==='search-term'){
     $term_type='$';
-    $where = "WHERE text LIKE %'".$term_name."'%";
+    $where = "WHERE text LIKE '%".$term_name."%'";
 }
 
 $select = 'SELECT text,created_at,author,original_tweet_id from tweet ';
-$limit =' LIMIT 100';
-$query = $select.$where.' ORDER BY created_at '.$limit;
+$limit =' LIMIT 1000';
+$query = $select.$where.' ORDER BY created_at DESC'.$limit;
 
 $_SESSION['tweets_query'] = $select.$where;
+$_SESSION['where_query'] = $where;
+
 
 $db_results = db_fetch($query);
-
-/*for($ri = 0; $ri < pg_num_rows($db_results); $ri++) {
-    
-    $row = pg_fetch_array($db_results, $ri);
-//    echo "time_stamp: ". $row['time_stamp'];
-}*/
-
-
-//http://dtp-24.sncs.abdn.ac.uk/phpPgAdmin/
-//$db = pg_connect('host=http://dtp-24.sncs.abdn.ac.uk port=5432 dbname=tweetdesk user=postgres password=5L1ght1y'); 
-
-//$query = "SELECT * FROM track_list"; 
-
-//$result = pg_query($db,$query); 
-//if (!$result) { 
-  //  echo "Problem with query " . $query . "<br/>"; 
-    //echo pg_last_error(); 
-    //exit(); 
-//} 
-
-        //print_r($result);
-        //die();
-
-  //      while($myrow = pg_fetch_assoc($result)) { 
-           // print_r($myrow);
-           // printf ("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>", $myrow['id'], htmlspecialchars($myrow['firstname']), htmlspecialchars($myrow['surname']), htmlspecialchars($myrow['emailaddress']));
-    //    } 
-
-       // die();
 ?>
 <div id="page-wrapper">
     <div class="row">
@@ -69,39 +42,6 @@ $db_results = db_fetch($query);
           <li><a href="tracklist.php">Tracklist</a></li>
           <li class="active">Tracking Details</li>
       </ol>
-
-      <div class="col-lg-6">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                Overview
-            </div>
-            <!-- /.panel-heading -->
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover" id="dataTables">
-                        <thead>
-                            <tr>
-                                <th>Date Added</th>
-                                <th>Date Used</th>
-                                <th>Added By</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                           <tr class="gradeA">
-                            <td class="center">30/May/2014</td>
-                            <td class="center">02/June/2014</td>
-                            <td class="center">Mujtaba</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <!-- /.table-responsive -->
-        </div>
-        <!-- /.panel-body -->
-    </div>
-    <!-- /.panel -->
-</div>
-<!-- /.col-lg-12 -->
 </div>
 <!-- /.row -->
 
@@ -181,121 +121,39 @@ $db_results = db_fetch($query);
 
 <!-- /.row -->
 <div class="row">
-    <div class="col-lg-10">
+    <div class="col-lg-10 col-md-10 col-sm-10">
         <div class="panel panel-info">
             <div class="panel-heading">
-                Tweets Per Hour
-                <div class='col-sm-4 pull-right'>
-                   <div class="form-group-row">
-                    <label for="inputType" class="col-sm-4 control-label">To: </label>
+                Tweets
+               
+               <div class="form-group-row heading-menu pull-right">
+                <!--label for="inputType" class="col-lg-2 col-md-2 col-sm-2 control-label"></label-->
+                <div class='datetimepicker-input-group date'>
+                    <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" name='chart_datetimepicker_from' id='chart_datetimepicker_from' placeholder="From" required/>
+                </div>
+          
+
+                    <!--label for="inputType" class="col-lg-1 col-md-1 col-sm-1 control-label"></label-->
                     <div class='datetimepicker-input-group date'>
-                        <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" name='chart_datetimepicker_to' id='chart_datetimepicker_to'/>
+                        <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" name='chart_datetimepicker_to' id='chart_datetimepicker_to' placeholder="To" required/>
                     </div>
+               
+                    <div class='datetimepicker-input-group date datetimepicker-input-select'>
+                        <select class="form-control" name="chart_frequency" id="chart_frequency">
+                              <option value="hour">Last hour</option>
+                              <option value="day" selected="selected">Last day</option>
+                              <option value="week">Last week</option>
+                              <option value="month">Last month</option>
+                          </select>
                 </div>
-            </div>
-
-            <div class='col-sm-4 pull-right'>
-               <div class="form-group-row">
-                <label for="inputType" class="col-sm-4 control-label">From: </label>
                 <div class='datetimepicker-input-group date'>
-                    <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" name='chart_datetimepicker_from' id='chart_datetimepicker_from' />
+                    <button type='button' class="btn btn-success datetimepicker-form-control" onclick="add_chart_data()">Refresh</button>
                 </div>
             </div>
-        </div>
-
-            <div class='pull-right'>
-               <div class="form-group-row">
-                <div class='datetimepicker-input-group date'>
-                    <button type='button'class="btn btn-primary datetimepicker-form-control" onclick="add_chart_data()">Refresh</button>
-                </div>
-            </div>
-        </div>
-
-
-
     </div>
     <!-- /.panel-heading -->
     <div class="panel-body">
         <div id="morris-tmi-chart"></div>
-    </div>
-    <!-- /.panel-body -->
-</div>
-<!-- /.panel -->
-</div>
-</div> <!-- /.row -->
-
-
-<!-- /.row -->
-<div class="row">
-    <div class="col-lg-10">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                Tweets Per Hour
-
-
-                <div class='col-sm-4 pull-right'>
-                   <div class="form-group-row">
-                    <label for="inputType" class="col-sm-4 control-label">To: </label>
-                    <div class='datetimepicker-input-group date'>
-                        <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" />
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class='col-sm-4 pull-right'>
-               <div class="form-group-row">
-                <label for="inputType" class="col-sm-4 control-label">From: </label>
-                <div class='datetimepicker-input-group date'>
-                    <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control"/>
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <!-- /.panel-heading -->
-    <div class="panel-body">
-        <div id="morris-hour-chart"></div>
-    </div>
-    <!-- /.panel-body -->
-</div>
-<!-- /.panel -->
-</div>
-</div> <!-- /.row -->
-
-<!-- /.row -->
-<div class="row">
-    <div class="col-lg-10">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                Tweets Per Day
-
-                <div class='col-sm-4 pull-right'>
-                   <div class="form-group-row">
-                    <label for="inputType" class="col-sm-4 control-label">To: </label>
-                    <div class='datetimepicker-input-group date' id='datetimepicker3'>
-                        <input type='text' class="datetimepicker-form-control" />
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class='col-sm-4 pull-right'>
-               <div class="form-group-row">
-                <label for="inputType" class="col-sm-4 control-label">From: </label>
-                <div class='datetimepicker-input-group date' id='datetimepicker4'>
-                    <input type='text' class="datetimepicker-form-control" />
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- /.panel-heading -->
-    <div class="panel-body">
-        <div id="morris-day-chart"></div>
     </div>
     <!-- /.panel-body -->
 </div>
@@ -323,7 +181,7 @@ $("#chart_datetimepicker_to").on("dp.change",function (e) {
 $('#datetimepicker3').datetimepicker();
 $('#datetimepicker4').datetimepicker();
 
-$(function() {
+/*$(function() {
     $("td[colspan=3]").find("p").hide();
     $("dataTables-tracklist").click(function(event) {
         event.stopPropagation();
@@ -334,8 +192,20 @@ $(function() {
             $target.closest("tr").next().find("p").slideToggle();
         }                    
     });
-});
+});*/
 
-$('#dataTables-tweets').dataTable();
-
+//data table init
+$('#dataTables-tweets').dataTable({
+        aaSorting: [[2, 'desc']],
+        bPaginate: true,
+        bFilter: true,
+        bInfo: false,
+        bSortable: true,
+        bRetrieve: true,
+        aoColumnDefs: [
+            { "aTargets": [ 0 ], "bSortable": true },
+            { "aTargets": [ 1 ], "bSortable": true },
+            { "aTargets": [ 2 ], "bSortable": true }
+        ]
+    }); 
 </script>

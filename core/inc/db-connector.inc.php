@@ -2,8 +2,8 @@
 	function get_db(){
 		// database constants
 		$table = '';
-		$hostname = "localhost";
-		//$hostname = "dtp-24.sncs.abdn.ac.uk";
+		//$hostname = "localhost";
+		$hostname = "dtp-24.sncs.abdn.ac.uk";
 		$port = '5432';
 		$user = "postgres";
 		$password = "5L1ght1y";
@@ -19,6 +19,8 @@
 
 	$db = get_db();
 	//echo "<br/><br/>query in db_fetch: ".$query;
+	//exit();
+
 	$result = pg_exec($db, $query);
 	// query to get data from database
 
@@ -36,5 +38,13 @@
 	*/
 	pg_close();
 	return $result;
+	}
+
+	//get available records in database
+	function db_count(){
+		$db = get_db();
+		$result = pg_exec($db, 'SELECT count (id) from tweet');
+
+		return pg_fetch_result($result,0);
 	}
 ?>

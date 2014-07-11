@@ -66,7 +66,9 @@ while($curr_split<=$split){
 		while($curr_loop<$loop && ($row=pg_fetch_array($result))) {	
 		  // create line with field values
 		  for($i = 0; $i < $field; $i++) {
-		    $csv_export.= '"'.$row[pg_field_name($result,$i)].'",';
+		  	$csv_value = $row[pg_field_name($result,$i)];
+		  	$csv_value = str_replace('"', '""', $csv_value);
+		    $csv_export.= '"'.$csv_value.'",';
 		  }	
 		    $csv_export.= '
 		';	

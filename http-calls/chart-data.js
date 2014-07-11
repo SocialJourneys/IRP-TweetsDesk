@@ -1,18 +1,29 @@
+  var chart =  new Morris.Area({
+        element: 'morris-tmi-chart',
+        xkey: 'time',
+        ykeys: ['tweets', 'users'],
+        labels: ['Tweets', 'Users'],
+        pointSize: 2,
+        hideHover: 'auto',
+        resize: true
+    });
+
+add_chart_data();
+
 function add_chart_data(){  
       
   //alert('hello1');
-
+ 
   var from = $('#chart_datetimepicker_from').val();
   var to = $('#chart_datetimepicker_to').val();
+  var frequency = $('#chart_frequency').val();
 
-  //alert(type);
-  //alert('here');
       $.ajax({
         type:"GET",
         url:"http-calls/chart-data.php",
         dataType:"json",
         contentType:"application/json",
-        data:"from="+from+"&to="+to,
+        data:"from="+from+"&to="+to+"&frequency="+frequency,
         
         success:function(response){
         reload_chart(response);
@@ -22,7 +33,7 @@ function add_chart_data(){
         },
           error: function(response){
           //TODO show error on the UI
-      console.log(JSON.stringify(response));
+              console.log(JSON.stringify(response));
              alert('there was an error!' + JSON.stringify(response));
           }
       });
@@ -32,12 +43,12 @@ function add_chart_data(){
 
 function reload_chart(response){
 
-    alert('inside reload chart'+response.length);
+    //alert('inside reload chart: '+response.length);
 
     var t_data = [];
 
-    for(var i=0; i<=response.length;i++){
-        var timestamp = (response[i].timestamp).toString();
+    for(var i=0; i<response.length;i++){
+        var timestamp = (response[i].timestamp);
         var tweets_count = parseInt(response[i].tweets_count);
         var authors_count = parseInt(response[i].authors_count);
         
@@ -45,29 +56,16 @@ function reload_chart(response){
                     tweets:tweets_count,
                     users:authors_count,
                 };
-
-/*        t_data[i]={time:'2014-02-01 13:56:43',
-                    tweets:'100',
-                    users:'10'
-                };
-
-*/
-        console.log(timestamp);
+       // console.log(timestamp);
        
     }
-    alert('hello2');
-   // alert(t_data);
-
-    Morris.Area({
-        element: 'morris-tmi-chart',
-        data:t_data,
-        xkey: 'time',
-        ykeys: ['tweets', 'users'],
-        labels: ['Tweets', 'Users'],
-        pointSize: 2,
-        hideHover: 'auto',
-        resize: true
-    });
+  
+  if(t_data.length>0){
+    chart.setData(t_data);
+    chart.redraw();
+  }
+  else
+   alert('No data found, try with different input.');
 }
 
 /*Morris.Area({
