@@ -12,6 +12,7 @@
 
     <!-- Core CSS - Include with every page -->
     <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/sticky-footer.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
 
     <!-- Page-Level Plugin CSS - Dashboard -->

@@ -36,6 +36,12 @@
     
     <script type="text/javascript" src="js/tmi.js"></script>
 
+    <div class="footer">
+      <div class="container">
+        <p class="text-muted">© Copyright 2014 TMI.</p>
+      </div>
+    </div>
+
 <?php include('dialogs.php');?>
 </body>
 </html>
