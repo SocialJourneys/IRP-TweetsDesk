@@ -226,6 +226,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         $zipname = $returnArray[0];
         $records = $returnArray[1];
 
+//echo isset($_POST['author'])?$_POST['author'] : (isset($_GET['handle'])? $_GET['handle']:''):'';
+
         //echo 'records: '.$records;
         //$csv_filename = 'TMI_db_export'.'_'.date('Y-m-d').'.csv';
 
@@ -387,8 +389,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-tweet-author">
                         <label label-default="" for="review-filter-tweet-author"></label>
-                      <input type="text" class="form-control review-control" name="author" placeholder="@handle" id="review-filter-tweet-author" value="<?php echo isset($_POST['author'])?$_POST['author'] :''?>"/>
-                      <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter handle of the author. e.g @FirstAberdeen">
+                      <input type="text" class="form-control review-control" name="author" placeholder="@handle" id="review-filter-tweet-author" value="<?php echo isset($_POST['author'])?$_POST['author'] : (isset($_GET['handle'])? $_GET['handle']:'');?>"/>
+                      <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter handle of the author. e.g FirstAberdeen. Enter handle name without @ sign.">
                        <i class="fa fa-info"></i>
                     </button>   
                     </div>
@@ -472,7 +474,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                           <option value="LIKE" <?php if($_POST['textKeyword_condition'] == "LIKE") echo "selected";?> >contains</option>
                           <option value="=" <?php if($_POST['textKeyword_condition'] == "=") echo "selected";?> >exact match</option>
                       </select>
-                      <input type="text" class="form-control review-control" name="text" id="review-filter-tweet-content" placeholder="enter keyword" value="<?php echo isset($_POST['text'])?$_POST['text'] :''?>"/>    
+                      <input type="text" class="form-control review-control" name="text" id="review-filter-tweet-content" placeholder="enter keyword" value="<?php echo isset($_POST['text'])?$_POST['text']:(isset($_GET['search-term'])? $_GET['search-term']:(isset($_GET['hashtag'])? '#'.$_GET['hashtag']:''));?>"/>    
 
 
                       <button type="button" class="btn btn-xs btn-primary" id="add-keyword" style="margin-bottom: 5px;">Add Keyword</button>

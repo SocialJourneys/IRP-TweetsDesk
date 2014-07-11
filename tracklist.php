@@ -6,10 +6,22 @@ $headers = array('Content-Type: application/json',"Authorization: ".$_SESSION['a
 //REST response:
 $response =  rest_get($url,$headers);
 $dataArray = json_decode($response);
+
+ //Get the status of the user (active/innactive):
+$status = $dataArray->{'statusCode'};
+
+//Check if the session has expired
+if($status && $status!=201){
+    $errors[] = $dataArray->{'errors'}[0];
+    $errors[] = $dataArray->{'moreInfo'};
+
+    header("Location: logout.php");
+    die();  
+}
+
 //print_r($response);
 //die();
 $dataArray = $dataArray->{'trackLists'};
-
 
 ?>
 <?php include('header.php');?>

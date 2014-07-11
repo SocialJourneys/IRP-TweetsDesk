@@ -72,7 +72,7 @@ $db_results = db_fetch($query);
                 Tweets mentioning: <?php echo $term_name;?>
 
     <div class="input-group pull-right">
-        <button type="button" class="btn btn-success dropdown-toggle header-button"><span class="fa fa-list-alt fa-fw"></span> Export CSV</button>
+        <a type="button" class="btn btn-success dropdown-toggle header-button" href="review-export.php?<?php echo $_GET['term_type']?>=<?php echo $_GET['term_name']?>" ><span class="fa fa-list-alt fa-fw"></span> Export CSV</a>
     </div><!-- /input-group -->
 
             </div>
