@@ -189,7 +189,7 @@ $db_results = db_fetch($query);
                    <div class="form-group-row">
                     <label for="inputType" class="col-sm-4 control-label">To: </label>
                     <div class='datetimepicker-input-group date'>
-                        <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" name='chart_datetimepicker_from' id='chart_datetimepicker_from'/>
+                        <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" name='chart_datetimepicker_to' id='chart_datetimepicker_to'/>
                     </div>
                 </div>
             </div>
@@ -198,7 +198,7 @@ $db_results = db_fetch($query);
                <div class="form-group-row">
                 <label for="inputType" class="col-sm-4 control-label">From: </label>
                 <div class='datetimepicker-input-group date'>
-                    <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" name='chart_datetimepicker_to' id='chart_datetimepicker_to' />
+                    <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" name='chart_datetimepicker_from' id='chart_datetimepicker_from' />
                 </div>
             </div>
         </div>

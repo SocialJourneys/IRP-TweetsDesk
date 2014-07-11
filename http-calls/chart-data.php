@@ -1,25 +1,26 @@
 <?php include('../core/init.core.php');?>
 <?php
-
+header("Content-Type: application/json");
 $from = $_GET['from'];
 $to = $_GET['to'];
 
 $tweets_query = $_SESSION['tweets_query'];
 
-if($from || $to){
+/*if($from || $to){
 
 }
 else{
 	$from = '2014-02-01 19:56:43';
 	$to = '2014-07-01 19:56:43';
-}
+}*/
 
 $ret_array = array("query"=>$tweets_query);
 $ret_array = json_encode($ret_array);
 
-$select = "SELECT text,time_stamp,author,original_tweet_id from tweet WHERE time_stamp>= '2014-02-01 13:56:43' ORDER BY time_stamp LIMIT 10000";
-
-//$db_results = db_fetch($tweets_query);
+//$select = "SELECT text,time_stamp,author,original_tweet_id from tweet WHERE time_stamp>= '2014-02-01 13:56:43' ORDER BY time_stamp LIMIT 10000";
+$select = "SELECT time_stamp from tweet WHERE time_stamp>="."'".$from."'"." AND "."time_stamp<="."'".$to."'"." ORDER BY time_stamp LIMIT 10000";
+	//$db_results = db_fetch($tweets_query);
+//echo $select;
 $db_results = db_fetch($select);
 $db_array = array();
 
@@ -47,14 +48,13 @@ $seconds = ($end-$begin);
 $hours = ($end-$begin)/3600;
 $days = ($end-$begin)/86400;
 
-echo 'count: '. count($timestamps);
+/*echo 'count: '. count($timestamps);
 echo '<br/>first row date: '.($timestamps[0]);
 echo '<br/>last row date: '.($timestamps[count($timestamps)-1]);
 echo '<br/>time difference in seconds : '.$seconds;
 echo '<br/>time difference in hours : '.$hours;
 echo '<br/>time difference in days : '.$days;
-
-
+*/
 
 $interval = $seconds/23; //graph scale
 $loop_time = $begin; //initiale with begining timestamp
@@ -62,7 +62,6 @@ $intervals=array();
 $tweets_users=array();
 
 //$loop_time = $loop_time+$interval;
-
 
 while($loop_time<$end){
 	//$intervals[]=date('Y-m-d H:i:s',$loop_time);
@@ -84,19 +83,24 @@ while($loop_time<$end){
 
 	//echo $tweets_query;
 	//echo 'tweets_count'.$tweets_count;	
-	$intervals[date('Y-m-d H:i:s',$loop_time)] = $author_count.','.$tweets_count;
+	//$intervals[] = $author_count.','.$tweets_count;
+	//$intervals[$i]['timestamp'] = date('Y-m-d H:i:s',$loop_time);
+	//$intervals[$i]['tweets_count'] = $tweets_count;
+	//$intervals[$i]['author_count'] = $author_count;
+	$intervals[] = array("timestamp"=>(string)date('Y-m-d H:i:s',$loop_time),
+						"authors_count"=>$author_count,
+						"tweets_count"=>$tweets_count);
 
 	$loop_time = $loop_time+$interval;
 }
 
-foreach ($intervals as $key => $value) {
+//for($i=0;$i<=count($intervals);i++)
+//echo '<br/>time: '.	count($intervals);//['timestamp'];
+
+/*foreach ($intervals as $key => $value) {
 	echo '<br/>time: '.	$key. ' values: '.$value;
 
-}
-
-function calculate_tweets_authors($from,$to){
-
-}
+}*/
 
 /*if($seconds<=60){
 	$interval = 6;
@@ -112,10 +116,13 @@ else if($seconds<=3600){
 }
 */
 
-die();
+http_response_code(200);
+echo json_encode($intervals);
 
-$users = array();
-$tweets = array();
+//die();
+
+//$users = array();
+//$tweets = array();
 
 
 //echo $_SESSION['tweets_query'];
