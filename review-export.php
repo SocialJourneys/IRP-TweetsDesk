@@ -274,9 +274,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         <th class="text-center"><h4>Filters</h4>
 
                           <label class="control-label" style="font-size:14px; font-weight:normal; margin-bottom: 0; margin-top: 0;"><strong>Criteria:</strong></label>
-                          <label class="radio" style="display:inline-block; font-size:14px; font-weight:normal; margin-bottom: 0; margin-top: 0; min-height: 20px; padding-left: 25px;">
-                            <input type="radio" name="filters_criteria" id="filters_criteria_all" value="AND" checked>All of these
-                          </label>
+                          <label class="radio" style="display:inline-block; font-size:14px; font-weight:normal; margin-bottom: 0px; margin-top: 0px; min-height: 20px; padding-left: 25px;">
+                            <input type="radio" name="filters_criteria" id="filters_criteria_all" value="AND" checked>All of these</label>
                           <label class="radio" style="display:inline-block; font-size:14px; font-weight:normal; margin-bottom: 0; margin-top: 0; min-height: 20px; padding-left: 25px;">
                             <input type="radio" name="filters_criteria" id="filters_criteria_any" value="OR">Any of these</label>
                       </th>

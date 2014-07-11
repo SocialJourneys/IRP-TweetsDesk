@@ -22,7 +22,7 @@ if(strlen($tweets_query)!=0){
 	$select = $tweets_query." ORDER BY ".$time_field." desc LIMIT 10000";
 }
 else{
-	if(strlen($frequency)!=0){
+	if(empty($from) && empty($to)){
 		$from = date('Y-m-d H:i:s',strtotime('-1 '.$frequency));
 		$to = date('Y-m-d H:i:s',time());
 	}
