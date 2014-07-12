@@ -28,12 +28,12 @@ function add_chart_data(){
         success:function(response){
         reload_chart(response);
         //alert(response[0].timestamp);
-        console.log(JSON.stringify(response));
+        //console.log(JSON.stringify(response));
        // alert('hello2');
         },
           error: function(response){
           //TODO show error on the UI
-              console.log(JSON.stringify(response));
+             // console.log(JSON.stringify(response));
              //alert('there was an error!' + JSON.stringify(response));
           }
       });

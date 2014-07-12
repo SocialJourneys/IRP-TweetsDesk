@@ -19,7 +19,7 @@ $time_field = 'created_at';
 if(strlen($tweets_query)!=0){
 	//$from = date('Y-m-d H:i:s',strtotime('-1 day'));
 	//$select = $tweets_query." AND ". $time_field.">="."'".$from."'"." ORDER BY ".$time_field." LIMIT 10000";
-	$select = $tweets_query." ORDER BY ".$time_field." desc LIMIT 10000";
+	$select = $tweets_query." ORDER BY ".$time_field." desc LIMIT 15000";
 }
 else{
 	if(empty($from) && empty($to)){
@@ -28,7 +28,7 @@ else{
 	}
 	
 	$where = $_SESSION['where_query'];
-	$select = "SELECT ".$time_field.",author from tweet ".$where." AND ".$time_field.">="."'".$from."'"." AND ".$time_field."<="."'".$to."'"." ORDER BY ".$time_field." desc LIMIT 10000";
+	$select = "SELECT ".$time_field.",author from tweet ".$where." AND ".$time_field.">="."'".$from."'"." AND ".$time_field."<="."'".$to."'"." ORDER BY ".$time_field." desc LIMIT 15000";
 }
 
 	//$select = "SELECT ".$time_field.",author from tweet WHERE ".$time_field.">="."'".$from."'"." AND ".$time_field."<="."'".$to."'"." ORDER BY ".$time_field." LIMIT 10000";
@@ -94,7 +94,7 @@ while($loop_time<$end){
 
 	$authors_query = "SELECT author from tweet WHERE ".$time_field.">="."'".date('Y-m-d H:i:s',$loop_time-$interval)."'"." AND ".
 	$time_field."<="."'".date('Y-m-d H:i:s',$loop_time)."'"
-	."GROUP BY author LIMIT 1000";
+	."GROUP BY author";
 
 	$db_results = db_fetch($authors_query);
 	$author_count=pg_num_rows($db_results);
