@@ -34,8 +34,6 @@
     <!--bootbox-->
     <script type="text/javascript" src="js/bootbox.min.js"> </script>
     
-    <script type="text/javascript" src="js/tmi.js"></script>
-
     <div class="footer">
       <div class="container">
         <p class="text-muted">© Copyright 2014 TMI.</p>

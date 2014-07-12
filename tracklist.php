@@ -55,9 +55,9 @@ $dataArray = $dataArray->{'trackLists'};
                       <div class="input-group-btn">
                         <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" id="dropdown-title" value='0'>Select Type <span class="caret"></span></button>
                         <ul class="dropdown-menu pull-right" id="dropdown-term-type">
-                          <li data-type='hashtag'><a href="#">Hashtag</a></li>
-                          <li data-type='handle'><a href="#">Handle</a></li>
-                          <li data-type='search-term'><a href="#">Search Term</a></li>
+                          <li data-type='hashtag'><a>Hashtag</a></li>
+                          <li data-type='handle'><a>Handle</a></li>
+                          <li data-type='search-term'><a>Search Term</a></li>
                         </ul>
                       </div><!-- /btn-group -->
                     </div><!-- /input-group -->
@@ -71,7 +71,7 @@ $dataArray = $dataArray->{'trackLists'};
             <div style="margin-top:10px" class="form-group">
              <!-- Button -->
                 <div class="col-sm-12 controls">
-                     <a id="btn-add-term" href="#" class="btn btn-primary pull-right" onClick='addTerm(<?php echo '"'.$_SESSION['account']['userRole'].'"';?>)'>Add</a>
+                     <a id="btn-add-term" class="btn btn-primary pull-right" onClick="addTerm(<?php echo "'".$_SESSION['account']['userRole']."'";?>)">Add</a>
                 </div>
             </div>
             </form>  
@@ -81,7 +81,6 @@ $dataArray = $dataArray->{'trackLists'};
 <?php
 }
 ?>
-
 <?php 
 $rawData = '{
     "0":{"id":10,"term":"Aberdeen","type":"hashtag"},
@@ -185,8 +184,8 @@ $tempData = json_decode($rawData, true);
 
 <?php include('footer.php');?>
 
-<script type="text/javascript" src="http-calls/add-term.js"> </script>
 <script type="text/javascript" src="http-calls/delete-term.js"> </script>
+<script type="text/javascript" src="http-calls/add-term.js"> </script>
 
 <!-- Data table init -->
 <script>

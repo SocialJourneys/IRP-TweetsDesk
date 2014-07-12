@@ -222,9 +222,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         $query = $query .$fields.' from '. $table.$where.$limit;
 
 
-        $returnArray = dbExport($query,intval($split));               
-        $zipname = $returnArray[0];
-        $records = $returnArray[1];
+        $returnArray = dbExport($query,intval($split),'db_exports/');               
+        $zipname = $returnArray['file'];
+        $records = $returnArray['records'];
 
 //echo isset($_POST['author'])?$_POST['author'] : (isset($_GET['handle'])? $_GET['handle']:''):'';
 
@@ -263,7 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
    
     <div class="panel-body">
         <!-- table- -->
-        <form class="myform" role ="form" method="post" action="">
+        <form class="myform" role ="form" method="post" action="" id="review-export-form">
             <table class="table table-bordered">  
                 <thead> 
                <p> <span style="color:Red;">*</span> fields are required.
@@ -718,6 +718,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 </div> <!--<div class="row col-xs-12 col-sm-12 col-lg-10 col-md-12"-->
 
 <?php include('footer.php');?>
+
+<script type="text/javascript" src="http-calls/exporter.js"></script>
 
 <script type="text/javascript">
 

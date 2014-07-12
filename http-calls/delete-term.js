@@ -1,4 +1,3 @@
-
 function deleteTerm(term_id, term_name){
   
 

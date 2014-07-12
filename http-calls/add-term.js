@@ -1,3 +1,10 @@
+/*$(document).ready(function() {
+  $("#btn-add-term").click(function(){
+           //addTerm("#testDialog");
+               alert($(this).attr('data-user'));
+        });
+}); */
+
 function addTerm(userRole){  
 
 	var term_name = $('#add-term-input').val();
@@ -63,7 +70,7 @@ function addTerm(userRole){
 function addrow(response,userRole) {
 
   var deleteBtnRow='';  
-    if(userRole==='Admin ||' userRole==='Super Admin')
+    if(userRole==='Admin' || userRole==='Super Admin')
       deleteBtnRow = '<a data-href="http-calls/delete-term.php" class="btn btn-danger btn-sm active" role="button" onClick="deleteBtnClicked(this);" id="delete-btn" data-id='+response.id+' data-type='+response.type+' data-name='+response.name+'>Delete</a>';
     
   var row = $('#dataTables-tracklist').dataTable().fnAddData( [
@@ -77,5 +84,3 @@ function addrow(response,userRole) {
 	var theNode = $('#dataTables-tracklist').dataTable().fnSettings().aoData[row[0]].nTr;
 	theNode.setAttribute('id','dataTables-tracklist-' + response.id);
 }
-
-

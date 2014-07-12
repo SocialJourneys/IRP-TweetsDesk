@@ -50,10 +50,10 @@
 
 
 
-	function dbExport($query,$split){
+	function dbExport($query,$split,$basePath,$progressBar){
 
 	// filename for export
-	$csv_filename = 'db_exports/TMI_export_'.'_'.date('Y-m-d_H.i.s');
+	$csv_filename = $basePath.'/TMI_export_'.'_'.date('Y-m-d_H.i.s');
 
 
 	$db = get_db();
@@ -83,6 +83,9 @@
 	$file_names=array();
 
 	//echo "<br/><br/>query in exporter: ".$query. ' split : '.$split. ' loop : '.$loop;
+
+	//echo 'records: '. $limit;
+	//die();
 
 	while($curr_split<=$split){
 		$csv_export = '';
@@ -128,19 +131,19 @@
 	$zip = new ZipArchive;
 	$zip->open($zipname, ZipArchive::CREATE);
 
-	if(!$zip)
-		$zipname=-1;
-
 	foreach ($file_names as $file) {
 	  $zip->addFile($file);
 	}
 
 	$zip->close();
 
+	if(file_exists($zipname)==false)
+		$zipname=-1;
+
 	//fclose($fp);
 	pg_close();
 
-	$returnArray = array($zipname,$limit);
+	$returnArray = array("file"=>$zipname,"records"=>$limit);
 
 	// Export the data and prompt a csv file for download
 	/*header("Content-type: text/x-csv");
