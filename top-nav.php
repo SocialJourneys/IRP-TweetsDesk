@@ -10,6 +10,7 @@
             </div>
             <!-- /.navbar-header -->
 
+            <?php if(isset($_SESSION['account'])){?>
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -29,3 +30,4 @@
                 <!-- /.dropdown -->
             </ul>
             <!-- /.navbar-top-links -->
+            <?php }?>

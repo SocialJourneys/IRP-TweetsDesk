@@ -14,6 +14,7 @@ if(strlen($_SESSION['tweets_query'])!=0){
 }
 
 $time_field = 'created_at';
+$where = $_SESSION['where_query'];
 
 //either it's a call from tracklist details page or chart refresh
 if(strlen($tweets_query)!=0){
