@@ -118,16 +118,17 @@ function get_db(){
 			  //echo "<br/>curr loop: ".$curr_loop;
 			$curr_loop=$curr_loop+1;
 			
-			if(($progressLoop%2)<=0 && $_SESSION['progressBarValue']<100){
+			if(($progressLoop%5)<=0 && $_SESSION['progressBarValue']<100){
 					session_start();
-					$_SESSION['progressBarValue']+=2;
+					$_SESSION['progressBarValue']+=5;
 					session_write_close();
 				}
 
 				$progressLoop+=$progress;
 			}
+			//sleep(1);
 
-			sleep(0.1);
+			//sleep(0.1);
 			if($split>1)
 				$file = $csv_filename.'-part'.$curr_split.'.csv';
 			else
@@ -153,7 +154,7 @@ function get_db(){
 	$zip->close();
 
 	if(file_exists($zipname)==false)
-		$zipname=-1;
+		$zipname=0;
 
 	//fclose($fp);
 	pg_close();

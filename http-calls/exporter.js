@@ -35,25 +35,25 @@ $('#review-export-form').on('submit', function (e) {
 function showFileDownload(response){
         
         var filename = response.file;
-        var link = filename;
-        
-        if(filename!=-1){
-            var paths = filename.split("/");
-            filename = paths[1]+'/'+paths[2];
-        }
-
         var records = response.records;
         var message;
         var footer_msg;
-            if(filename!=-1){
-                message = '<h2>Your exported file is ready.</h2><br/>';
-                message+='<p>Total number of records: <strong>' + records +'</strong></p>';
+            if(filename.length){
+              //fix the file path
+                var paths = filename.split('/');
+                filename = paths[1]+'/'+paths[2];
+                var link = filename;
+
+                message = '<div class="progress-modal-message"><h2>Your exported file is ready.</h2><br/>';
+                message+='<p>Total number of records: <strong>' + records +'</strong></p></div>';
+
                 footer_msg="<div class='modal-footer'><a href='"+link+"' class='btn btn-primary' type='button' id='file-download-btn'>Download</a></div>";
 
             }
             else{
-                message = '<h2>There was an error.</h2><br/>';
-                message+='<strong>Please try again.</strong>';
+                message = '<div class="progress-modal-message"><h2>There was an error.</h2><br/>';
+                message+='<strong>Please try again.</strong></div>';
+
                 footer_msg="<div class='modal-footer'><a class='btn btn-primary' type='button' class='close' data-dismiss='modal'>OK</a></div>";
             }
         //var box = bootbox.alert(message);
@@ -61,11 +61,11 @@ function showFileDownload(response){
                 //box.find(".btn-primary").remove();
                 //box.find(".modal-footer").append("<a href='"+link+"' class='btn btn-primary' type='button' id='file-download-btn'>Download</a>");
                 //box.find(".btn-primary").remove();
-            initModal();
+            initModal(false);
 
-            //modal.find(".modal-body").empty();
             modal.find(".modal-body").append(message);
             footer = modal.find(".modal-content");
+
             //modal.find(".modal-footer").remove();
             footer.append(footer_msg);
        // }
@@ -77,7 +77,7 @@ return false;
 function showProgressBar(){
 
 
-    initModal();
+    initModal(true);
 
    modal.modal('show');
 
@@ -103,13 +103,20 @@ function showProgressBar(){
 
 }
 
-function initModal(){
+function initModal(isBar){
     modal = $('.js-loading-bar'),
     bar = modal.find('.progress-bar');
-    //modal.find(".modal-body").empty();
+    bar.width(0+'%');
+    modal.find(".progress-modal-message").remove();
     modal.find(".modal-footer").remove();
-    //if(isBar==false)
-       // bar.parent().remove();
+    if(isBar==true){
+        bar.parent().css('display','block');
+        modal.find('.modal-header').css('display','none');
+    }
+    else{
+        bar.parent().css('display','none');
+        modal.find('.modal-header').css('display','block');
+    }
 
     return false;
 }
