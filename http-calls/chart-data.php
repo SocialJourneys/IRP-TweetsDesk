@@ -94,8 +94,7 @@ while($loop_time<$end){
 	//echo '<br/>time: '.	gmdate('Y-m-d H:i:s',);
 
 	$authors_query = "SELECT author from tweet ".$where." AND ".$time_field.">="."'".date('Y-m-d H:i:s',$loop_time-$interval)."'"." AND ".
-	$time_field."<="."'".date('Y-m-d H:i:s',$loop_time)."'"
-	."GROUP BY author";
+	$time_field."<="."'".date('Y-m-d H:i:s',$loop_time)."'"."GROUP BY author";
 
 	$db_results = db_fetch($authors_query);
 	$author_count=pg_num_rows($db_results);

@@ -181,6 +181,11 @@ $("#chart_datetimepicker_to").on("dp.change",function (e) {
 $('#datetimepicker3').datetimepicker();
 $('#datetimepicker4').datetimepicker();
 
+$('#chart_frequency').on('change', function() {
+    $('#chart_datetimepicker_from').val('');
+    $('#chart_datetimepicker_to').val('');
+});
+
 /*$(function() {
     $("td[colspan=3]").find("p").hide();
     $("dataTables-tracklist").click(function(event) {

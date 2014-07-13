@@ -217,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         if(!empty($_POST['limit']))
           $limit = ' LIMIT '.trim($_POST['limit']);
 
-        $query = $query .$fields.' from '. $table.$where.$limit;
+        $query = $query .$fields.' from '. $table.$where." ORDER BY created_at DESC ".$limit;
 
 		$_SESSION['progressBarValue'] =0;
 
@@ -225,6 +225,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         
 		if(!empty($returnArray)){
 			http_response_code(200);
+			$returnArray=array_reverse($returnArray);
 			echo json_encode($returnArray);
 		}
 		else
