@@ -2,6 +2,7 @@
 <?php
 header("Content-Type: application/json");
 $_SESSION['progressBarValue'] =0;
+
 //prepare the SQL query from form
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 

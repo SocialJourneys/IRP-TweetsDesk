@@ -3,7 +3,6 @@ var modal;
 var bar;
 
 $('#review-export-form').on('submit', function (e) {
-
         //alert('form was submitted');
         e.preventDefault();
 
@@ -19,11 +18,15 @@ $('#review-export-form').on('submit', function (e) {
               showFileDownload(response);
 
             },
-            error: function(response){
+            error: function(){
+              //alert('EXPORTER: there was an error! ' + JSON.stringify(response));
+
               clearInterval(progresspump);
-            showFileDownload(response);
             //console.log(JSON.stringify(response));
-             alert('EXPORTER: there was an error! ' + JSON.stringify(response));
+              var response = getDownloadedFileStatus();
+              showFileDownload(response);
+            
+             
             }
           });
 
@@ -38,7 +41,7 @@ function showFileDownload(response){
         var records = response.records;
         var message;
         var footer_msg;
-            if(filename.length){
+            if(filename!=0 && filename.length){
               //fix the file path
                 var paths = filename.split('/');
                 filename = paths[1]+'/'+paths[2];
@@ -87,19 +90,39 @@ function showProgressBar(){
         $.ajax({
             url: 'http-calls/get-session.php',
             dataType:'json',
-            async: true,
+            async: false,
             success: function (response) {
                 data = response.progressBarValue;
                 updateProgressBar(progresspump,bar,data);
               //alert('form was submitted');
               //showFileDownload(response);
+            },
+            error:function(response){
+              clearInterval(progresspump);
+
             }
         });
-  }, 1000);
+  }, 100);
 
 //    modal.removeClass("progress-bar");
 
     return false;
+
+}
+
+//if the ajax request overload, use ajax call to check file status
+function getDownloadedFileStatus(){
+    var returnData;
+        $.ajax({
+            url: 'http-calls/get-export-status.php',
+            dataType:'json',
+            async: false,
+            success: function (response) {
+                returnData = response;
+            }
+        });
+
+    return returnData;
 
 }
 
@@ -126,12 +149,14 @@ function initModal(isBar){
 //update progress value on UI
 
 function updateProgressBar(callback, bar, value){
-    bar.width(value+'%');
-    if (value>=100) {
+    bar.width(value.toFixed(2)+'%');
+    if (value>=99) {
         clearInterval(callback);
     }
 
-    bar.text(value+'%');
+    bar.text(value.toFixed(2)+'%');
+
+    return false;
 }
 
 //init modal with progress bar

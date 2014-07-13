@@ -19,7 +19,7 @@
 			die();
 		}
 	}
-
+	
 	//API URL constant:
 
 	//Application Authorization Key

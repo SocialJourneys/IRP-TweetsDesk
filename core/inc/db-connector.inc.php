@@ -3,8 +3,8 @@
 function get_db(){
 		// database constants
 		$table = '';
-		$hostname = "localhost";
-		//$hostname = "dtp-24.sncs.abdn.ac.uk";
+		//$hostname = "localhost";
+		$hostname = "dtp-24.sncs.abdn.ac.uk";
 		$port = '5432';
 		$user = "postgres";
 		$password = "5L1ght1y";
@@ -118,13 +118,13 @@ function get_db(){
 			  //echo "<br/>curr loop: ".$curr_loop;
 			$curr_loop=$curr_loop+1;
 			
-			if(($progressLoop%5)<=0 && $_SESSION['progressBarValue']<100){
+			//if(($progressLoop%5)<=0 && $_SESSION['progressBarValue']<100){
 					session_start();
-					$_SESSION['progressBarValue']+=5;
+					$_SESSION['progressBarValue']+=$progress;
 					session_write_close();
-				}
+				//}
 
-				$progressLoop+=$progress;
+				//$progressLoop+=$progress;
 			}
 			//sleep(1);
 
@@ -160,6 +160,11 @@ function get_db(){
 	pg_close();
 
 	$returnArray = array("file"=>$zipname,"records"=>$limit);
+
+	session_start();
+	$_SESSION['exportedFile']=$returnArray;
+	session_write_close();
+	
 	// Export the data and prompt a csv file for download
 	/*header("Content-type: text/x-csv");
 	header("Content-Disposition: attachment; filename=".$csv_filename."");
