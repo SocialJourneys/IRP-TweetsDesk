@@ -106,10 +106,12 @@ function showProgressBar(){
 function initModal(isBar){
     modal = $('.js-loading-bar'),
     bar = modal.find('.progress-bar');
-    bar.width(0+'%');
+    
     modal.find(".progress-modal-message").remove();
     modal.find(".modal-footer").remove();
     if(isBar==true){
+        bar.width(0+'%');
+        bar.text(0+'%');
         bar.parent().css('display','block');
         modal.find('.modal-header').css('display','none');
     }
@@ -129,7 +131,7 @@ function updateProgressBar(callback, bar, value){
         clearInterval(callback);
     }
 
-    //bar.text(value+'%');
+    bar.text(value+'%');
 }
 
 //init modal with progress bar
