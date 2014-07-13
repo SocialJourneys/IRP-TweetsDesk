@@ -62,7 +62,7 @@ function reload_chart(response){
   
   if(t_data.length>0){
     tweets_chart.setData(t_data);
-    tweets_chart.reDraw();
+    tweets_chart.redraw();
   }
   else
    alert('No data found, try with different input.');

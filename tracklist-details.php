@@ -121,10 +121,10 @@ $db_results = db_fetch($query);
 
 <!-- /.row -->
 <div class="row">
-    <div class="col-lg-10 col-md-10 col-sm-10">
+    <div class="col-lg-10">
         <div class="panel panel-info">
             <div class="panel-heading">
-                Tweets
+                Tweets mentioning: <?php echo $term_name;?>
                
                <div class="form-group-row heading-menu pull-right">
                 <!--label for="inputType" class="col-lg-2 col-md-2 col-sm-2 control-label"></label-->
