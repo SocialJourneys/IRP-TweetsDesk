@@ -36,9 +36,14 @@ $('#review-export-form').on('submit', function (e) {
 
 //file export result message box
 function showFileDownload(response){
+        var filename=0;
+        var records;
+        if(response!=null){
+            filename = response.file;
+            records  = response.records;
+        }
         
-        var filename = response.file;
-        var records = response.records;
+   
         var message;
         var footer_msg;
             if(filename!=0 && filename.length){

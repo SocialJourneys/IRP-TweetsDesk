@@ -93,7 +93,7 @@ while($loop_time<$end){
 	//echo '<br/>time: '.	date('Y-m-d H:i:s',$loop_time);
 	//echo '<br/>time: '.	gmdate('Y-m-d H:i:s',);
 
-	$authors_query = "SELECT author from tweet WHERE ".$time_field.">="."'".date('Y-m-d H:i:s',$loop_time-$interval)."'"." AND ".
+	$authors_query = "SELECT author from tweet ".$where." AND ".$time_field.">="."'".date('Y-m-d H:i:s',$loop_time-$interval)."'"." AND ".
 	$time_field."<="."'".date('Y-m-d H:i:s',$loop_time)."'"
 	."GROUP BY author";
 
@@ -104,7 +104,7 @@ while($loop_time<$end){
 	
 	//$author_count=sql_count($db_array,date('Y-m-d H:i:s',$loop_time-$interval),date('Y-m-d H:i:s',$loop_time),'author',true);
 
-	$tweets_query = "SELECT count(text) from tweet WHERE ".$time_field.">="."'".date('Y-m-d H:i:s',$loop_time-$interval)."'"." AND ".
+	$tweets_query = "SELECT count(text) from tweet ".$where." AND ".$time_field.">="."'".date('Y-m-d H:i:s',$loop_time-$interval)."'"." AND ".
 	$time_field."<="."'".date('Y-m-d H:i:s',$loop_time)."'";
 	
 	$db_results = db_fetch($tweets_query);
