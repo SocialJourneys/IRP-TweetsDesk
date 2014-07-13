@@ -1,3 +1,7 @@
+var progresspump ;
+var modal;
+var bar;
+
 $('#review-export-form').on('submit', function (e) {
 
         //alert('form was submitted');
@@ -11,19 +15,28 @@ $('#review-export-form').on('submit', function (e) {
             success: function (response) {
                 console.log(response);
               //alert('form was submitted');
+              clearInterval(progresspump);
               showFileDownload(response);
+
             },
             error: function(response){
-            console.log(JSON.stringify(response));
-             alert('there was an error!' + JSON.stringify(response));
+              clearInterval(progresspump);
+            showFileDownload(response);
+            //console.log(JSON.stringify(response));
+             alert('EXPORTER: there was an error! ' + JSON.stringify(response));
             }
           });
+
+    showProgressBar();
+
 });
 
 //file export result message box
 function showFileDownload(response){
+        
         var filename = response.file;
-
+        var link = filename;
+        
         if(filename!=-1){
             var paths = filename.split("/");
             filename = paths[1]+'/'+paths[2];
@@ -31,26 +44,114 @@ function showFileDownload(response){
 
         var records = response.records;
         var message;
+        var footer_msg;
             if(filename!=-1){
                 message = '<h2>Your exported file is ready.</h2><br/>';
                 message+='<p>Total number of records: <strong>' + records +'</strong></p>';
+                footer_msg="<div class='modal-footer'><a href='"+link+"' class='btn btn-primary' type='button' id='file-download-btn'>Download</a></div>";
+
             }
             else{
                 message = '<h2>There was an error.</h2><br/>';
                 message+='<strong>Please try again.</strong>';
+                footer_msg="<div class='modal-footer'><a class='btn btn-primary' type='button' class='close' data-dismiss='modal'>OK</a></div>";
             }
-        var link = filename;
-        var box = bootbox.alert(message);
-            if(filename!=-1){
-                box.find(".btn-primary").remove();
-                box.find(".modal-footer").append("<a href='"+link+"' class='btn btn-primary' type='button' id='file-download-btn'>Download</a>");
-            }
+        //var box = bootbox.alert(message);
+            //if(filename!=-1){
+                //box.find(".btn-primary").remove();
+                //box.find(".modal-footer").append("<a href='"+link+"' class='btn btn-primary' type='button' id='file-download-btn'>Download</a>");
+                //box.find(".btn-primary").remove();
+            initModal();
+
+            //modal.find(".modal-body").empty();
+            modal.find(".modal-body").append(message);
+            footer = modal.find(".modal-content");
+            //modal.find(".modal-footer").remove();
+            footer.append(footer_msg);
+       // }
 
 return false;
 }
 
+//show progress bar
+function showProgressBar(){
 
-    //dynamic keyword fields
+
+    initModal();
+
+   modal.modal('show');
+
+  progresspump = setInterval(function(){
+    /* query the completion percentage from the server */
+    var data=0;
+        $.ajax({
+            url: 'http-calls/get-session.php',
+            dataType:'json',
+            async: true,
+            success: function (response) {
+                data = response.progressBarValue;
+                updateProgressBar(progresspump,bar,data);
+              //alert('form was submitted');
+              //showFileDownload(response);
+            }
+        });
+  }, 1000);
+
+//    modal.removeClass("progress-bar");
+
+    return false;
+
+}
+
+function initModal(){
+    modal = $('.js-loading-bar'),
+    bar = modal.find('.progress-bar');
+    //modal.find(".modal-body").empty();
+    modal.find(".modal-footer").remove();
+    //if(isBar==false)
+       // bar.parent().remove();
+
+    return false;
+}
+
+//update progress value on UI
+
+function updateProgressBar(callback, bar, value){
+    bar.width(value+'%');
+    if (value>=100) {
+        clearInterval(callback);
+    }
+
+    //bar.text(value+'%');
+}
+
+//init modal with progress bar
+/*$(document).ready(function() {
+ this.$('.js-loading-bar').modal({
+  backdrop: 'static',
+  show: false
+    }).on('shown.bs.modal', function( event ) {
+
+   var $bar = $(event.target).find('.progress-bar'),
+       _wait = function() {       
+            setTimeout(function() {
+              if ( $bar.is(':visible')) { 
+                   $bar.addClass('animate');
+               } else {
+                  console.log('not ready'); 
+                  _wait();
+               }
+            }, 0);       
+       };
+   
+   _wait();
+   
+    });
+}); */
+
+
+//export form dynamic keyword fields
+
     var fieldCount = 1; //to keep track of text box added
 
     $("#add-keyword").click(function (e)  //on add input button click
@@ -85,14 +186,3 @@ return false;
         }
         return false;
     });
-
-//ajax loading dialog
-$(document).ajaxSend(function(event, request, settings) {
-  //$('#export-progress-bar').show();
-  $('#myLargeModalLabel').modal('toggle');
-});
-
-$(document).ajaxComplete(function(event, request, settings) {
-  //$('#export-progress-bar').hide();
-  $('#myLargeModalLabel').modal('toggle');
-});

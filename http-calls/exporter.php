@@ -1,6 +1,7 @@
 <?php include('../core/init.core.php');?>
 <?php
-
+header("Content-Type: application/json");
+$_SESSION['progressBarValue'] =0;
 //prepare the SQL query from form
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
@@ -217,23 +218,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         $query = $query .$fields.' from '. $table.$where.$limit;
 
+		$_SESSION['progressBarValue'] =0;
+
         $returnArray = dbExport($query,intval($split),'../db_exports');               
         
-        http_response_code(200);
-		echo json_encode($returnArray);
-
-        //$zipname = $returnArray[0];
-        //$records = $returnArray[1];
-
-//echo isset($_POST['author'])?$_POST['author'] : (isset($_GET['handle'])? $_GET['handle']:''):'';
-
-        //echo 'records: '.$records;
-        //$csv_filename = 'TMI_db_export'.'_'.date('Y-m-d').'.csv';
-
-  //      header('Content-Type: application/zip');
-//header('Content-disposition: attachment; filename=filename.zip');
-//header('Content-Length: ' . filesize($zipname));
-//readfile($zipname);
+		if(!empty($returnArray)){
+			http_response_code(200);
+			echo json_encode($returnArray);
+		}
+		else
+			echo json_encode(array("errors"=>"Export error"));
 
   } //if post
 ?>

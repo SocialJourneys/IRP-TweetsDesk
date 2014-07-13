@@ -1,5 +1,6 @@
-<?php
-	function get_db(){
+<?php 
+
+function get_db(){
 		// database constants
 		$table = '';
 		$hostname = "localhost";
@@ -86,6 +87,11 @@
 
 	//echo 'records: '. $limit;
 	//die();
+	session_start();
+	$progress=100/$limit; //if 20, than each loop adds 0.2
+	$_SESSION['progressBarValue']=0;
+
+	$progressLoop = 0;
 
 	while($curr_split<=$split){
 		$csv_export = '';
@@ -111,8 +117,17 @@
 			';	
 			  //echo "<br/>curr loop: ".$curr_loop;
 			$curr_loop=$curr_loop+1;
+			
+			if(($progressLoop%2)<=0 && $_SESSION['progressBarValue']<100){
+					session_start();
+					$_SESSION['progressBarValue']+=2;
+					session_write_close();
+				}
+
+				$progressLoop+=$progress;
 			}
 
+			sleep(0.1);
 			if($split>1)
 				$file = $csv_filename.'-part'.$curr_split.'.csv';
 			else
@@ -126,7 +141,7 @@
 			$curr_loop=0;
 			$curr_split=$curr_split+1;
 	}
-
+	
 	$zipname = $csv_filename.'.zip';
 	$zip = new ZipArchive;
 	$zip->open($zipname, ZipArchive::CREATE);
@@ -144,7 +159,6 @@
 	pg_close();
 
 	$returnArray = array("file"=>$zipname,"records"=>$limit);
-
 	// Export the data and prompt a csv file for download
 	/*header("Content-type: text/x-csv");
 	header("Content-Disposition: attachment; filename=".$csv_filename."");

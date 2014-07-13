@@ -22,6 +22,7 @@ if($status && $status!=200){
 }
 
 if(empty($errors)){
+	http_response_code(200);
 	echo 'success';
 	//header("Location: ../tracklist.php?delete=YES");	//echo $response;
 //	die();

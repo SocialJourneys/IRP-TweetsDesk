@@ -33,7 +33,7 @@
 
     <!--bootbox-->
     <script type="text/javascript" src="js/bootbox.min.js"> </script>
-    
+
     <div class="footer">
       <div class="container">
         <p class="text-muted">© Copyright 2014 TMI.</p>

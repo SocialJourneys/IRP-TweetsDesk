@@ -1,7 +1,6 @@
 <?php include('core/init.core.php');?>
 <?php include('header.php');?>
 <?php include('export_csv.php');?>
-?>
 <?php
 
 $db_count = db_count();
@@ -222,9 +221,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         $query = $query .$fields.' from '. $table.$where.$limit;
 
 
-        $returnArray = dbExport($query,intval($split),'db_exports/');               
-        $zipname = $returnArray['file'];
-        $records = $returnArray['records'];
+        //$returnArray = dbExport($query,intval($split),'db_exports/');               
+        //$zipname = $returnArray['file'];
+        //$records = $returnArray['records'];
 
 //echo isset($_POST['author'])?$_POST['author'] : (isset($_GET['handle'])? $_GET['handle']:''):'';
 
@@ -722,7 +721,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 <script type="text/javascript" src="http-calls/exporter.js"></script>
 
 <script type="text/javascript">
-
 $('#review-filter-captured-at-to').datetimepicker();
 $('#review-filter-captured-at-from').datetimepicker();
 
@@ -854,30 +852,3 @@ $("input[name='review-checkbox[]']").each( function () {
 //info button tooltip initializer        
 $('[data-toggle="tooltip"]').tooltip();
 </script>
-<?php if($zipname){
-    if($zipname!=-1){
-        $message = '<h2>Your exported file is ready.</h2><br/>';
-        $message.='<p>Total number of records: <strong>'. $records .'</strong></p>';
-//       $message.="<strong>Click <a href='".$zipname."'>here</a> to download.</strong>";
-        //$message.="<button id='hidden-btn' href='".$zipname."'></button>";
-    }
-    else{
-        $message = '<h2>There was an error.</h2><br/>';
-        $message.='<strong>Please try again.</strong>';
-    }
-  ?>
-<script>
-var check = "<?php echo $zipname; ?>";
-
-var some_html = "<?php echo $message; ?>";
-var link = "<?php echo $zipname; ?>";
-var box = bootbox.alert(some_html);
-//box.find(".btn-primary").(attr("href",$("#hidden-btn").attr('href')));
-if(check!=1){
-    box.find(".btn-primary").remove();
-    box.find(".modal-footer").append("<a href='"+link+"' class='btn btn-primary' type='button' id='file-download-btn'>Download</a>");
-}
-//box.find("#file-download-btn").attr("data-bb-handler","ok");
-</script>
-  <?php
-}?>
