@@ -295,7 +295,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <td>
                         <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-10" id="filter-no-of-records">
                          <label label-default="" for="review-filter-no-of-records"></label>
-                         <input type="number" min="1" step="1" pattern="\d+" oninvalid="setCustomValidity('Please enter a number greater or equal to 1.') "class="form-control review-control" name="limit" id="review-filter-no-of-records" placeholder="Count" value="<?php echo isset($_POST['limit'])?$_POST['limit'] :'1000'?>" required/>   
+                         <input type="number" min="1" step="1" pattern="\d+" oninvalid="validatedMsg(this,1);" oninput="validatedMsg(this,1);" class="form-control review-control" name="limit" id="review-filter-no-of-records" placeholder="Count" value="<?php echo isset($_POST['limit'])?$_POST['limit'] :'1000'?>" required/>   
                     
                         <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Overall records you want to fetch. e.g: 0,10,1000. This field is required.">
                             <i class="fa fa-info"></i>
@@ -318,7 +318,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         <div class="review-form-group review-filters form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-db-id">
                             <label label-default="" for="review-filter-db-id">
                             </label> 
-                            <input type="number" class="form-control review-control" name="id" id="review-filter-db-id" placeholder="Identifier" value="<?php echo isset($_POST['id'])?$_POST['id'] :''?>" /> 
+                            <input type="number" <input type="number" min="0" step="1" pattern="\d+" oninvalid="validatedMsg(this,0);" oninput="validatedMsg(this,0);" class="form-control review-control" name="id" id="review-filter-db-id" placeholder="Identifier" value="<?php echo isset($_POST['id'])?$_POST['id'] :''?>" /> 
                             <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Database ID for this record. e.g: 0,10,1000">
                                  <i class="fa fa-info"></i>
                             </button>
@@ -413,7 +413,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                           <option value=">" <?php if($_POST['favourite_count_condition'] == ">") echo "selected";?> >></option>
                           <option value="<" <?php if($_POST['favourite_count_condition'] == "<") echo "selected";?> ><</option>
                       </select>
-                      <input type="number" type="number" min="1" step="1" pattern="\d+" oninvalid="setCustomValidity('Please enter a number greater than or equal to 0.')" class="form-control review-control" name="favourite_count" placeholder="N/A" id="review-filter-favourites" value="<?php echo isset($_POST['favourite_count'])?$_POST['favourite_count'] :''?>"/> 
+                     <input type="number" min="0" step="1" pattern="\d+" oninvalid="validatedMsg(this,0);" oninput="validatedMsg(this,0);" class="form-control review-control" name="favourite_count" placeholder="N/A" id="review-filter-favourites" value="<?php echo isset($_POST['favourite_count'])?$_POST['favourite_count'] :''?>"/> 
                     <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Count of Favourites.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -438,7 +438,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                           <option value=">" <?php if($_POST['re_tweeet_count_condition'] == ">") echo "selected";?> >></option>
                           <option value="<" <?php if($_POST['re_tweeet_count_condition'] == "<") echo "selected";?> ><</option>
                       </select>
-                      <input type="number" type="number" min="1" step="1" pattern="\d+" oninvalid="setCustomValidity('Please enter a number greater than or equal to 0.')" class="form-control review-control" name="re_tweeet_count" placeholder="N/A" id="review-filter-retweets" value="<?php echo isset($_POST['re_tweeet_count'])?$_POST['re_tweeet_count'] :''?>"/>   
+                      <input type="number" min="0" step="1" pattern="\d+" oninvalid="validatedMsg(this,0);" oninput="validatedMsg(this,0);" class="form-control review-control" name="re_tweeet_count" placeholder="N/A" id="review-filter-retweets" value="<?php echo isset($_POST['re_tweeet_count'])?$_POST['re_tweeet_count'] :''?>"/>   
                       <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Count of Retweets.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -505,7 +505,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-original-tweet-id">
                         <label label-default="" for="review-filter-original-tweet-id"></label>
-                      <input type="number" type="number" min="1" step="1" pattern="\d+" oninvalid="setCustomValidity('Please enter a number greater than or equal to 0.')" class="form-control review-control" name="original_tweet_id" id="review-filter-original-tweet-id" placeholder="Enter Tweet ID" value="<?php echo isset($_POST['original_tweet_id'])?$_POST['original_tweet_id'] :''?>"/>      
+                      <input type="number" min="0" step="1" pattern="\d+" oninvalid="validatedMsg(this,0);" oninput="validatedMsg(this,0);" class="form-control review-control" name="original_tweet_id" id="review-filter-original-tweet-id" placeholder="Enter Tweet ID" value="<?php echo isset($_POST['original_tweet_id'])?$_POST['original_tweet_id'] :''?>"/>      
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="The origianl tweet ID from twitter in numeric form.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -545,7 +545,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-reply-status-id">
                         <label label-default="" for="review-filter-reply-status-id"></label>
-                      <input type="number" type="number" min="1" step="1" pattern="\d+" oninvalid="setCustomValidity('Please enter a number greater than or equal to 0.')" class="form-control review-control" name="in_reply_to_status_id" id="review-filter-reply-status-id" placeholder="Enter Status ID" value="<?php echo isset($_POST['in_reply_to_status_id'])?$_POST['in_reply_to_status_id'] :''?>"/> 
+                      <input type="number" min="0" step="1" pattern="\d+" oninvalid="validatedMsg(this,0);" oninput="validatedMsg(this,0);" class="form-control review-control" name="in_reply_to_status_id" id="review-filter-reply-status-id" placeholder="Enter Status ID" value="<?php echo isset($_POST['in_reply_to_status_id'])?$_POST['in_reply_to_status_id'] :''?>"/> 
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter tweet ID for status in numeric form.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -565,7 +565,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-reply-user-id">
                         <label label-default="" for="review-filter-reply-user-id"></label>
-                      <input type="number" type="number" min="1" step="1" pattern="\d+" oninvalid="setCustomValidity('Please enter a number greater than or equal to 0.')" class="form-control review-control" name="in_reply_to_user_id" id="review-filter-reply-user-id" placeholder="Enter User ID" value="<?php echo isset($_POST['in_reply_to_user_id'])?$_POST['in_reply_to_user_id'] :''?>"/>    
+                     <input type="number" min="0" step="1" pattern="\d+" oninvalid="validatedMsg(this,0);" oninput="validatedMsg(this,0);" class="form-control review-control" name="in_reply_to_user_id" id="review-filter-reply-user-id" placeholder="Enter User ID" value="<?php echo isset($_POST['in_reply_to_user_id'])?$_POST['in_reply_to_user_id'] :''?>"/>    
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter user ID in numeric form for the user this tweet is mentioned.">
                        <i class="fa fa-info"></i>
                     </button>   
@@ -625,7 +625,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-user-id">
                         <label label-default="" for="review-filter-user-id"></label>
-                      <input type="number" type="number" min="1" step="1" pattern="\d+" oninvalid="setCustomValidity('Please enter a number greater than or equal to 0.')" class="form-control review-control" name="user_id" id="review-filter-user-id" placeholder="Enter Numeric User ID" value="<?php echo isset($_POST['user_id'])?$_POST['user_id'] :''?>"/>  
+                      <input type="number" min="0" step="1" pattern="\d+" oninvalid="validatedMsg(this,0);" oninput="validatedMsg(this,0);" class="form-control review-control" name="user_id" id="review-filter-user-id" placeholder="Enter Numeric User ID" value="<?php echo isset($_POST['user_id'])?$_POST['user_id'] :''?>"/>  
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Twitter user ID for this author of tweet in numeric form.">
                        <i class="fa fa-info"></i>
                     </button>                       
@@ -645,7 +645,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-conversation-id">
                         <label label-default="" for="review-filter-conversation-id"></label>
-                      <input type="number" type="number" min="1" step="1" pattern="\d+" oninvalid="setCustomValidity('Please enter a number greater than or equal to 0.')" class="form-control review-control" name="conversation_id" id="review-filter-conversation-id" placeholder="Enter Numeric Conversation ID" value="<?php echo isset($_POST['conversation_id'])?$_POST['conversation_id'] :''?>"/>     
+                     <input type="number" min="0" step="1" pattern="\d+" oninvalid="validatedMsg(this,0);" oninput="validatedMsg(this,0);" class="form-control review-control" name="conversation_id" id="review-filter-conversation-id" placeholder="Enter Numeric Conversation ID" value="<?php echo isset($_POST['conversation_id'])?$_POST['conversation_id'] :''?>"/>     
                          <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Conversation ID for this tweet in numeric form.">
                        <i class="fa fa-info"></i>
                     </button>                       
@@ -705,7 +705,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     </div>  
 
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-5 col-md-4 col-lg-4" id="filter-split">
-                    <input type="number" class="form-control review-control" name="split" id="review-filter-split" placeholder="Enter value" value="<?php echo isset($_POST['split'])?$_POST['split'] :''?>"/>       
+                    <input type="number" min="1" step="1" pattern="\d+" oninvalid="validatedMsg(this,1);" oninput="validatedMsg(this,1);" class="form-control review-control" name="split" id="review-filter-split" placeholder="Enter value" value="<?php echo isset($_POST['split'])?$_POST['split'] :''?>"/>       
  
                     </div>
             
@@ -856,4 +856,16 @@ $("input[name='review-checkbox[]']").each( function () {
 
 //info button tooltip initializer        
 $('[data-toggle="tooltip"]').tooltip();
+
+function validatedMsg(textbox,min) {
+
+     if(textbox.validity.patternMismatch){
+        textbox.setCustomValidity('Please enter a number greater than or equal to '+min);
+    }    
+    else {
+        textbox.setCustomValidity('');
+    }
+    return true;
+}
+
 </script>
