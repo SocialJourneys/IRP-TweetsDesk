@@ -55,7 +55,7 @@ function showFileDownload(response){
                 message = '<div class="progress-modal-message"><h2>Your exported file is ready.</h2><br/>';
                 message+='<p>Total number of records: <strong>' + records +'</strong></p></div>';
 
-                footer_msg="<div class='modal-footer'><a href='"+link+"' class='btn btn-primary' type='button' id='file-download-btn'>Download</a></div>";
+                footer_msg="<div class='modal-footer'><a href='"+link+"' class='btn btn-primary' type='button' id='file-download-btn' download>Download</a></div>";
 
             }
             else{
@@ -80,6 +80,7 @@ function showFileDownload(response){
 
 return false;
 }
+
 
 //show progress bar
 function showProgressBar(){

@@ -126,7 +126,7 @@ $db_results = db_fetch($query);
             <div class="panel-heading">
                 Tweets mentioning: <?php echo $term_name;?>
                
-               <div class="form-group-row heading-menu pull-right">
+               <div class="form-group-row heading-menu pull-right" id="chart_menu">
                 <!--label for="inputType" class="col-lg-2 col-md-2 col-sm-2 control-label"></label-->
                 <div class='datetimepicker-input-group date'>
                     <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" name='chart_datetimepicker_from' id='chart_datetimepicker_from' placeholder="From" required/>
@@ -171,16 +171,16 @@ $db_results = db_fetch($query);
 $('#chart_datetimepicker_from').datetimepicker();
 $('#chart_datetimepicker_to').datetimepicker();
 
-$("#chart_datetimepicker_from").on("dp.change",function (e) {
+//date restriction
+/*$("#chart_datetimepicker_from").on("dp.change",function (e) {
   $('#chart_datetimepicker_to').data("DateTimePicker").setMinDate(e.date);
 });
 $("#chart_datetimepicker_to").on("dp.change",function (e) {
   $('#chart_datetimepicker_from').data("DateTimePicker").setMinDate(e.date);
-});
+});*/
 
-$('#datetimepicker3').datetimepicker();
-$('#datetimepicker4').datetimepicker();
 
+//clear date box on selection of dropdown menu
 $('#chart_frequency').on('change', function() {
     $('#chart_datetimepicker_from').val('');
     $('#chart_datetimepicker_to').val('');

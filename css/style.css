@@ -71,6 +71,10 @@ white-space: nowrap;
   opacity: 0.5;
 }
 
+.input-disabled{
+ opacity: 0.5; 
+}
+
 .review-control{
   margin-bottom: 10px;
   padding: 6px 7px !important;

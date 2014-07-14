@@ -1,4 +1,6 @@
-  var tweets_chart =  new Morris.Area({
+
+$(document).ready(function() {
+ tweets_chart =  new Morris.Area({
         element: 'morris-tmi-chart',
         xkey: 'time',
         ykeys: ['tweets', 'users'],
@@ -9,6 +11,8 @@
     });
 
 add_chart_data();
+
+}); 
 
 function add_chart_data(){  
       
@@ -28,7 +32,7 @@ function add_chart_data(){
         success:function(response){
         reload_chart(response);
         //alert(response[0].timestamp);
-        //console.log(JSON.stringify(response));
+        console.log(JSON.stringify(response));
        // alert('hello2');
         },
           error: function(response){
@@ -70,11 +74,35 @@ function reload_chart(response){
     return false;   
 }
 
+function toggleChartMenu(isEnable){
+      if(isEnable===true){
+              $("#chart_menu").removeClass("input-disabled");
+              //disable inputs inside parent div
+              //$(chart_menu+" :input").attr("disabled", false);
+              $("#chart_menu").find('input, button').attr('disabled',false);
+          }
+          //grey out
+          else{
+              $("#chart_menu").addClass("input-disabled");
+              $("#chart_menu").find('input, button').attr('disabled',true);
+      }
+
+      return false;
+          //$("#"+field_id).attr("disabled", false);
+}
+
+
+chart_loader= '<div id="chart_loader" style="position: absolute; left: 50%; top: 50%;"><img src="img/ajax_loader_blue_32.gif"></img></div>';
+
 //ajax loading dialog
 $(document).ajaxSend(function(event, request, settings) {
-  $('#ajax_loader').show();
+  $('#morris-tmi-chart').append(chart_loader);
+  //$('#ajax_loader').show();
+  toggleChartMenu(false); 
 });
 
 $(document).ajaxComplete(function(event, request, settings) {
-  $('#ajax_loader').hide();
+    $('#chart_loader').remove();
+ // $('#ajax_loader').hide();
+  toggleChartMenu(true);
 });
