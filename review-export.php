@@ -857,6 +857,7 @@ $("input[name='review-checkbox[]']").each( function () {
 //info button tooltip initializer        
 $('[data-toggle="tooltip"]').tooltip();
 
+//form validation
 function validatedMsg(textbox,min) {
 
      if(textbox.validity.patternMismatch){
