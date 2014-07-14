@@ -79,12 +79,12 @@ function toggleChartMenu(isEnable){
               $("#chart_menu").removeClass("input-disabled");
               //disable inputs inside parent div
               //$(chart_menu+" :input").attr("disabled", false);
-              $("#chart_menu").find('input, button').attr('disabled',false);
+              $("#chart_menu").find('input, button, select').attr('disabled',false);
           }
           //grey out
           else{
               $("#chart_menu").addClass("input-disabled");
-              $("#chart_menu").find('input, button').attr('disabled',true);
+              $("#chart_menu").find('input, button, select').attr('disabled',true);
       }
 
       return false;
