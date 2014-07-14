@@ -1,6 +1,5 @@
 <?php include('core/init.core.php');?>
 <?php include('header.php');?>
-<?php include('export_csv.php');?>
 <?php
 
 $db_count = db_count();
@@ -723,7 +722,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 <?php include('footer.php');?>
 
-<script type="text/javascript" src="http-calls/exporter.js"></script>
+<script type="text/javascript" src="exporter.js"></script>
 
 <script type="text/javascript">
 $('#review-filter-captured-at-to').datetimepicker();

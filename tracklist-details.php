@@ -7,15 +7,15 @@ $term_type = $_GET['term_type'];
 
 if($term_type==='handle'){
     $term_type='@';
-    $where = "WHERE author='".$term_name."'";
+    $where = "WHERE LOWER(author)=LOWER('".$term_name."')";
 }
 if($term_type==='hashtag'){
     $term_type='#';
-    $where = "WHERE text LIKE '%#".$term_name."%'";
+    $where = "WHERE LOWER(text) LIKE LOWER('%#".$term_name."%')";
 }
 if($term_type==='search-term'){
     $term_type='$';
-    $where = "WHERE text LIKE '%".$term_name."%'";
+    $where = "WHERE LOWER(text) LIKE LOWER('%".$term_name."%')";
 }
 
 $select = 'SELECT text,created_at,author,original_tweet_id from tweet ';
@@ -25,6 +25,8 @@ $query = $select.$where.' ORDER BY created_at DESC'.$limit;
 $_SESSION['tweets_query'] = $select.$where;
 $_SESSION['where_query'] = $where;
 
+//echo $query;
+//exit();
 
 $db_results = db_fetch($query);
 ?>
@@ -201,7 +203,7 @@ $('#chart_frequency').on('change', function() {
 
 //data table init
 $('#dataTables-tweets').dataTable({
-        aaSorting: [[2, 'desc']],
+        aaSorting: [[1, 'desc']],
         bPaginate: true,
         bFilter: true,
         bInfo: false,

@@ -8,7 +8,7 @@ $('#review-export-form').on('submit', function (e) {
 
           $.ajax({
             type: 'POST',
-            url: 'http-calls/exporter.php',
+            url: 'exporter.php',
             dataType:'json',
             data: $('#review-export-form').serialize(),
             success: function (response) {

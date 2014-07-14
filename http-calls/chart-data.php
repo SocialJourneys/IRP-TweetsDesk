@@ -29,7 +29,7 @@ else{
 	}
 	
 	$where = $_SESSION['where_query'];
-	$select = "SELECT ".$time_field.",author from tweet ".$where." AND ".$time_field.">="."'".$from."'"." AND ".$time_field."<="."'".$to."'"." ORDER BY ".$time_field." desc LIMIT 15000";
+	$select = "SELECT ".$time_field.",text, author from tweet ".$where." AND ".$time_field.">="."'".$from."'"." AND ".$time_field."<="."'".$to."'"." ORDER BY ".$time_field." desc LIMIT 15000";
 }
 
 	//$select = "SELECT ".$time_field.",author from tweet WHERE ".$time_field.">="."'".$from."'"." AND ".$time_field."<="."'".$to."'"." ORDER BY ".$time_field." LIMIT 10000";
