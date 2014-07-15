@@ -469,8 +469,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         </label>
 
                         <select class="form-control review-control" name="textKeyword_condition" id="review-filter-tweet-content-condition">
-                          <option value="LIKE" <?php if($_POST['textKeyword_condition'] == "LIKE") echo "selected";?> >contains</option>
-                          <option value="=" <?php if($_POST['textKeyword_condition'] == "=") echo "selected";?> >exact match</option>
+                          <option value="~*" <?php if($_POST['textKeyword_condition'] == "~*") echo "selected";?> >contains</option>
+                          <option value="!~*" <?php if($_POST['textKeyword_condition'] == "!~*") echo "selected";?> >doesn't contain</option>
+                          <option value="=" <?php if($_POST['textKeyword_condition'] == "=") echo "selected";?> >full match</option>
                       </select>
                       <input type="text" class="form-control review-control" name="text" id="review-filter-tweet-content" placeholder="enter keyword" value="<?php echo isset($_POST['text'])?$_POST['text']:(isset($_GET['search-term'])? $_GET['search-term']:(isset($_GET['hashtag'])? '#'.$_GET['hashtag']:''));?>"/>    
 
@@ -678,12 +679,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 </tr><!-- Stakeholder-->
 
                 <tr><!-- required text Split-->
-                    <td style="border:0px;">
- 
-               <!--p> <span style="color:Red;">*</span> fields are required.
- </p--> 
 
-                    </td>
                 </tr><!-- required text Split-->
 
             </tbody>

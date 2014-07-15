@@ -8,6 +8,10 @@ $(document).ready(function() {
         pointSize: 2,
         hideHover: 'auto',
         resize: true
+   //     hoverCallback: function(index, options, content) {
+     //     //alert(content);
+       // return(content.append('<span>THIS</span>'));
+    //}
     });
 
 add_chart_data();
@@ -90,6 +94,11 @@ function toggleChartMenu(isEnable){
       return false;
           //$("#"+field_id).attr("disabled", false);
 }
+
+
+$( "#moorris-tmi-chart" ).click(function() {
+  alert( "Handler for .click() called." );
+});
 
 
 chart_loader= '<div id="chart_loader" style="position: absolute; left: 50%; top: 50%;"><img src="img/ajax_loader_blue_32.gif"></img></div>';

@@ -191,7 +191,7 @@ function updateProgressBar(callback, bar, value){
 
 
 //export form dynamic keyword fields
-
+$(document).ready(function() {
     var fieldCount = 1; //to keep track of text box added
 
     $("#add-keyword").click(function (e)  //on add input button click
@@ -208,7 +208,7 @@ function updateProgressBar(callback, bar, value){
         {
             fieldCount++; //text box added increment
             //add input box
-            $(inputsWrapper).append('<div class="form-group-keyword"><select class="form-control review-control" name="textKeyword_condition_' + fieldCount+'"id="textKeyword_condition_'+fieldCount+'"><option value="LIKE">contains</option><option value="=">exact match</option></select><input type="text" class="form-control review-control" name="text_'+ fieldCount +'"id="text_'+fieldCount+'" placeholder="enter keyword"/> <a href="#" class="removeclass5">&times;</a></div>');
+            $(inputsWrapper).append('<div class="form-group-keyword"><select class="form-control review-control" name="textKeyword_condition_' + fieldCount+'"id="textKeyword_condition_'+fieldCount+'"><option value="LIKE">contains</option><option value="=">exact match</option><option value="NOT LIKE">doesnt contain</option></select><input type="text" class="form-control review-control" name="text_'+ fieldCount +'"id="text_'+fieldCount+'" placeholder="enter keyword"/> <a href="#" class="removeclass5">&times;</a></div>');
             zk++; //text box increment
         }
 
@@ -226,3 +226,4 @@ function updateProgressBar(callback, bar, value){
         }
         return false;
     });
+  });

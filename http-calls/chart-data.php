@@ -16,14 +16,14 @@ if(strlen($_SESSION['tweets_query'])!=0){
 $time_field = 'created_at';
 $where = $_SESSION['where_query'];
 
-//either it's a call from tracklist details page or chart refresh
+//then it's a call from tracklist details page else chart refresh
 if(strlen($tweets_query)!=0){
 	//$from = date('Y-m-d H:i:s',strtotime('-1 day'));
 	//$select = $tweets_query." AND ". $time_field.">="."'".$from."'"." ORDER BY ".$time_field." LIMIT 10000";
 	$select = $tweets_query." ORDER BY ".$time_field." desc LIMIT 15000";
 }
 else{
-	if(empty($from) && empty($to)){
+	if(empty($from) && empty($to)){ //if selected dates or frequency
 		$from = date('Y-m-d H:i:s',strtotime('-1 '.$frequency));
 		$to = date('Y-m-d H:i:s',time());
 	}

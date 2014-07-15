@@ -141,32 +141,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
               if(trim($_POST[$checkbox])!="" || sizeof($keywords)>0){
                 
-                if($where)
+                if($where) //if it is a continuong WHERE clause, append AND or OR
                   $where = $where . $comb_criteria;
 
                 $where = $where.' (';
 
                 if(trim($_POST[$checkbox])!=""){
-                    if($_POST[$checkbox.'Keyword_condition']==='LIKE')
+                    if( ($_POST[$checkbox.'Keyword_condition'])==='~*' || ($_POST[$checkbox.'Keyword_condition']==='!~*'))
                   //    $_POST[$checkbox] = "'%".trim($_POST[$checkbox])."%'";
-                        $text = "'%".trim($_POST[$checkbox])."%'"; 
+                        $text = "'[^[:alnum:]]".trim($_POST[$checkbox])."[^[:alnum:]]'"; 
+                    else
+                      $text = "'".trim($_POST[$checkbox])."'";
 
-                    $where = $where.' LOWER('.$checkbox.') '.$_POST[$checkbox.'Keyword_condition'].' LOWER('.$text.')';
+                    $where = $where.' '.$checkbox.' '.$_POST[$checkbox.'Keyword_condition'].' '.$text.' ';
                 }
 
                 //loop through dynamic boxes
                 foreach ($keywords as $key => $value) {
-                  if($value!=""){
+                  if($value!=""){ //value is the input value
                     //extract the condition from key :e.g k1_LIKE
                     $condition = explode("_", $key);
                     $condition = $condition[1];
-                    if(trim($text)!="")
+                    if(trim($text)!="") //if keyword already in the query, then add AND or OR
                       $where = $where.$text_comb_criteria;
 
-                    if($condition==='LIKE')
-                        $text = "'%".trim($value)."%'"; 
+                    if($condition==='~*' || $condition==='!~*')
+                        $text = "'[^[:alnum:]]".trim($value)."[^[:alnum:]]'"; 
+                    else
+                      $text = "'".trim($value)."'";
 
-                    $where = $where.' LOWER('.$checkbox.') '.$condition.' '.'LOWER('.$text.')';
+                    $where = $where.' '.$checkbox.' '.$condition.' '.$text.' ';
                   }
                        // echo( 'condition: ' . $key.', value:'.$value.'<br/>' );
                     //    echo sizeof($keywords);

@@ -11,11 +11,11 @@ if($term_type==='handle'){
 }
 if($term_type==='hashtag'){
     $term_type='#';
-    $where = "WHERE LOWER(text) LIKE LOWER('%#".$term_name."%')";
+    $where = "WHERE text ~* '[^[:alnum:]]".$term_name."[^[:alnum:]]'";
 }
 if($term_type==='search-term'){
     $term_type='$';
-    $where = "WHERE LOWER(text) LIKE LOWER('%".$term_name."%')";
+    $where = "WHERE text ~* '[^[:alnum:]]".$term_name."[^[:alnum:]]'";
 }
 
 $select = 'SELECT text,created_at,author,original_tweet_id from tweet ';
