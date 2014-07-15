@@ -19,7 +19,7 @@ if($term_type==='search-term'){
 }
 
 $select = 'SELECT text,created_at,author,original_tweet_id from tweet ';
-$limit =' LIMIT 1000';
+$limit =' LIMIT 100';
 $query = $select.$where.' ORDER BY created_at DESC'.$limit;
 
 $_SESSION['tweets_query'] = $select.$where;
@@ -29,6 +29,7 @@ $_SESSION['where_query'] = $where;
 //exit();
 
 $db_results = db_fetch($query);
+
 ?>
 <div id="page-wrapper">
     <div class="row">

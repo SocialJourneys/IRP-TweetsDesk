@@ -28,7 +28,7 @@ function add_chart_data(){
 
       $.ajax({
         type:"GET",
-        url:"http-calls/chart-data.php",
+        url:"http-calls/chart-data1.php",
         dataType:"json",
         contentType:"application/json",
         data:"from="+from+"&to="+to+"&frequency="+frequency,
@@ -41,7 +41,7 @@ function add_chart_data(){
         },
           error: function(response){
           //TODO show error on the UI
-             // console.log(JSON.stringify(response));
+              console.log(JSON.stringify(response));
              //alert('there was an error!' + JSON.stringify(response));
           }
       });
