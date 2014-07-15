@@ -3,8 +3,8 @@
 function get_db(){
 		// database constants
 		$table = '';
-		//$hostname = "localhost";
-		$hostname = "dtp-24.sncs.abdn.ac.uk";
+		$hostname = "localhost";
+		//$hostname = "dtp-24.sncs.abdn.ac.uk";
 		$port = '5432';
 		$user = "postgres";
 		$password = "5L1ght1y";

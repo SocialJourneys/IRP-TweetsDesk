@@ -28,7 +28,7 @@ function add_chart_data(){
 
       $.ajax({
         type:"GET",
-        url:"http-calls/chart-data1.php",
+        url:"http-calls/chart-data.php",
         dataType:"json",
         contentType:"application/json",
         data:"from="+from+"&to="+to+"&frequency="+frequency,
@@ -71,10 +71,16 @@ function reload_chart(response){
   if(t_data.length>0){
     tweets_chart.setData(t_data);
     tweets_chart.redraw();
-  }
-  else
-   alert('No data found, try with different input.');
 
+     $('#chart_datetimepicker_from').val(response[0].timestamp);
+ $('#chart_datetimepicker_to').val(response[(response.length)-1].timestamp);
+  }
+  else{
+       alert('No data found, try with different input.');
+
+        tweets_chart.setData(null);
+    tweets_chart.redraw();
+}
     return false;   
 }
 

@@ -1,8 +1,10 @@
 <?php include('core/init.core.php');?>
 <?php
 header("Content-Type: application/json");
-$_SESSION['progressBarValue'] =0;
-$_SESSION['exportedFile']='';
+
+$_SESSION['exporter']['progress'] = 0;
+$_SESSION['exporter']['exportedFile'] = '';
+$_SESSION['exporter']['progressMessage'] ='';
 
 //prepare the SQL query from form
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -224,7 +226,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         $query = $query .$fields.' from '. $table.$where." ORDER BY created_at DESC ".$limit;
 
-		$_SESSION['progressBarValue'] =0;
+          $message_limit=$limit;
+          session_start();
+          $_SESSION['exporter']['progressMessage'] ='Retrieving tweets from database...';
+          session_write_close();
+
 
         $returnArray = dbExport($query,intval($split));               
         
@@ -278,11 +284,16 @@ function dbExport($query,$split){
 
   //echo 'records: '. $limit;
   //die();
-  session_start();
+  
   $progress=100/$limit; //if 20, than each loop adds 0.2
-  $_SESSION['progressBarValue']=0;
-
+  session_start();
+  $_SESSION['exporter']['progress'] = 0;
+  $_SESSION['exporter']['progressMessage'] ='Creating CSV file...';
+  session_write_close();
+  
   $progressLoop = 0;
+
+     
 
   while($curr_split<=$split){
     $csv_export = '';
@@ -311,7 +322,7 @@ function dbExport($query,$split){
       
       //if(($progressLoop%5)<=0 && $_SESSION['progressBarValue']<100){
           session_start();
-          $_SESSION['progressBarValue']+=$progress;
+          $_SESSION['exporter']['progress'] +=$progress;
           session_write_close();
         //}
 
@@ -334,6 +345,11 @@ function dbExport($query,$split){
       $curr_split=$curr_split+1;
   }
   
+  session_start();
+  $_SESSION['exporter']['progressMessage'] ='Writing ZIP file...';
+  session_write_close();
+
+
   $zipname = $csv_filename.'.zip';
   $zip = new ZipArchive;
   $zip->open($zipname, ZipArchive::CREATE);
@@ -353,7 +369,7 @@ function dbExport($query,$split){
   $returnArray = array("file"=>$zipname,"records"=>$limit);
 
   session_start();
-  $_SESSION['exportedFile']=$returnArray;
+  $_SESSION['exporter']['exportedFile']=$returnArray;
   session_write_close();
   
   // Export the data and prompt a csv file for download

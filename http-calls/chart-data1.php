@@ -13,14 +13,14 @@ if(strlen($_SESSION['tweets_query'])!=0){
 	$_SESSION['tweets_query']="";
 }
 
-$time_field = 'created_at';
+$time_field = 'time_stamp';
 $where = $_SESSION['where_query'];
 
 //then it's a call from tracklist details page else chart refresh
 if(strlen($tweets_query)!=0){
 	//$from = date('Y-m-d H:i:s',strtotime('-1 day'));
 	//$select = $tweets_query." AND ". $time_field.">="."'".$from."'"." ORDER BY ".$time_field." LIMIT 10000";
-	$select = $tweets_query." ORDER BY ".$time_field." desc LIMIT 100";
+	$select = $tweets_query." ORDER BY ".$time_field." desc LIMIT 10000";
 }
 else{
 	if(empty($from) && empty($to)){ //if selected dates or frequency
@@ -29,11 +29,11 @@ else{
 	}
 	
 	$where = $_SESSION['where_query'];
-	$select = "SELECT ".$time_field.",text, author from tweet ".$where." AND ".$time_field.">="."'".$from."'"." AND ".$time_field."<="."'".$to."'"." ORDER BY ".$time_field." desc LIMIT 100";
+	$select = "SELECT ".$time_field.",text, author from tweet ".$where." AND ".$time_field.">="."'".$from."'"." AND ".$time_field."<="."'".$to."'"." ORDER BY ".$time_field." desc LIMIT 10000";
 }
 
 	//$select = "SELECT ".$time_field.",author from tweet WHERE ".$time_field.">="."'".$from."'"." AND ".$time_field."<="."'".$to."'"." ORDER BY ".$time_field." LIMIT 10000";
-
+//$select = "SELECT ".$time_field.",author,text from tweet ORDER BY ".$time_field." desc LIMIT 500";
 //$select = "SELECT text,time_stamp,author,original_tweet_id from tweet WHERE time_stamp>= '2014-02-01 13:56:43' ORDER BY time_stamp LIMIT 10000";
 	//$db_results = db_fetch($tweets_query);
 
@@ -103,17 +103,22 @@ while($loop_time<$end){
 	//$authors_query = "SELECT ".$i." as tag, author from tweet ".$where." AND ".$time_field.">="."'".date('Y-m-d H:i:s',$loop_time-$interval)."'"." AND ".$time_field."<="."'".date('Y-m-d H:i:s',$loop_time)."'"."GROUP BY author;";
 	//$queries.=$authors_query;
 	//$i++;
-	$from=date('Y-m-d H:i:s',$loop_time);
-	$to=date('Y-m-d H:i:s',$loop_time+$interval);
-	$db_intervals = findInterval($timestamps,($i),$from,$to);
+	$from=date('Y-m-d H:i:s.u',$loop_time-$interval);
+	$to=date('Y-m-d H:i:s.u',$loop_time);
+	$db_intervals = findInterval($timestamps,floor($i),$from,$to);
 	$i+=$index_interval;
 
-	//$authors_array = array_slice($authors, $db_intervals['from'],$db_intervals['to']);
-	//$authors_unique_array = array_unique($authors_array);
-	//$authors_unique_array = count($authors_unique_array);
+	if($db_intervals['from']===$db_intervals['to']){
+		$author_count=0;
+		$tweets_count=0;
+	}
+	else{
+		$authors_array = array_slice($authors, $db_intervals['from'],$db_intervals['to']);
+		$authors_unique_array = array_unique($authors_array);
+		$author_count = count($authors_unique_array);
 
-	//$tweets_count = count($authors_array);
-
+		$tweets_count = count($authors_array);
+	}
 	//$intervals[]=array("db_from "=>(string)date('Y-m-d H:i:s',strtotime($timestamps[$db_intervals['from']])),"db_to "=>(string)date('Y-m-d H:i:s',strtotime($timestamps[$db_intervals['to']])),"loop from"=>(string)date('Y-m-d H:i:s',$loop_time),"loop to"=>(string)date('Y-m-d H:i:s',$loop_time+$interval));
 	//$intervals[]=$db_intervals;
 	
@@ -131,10 +136,10 @@ while($loop_time<$end){
 	
 	//$intervals[] = array("timestamp"=>(string)date('Y-m-d H:i:s',$loop_time));
 
-	$intervals[]=$db_intervals;
-	//$intervals[] = array("timestamp"=>(string)date('Y-m-d H:i:s',$loop_time),
-	//					"authors_count"=>$author_count,
-	//					"tweets_count"=>$tweets_count);
+	//$intervals[]=$db_intervals;
+	$intervals[] = array("timestamp"=>(string)date('Y-m-d H:i:s',$loop_time),
+						"authors_count"=>$author_count,
+						"tweets_count"=>$tweets_count);
 
 	
 	$loop_time = $loop_time+$interval;
@@ -148,7 +153,7 @@ echo json_encode($intervals);
 ?>
 <?php
 function findInterval($source_array,$index,$from,$to){
-	$db_date = date('Y-m-d H:i:s',strtotime($source_array[$index]));
+	$db_date = date('Y-m-d H:i:s.u',strtotime($source_array[$index]));
 	
 	$db_index_from=0;
 	$db_index_to=0;
@@ -161,40 +166,40 @@ function findInterval($source_array,$index,$from,$to){
 		$zk = $index;
 		while($db_date>$from && $zk>0){
 			$zk--;
-			$db_date=date('Y-m-d H:i:s',strtotime($source_array[$zk]));
+			$db_date=date('Y-m-d H:i:s.u',strtotime($source_array[$zk]));
 		}
-		$db_index_from=$zk;
+		$db_index_from=$zk-1;
 	}
 	else if($db_date<$from){
 		$zk = $index;
 
-		while($db_date<$from && $zk<(count($source_array))-1){
+		while($db_date<$from && $zk<=(count($source_array))-1){
 			$zk++;
-			$db_date=date('Y-m-d H:i:s',strtotime($source_array[$zk]));
+			$db_date=date('Y-m-d H:i:s.u',strtotime($source_array[$zk]));
 		}
-		$db_index_from=$zk;
+		$db_index_from=$zk-1;
 	}
 
 	$zk = $index;
-	$db_date = date('Y-m-d H:i:s',strtotime($source_array[$index]));
+	$db_date = date('Y-m-d H:i:s.u',strtotime($source_array[$index]));
 	//finding to
 	if($to==$db_date)
 		$db_index_to = $index;
 	else if($db_date<$to){
 		$zk = $index;
-		while($db_date<$to && $zk<(count($source_array))-1){
+		while($db_date<$to && $zk<=(count($source_array))-1){
 			$zk++;
-			$db_date=date('Y-m-d H:i:s',strtotime($source_array[$zk]));
+			$db_date=date('Y-m-d H:i:s.u',strtotime($source_array[$zk]));
 		}
-		$db_index_to=$zk;
+		$db_index_to=$zk-1;
 	}
 	else if($db_date>$to){
 		$zk = $index;
 		while($db_date>$to && $zk>0){
 			$zk--;
-			$db_date=date('Y-m-d H:i:s',strtotime($source_array[$zk]));
+			$db_date=date('Y-m-d H:i:s.u',strtotime($source_array[$zk]));
 		}
-		$db_index_to=$zk;
+		$db_index_to=$zk-1;
 	} 
 
 

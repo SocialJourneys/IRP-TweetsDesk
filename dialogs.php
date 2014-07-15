@@ -12,6 +12,7 @@
          <h2 class="modal-title"></h2>
       </div>
      <div class="modal-body">
+		<div class="modal-title" id="progress-bar-title"></div>
 	 <div class="progress progress-popup">
 	  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
 	  </div>

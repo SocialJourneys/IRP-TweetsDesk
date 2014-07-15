@@ -1,6 +1,7 @@
 var progresspump ;
 var modal;
 var bar;
+var bar_title;
 
 $('#review-export-form').on('submit', function (e) {
         //alert('form was submitted');
@@ -98,8 +99,8 @@ function showProgressBar(){
             dataType:'json',
             async: false,
             success: function (response) {
-                data = response.progressBarValue;
-                updateProgressBar(progresspump,bar,data);
+                data = response.exporter.progress;
+                updateProgressBar(progresspump,bar,response);
               //alert('form was submitted');
               //showFileDownload(response);
             },
@@ -120,11 +121,11 @@ function showProgressBar(){
 function getDownloadedFileStatus(){
     var returnData;
         $.ajax({
-            url: 'http-calls/get-export-status.php',
+            url: 'http-calls/get-session.php',
             dataType:'json',
             async: false,
             success: function (response) {
-                returnData = response;
+                returnData = response.exporter.exportedFile;
             }
         });
 
@@ -135,18 +136,21 @@ function getDownloadedFileStatus(){
 function initModal(isBar){
     modal = $('.js-loading-bar'),
     bar = modal.find('.progress-bar');
-    
+    bar_title = modal.find('#progress-bar-title');
+
     modal.find(".progress-modal-message").remove();
     modal.find(".modal-footer").remove();
     if(isBar==true){
         bar.width(0+'%');
         bar.text(0+'%');
         bar.parent().css('display','block');
+        bar_title.css('display','block');
         modal.find('.modal-header').css('display','none');
     }
     else{
         bar.parent().css('display','none');
         modal.find('.modal-header').css('display','block');
+        bar_title.css('display','none');
     }
 
     return false;
@@ -154,13 +158,16 @@ function initModal(isBar){
 
 //update progress value on UI
 
-function updateProgressBar(callback, bar, value){
+function updateProgressBar(callback, bar, response){
+    value = response.exporter.progress;
     bar.width(value.toFixed(2)+'%');
+
     if (value>=99) {
         clearInterval(callback);
     }
 
     bar.text(value.toFixed(2)+'%');
+    bar_title.text(response.exporter.progressMessage);
 
     return false;
 }
