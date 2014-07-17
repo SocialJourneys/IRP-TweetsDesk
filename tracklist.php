@@ -190,7 +190,12 @@ $tempData = json_decode($rawData, true);
 <!-- Data table init -->
 <script>
 
-$('#dataTables-tracklist').dataTable();
+$('#dataTables-tracklist').dataTable({
+            "oLanguage": {
+            "sInfo": 'Showing _END_ Sources.',
+            "sEmptyTable": "No tracklist items found.",
+        }
+});
 
 
 <!-- changing drop down title -->
@@ -205,7 +210,7 @@ $('#dropdown-term-type li').on('click',function(){
     if (type==='hashtag')
         symbol = '#';
     if (type ==='search-term')
-        symbol='$';
+        symbol=' ';
 
 
      $('#dropdown-title').text($(this).find('a').text());

@@ -134,7 +134,7 @@ function getDownloadedFileStatus(){
 }
 
 function initModal(isBar){
-    modal = $('.js-loading-bar'),
+    modal = $('.js-loading-bar');
     bar = modal.find('.progress-bar');
     bar_title = modal.find('#progress-bar-title');
 
@@ -162,12 +162,17 @@ function updateProgressBar(callback, bar, response){
     value = response.exporter.progress;
     bar.width(value.toFixed(2)+'%');
 
+
     if (value>=99) {
         clearInterval(callback);
     }
 
     bar.text(value.toFixed(2)+'%');
-    bar_title.text(response.exporter.progressMessage);
+
+    if(value>99)
+      bar_title.text('Preparing download file...');
+    else
+      bar_title.text(response.exporter.progressMessage);
 
     return false;
 }

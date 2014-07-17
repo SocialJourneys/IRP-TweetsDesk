@@ -3,15 +3,16 @@
 function get_db(){
 		// database constants
 		$table = '';
-		$hostname = "localhost";
-		//$hostname = "dtp-24.sncs.abdn.ac.uk";
+		//$hostname = "localhost";
+		$hostname = "dtp-24.sncs.abdn.ac.uk";
 		$port = '5432';
 		$user = "postgres";
 		$password = "5L1ght1y";
 		$database = "tweetdesk";
 
 		$db = pg_connect('host='.$hostname.' port='.$port.' dbname='.$database.' user='.$user.' password='.$password)
-		or die('Could not connect database!');
+		or 0; //die('Could not connect to database');
+		
 		return $db;
 
 	}
@@ -44,9 +45,12 @@ function get_db(){
 	//get available records in database
 	function db_count(){
 		$db = get_db();
-		$result = pg_exec($db, 'SELECT count (id) from tweet');
+		if($db ==0)
+			return 'DB Connection Error!';
 
+		$result = pg_exec($db, 'SELECT count (id) from tweet');
 		return pg_fetch_result($result,0);
+		//return 1;
 	}
 
 ?>

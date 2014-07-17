@@ -14,12 +14,12 @@ if($term_type==='hashtag'){
     $where = "WHERE text ~* '[^[:alnum:]]".$term_name."[^[:alnum:]]'";
 }
 if($term_type==='search-term'){
-    $term_type='$';
+    $term_type='';
     $where = "WHERE text ~* '[^[:alnum:]]".$term_name."[^[:alnum:]]'";
 }
 
 $select = 'SELECT text,created_at,author,original_tweet_id from tweet ';
-$limit =' LIMIT 100';
+$limit =' LIMIT 15000';
 $query = $select.$where.' ORDER BY created_at DESC'.$limit;
 
 $_SESSION['tweets_query'] = $select.$where;
@@ -124,21 +124,21 @@ $db_results = db_fetch($query);
 
 <!-- /.row -->
 <div class="row">
-    <div class="col-lg-10">
+    <div class="col-lg-10 col-md-10 col-sm-12">
         <div class="panel panel-info">
-            <div class="panel-heading">
+            <div class="panel-heading" id="morris-tmi-chart-panel">
                 Tweets mentioning: <?php echo $term_name;?>
                
                <div class="form-group-row heading-menu pull-right" id="chart_menu">
                 <!--label for="inputType" class="col-lg-2 col-md-2 col-sm-2 control-label"></label-->
                 <div class='datetimepicker-input-group date'>
-                    <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" name='chart_datetimepicker_from' id='chart_datetimepicker_from' placeholder="From" required/>
+                    <input type='text' data-date-format="YYYY-MM-DD HH:mm:ss" class="datetimepicker-form-control" name='chart_datetimepicker_from' id='chart_datetimepicker_from' placeholder="From" required/>
                 </div>
           
 
                     <!--label for="inputType" class="col-lg-1 col-md-1 col-sm-1 control-label"></label-->
                     <div class='datetimepicker-input-group date'>
-                        <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" name='chart_datetimepicker_to' id='chart_datetimepicker_to' placeholder="To" required/>
+                        <input type='text' data-date-format="YYYY-MM-DD HH:mm:ss" class="datetimepicker-form-control" name='chart_datetimepicker_to' id='chart_datetimepicker_to' placeholder="To" required/>
                     </div>
                
                     <div class='datetimepicker-input-group date datetimepicker-input-select'>
@@ -156,6 +156,7 @@ $db_results = db_fetch($query);
     </div>
     <!-- /.panel-heading -->
     <div class="panel-body">
+        <span class="col-lg-10 col-md-10 col-sm-12" id="morris-tmi-chart-error-message" style="font-size:20px; width:100%; height:100%; text-align:center;vertical-align:middle;">No tweets found.</span>
         <div id="morris-tmi-chart"></div>
     </div>
     <!-- /.panel-body -->
@@ -214,6 +215,11 @@ $('#dataTables-tweets').dataTable({
             { "aTargets": [ 0 ], "bSortable": true },
             { "aTargets": [ 1 ], "bSortable": true },
             { "aTargets": [ 2 ], "bSortable": true }
-        ]
+        ],
+        "oLanguage": {
+            "sInfo": 'Showing _END_ Sources.',
+            "sInfoEmpty": 'No tweets found',
+            "sEmptyTable": "No tweets found.",
+        }
     }); 
-</script>
+</script> 

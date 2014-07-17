@@ -14,6 +14,8 @@ $(document).ready(function() {
     //}
     });
 
+error_message = $('#morris-tmi-chart-error-message');
+tweets_chart_div = $('#morris-tmi-chart');
 add_chart_data();
 
 }); 
@@ -25,6 +27,9 @@ function add_chart_data(){
   var from = $('#chart_datetimepicker_from').val();
   var to = $('#chart_datetimepicker_to').val();
   var frequency = $('#chart_frequency').val();
+  
+  error_message.css('display','none');
+  tweets_chart_div.css('display','none');
 
       $.ajax({
         type:"GET",
@@ -42,6 +47,7 @@ function add_chart_data(){
           error: function(response){
           //TODO show error on the UI
               console.log(JSON.stringify(response));
+              error_message.css('display','block');
              //alert('there was an error!' + JSON.stringify(response));
           }
       });
@@ -69,18 +75,20 @@ function reload_chart(response){
     }
   
   if(t_data.length>0){
+        error_message.css('display','none');
+    tweets_chart_div.css('display','block');
+    
     tweets_chart.setData(t_data);
     tweets_chart.redraw();
 
      $('#chart_datetimepicker_from').val(response[0].timestamp);
- $('#chart_datetimepicker_to').val(response[(response.length)-1].timestamp);
+    $('#chart_datetimepicker_to').val(response[(response.length)-1].timestamp);
+
   }
   else{
-       alert('No data found, try with different input.');
-
-        tweets_chart.setData(null);
-    tweets_chart.redraw();
-}
+      // alert('No data found, try with different input.');
+        error_message.css('display','block');
+    }
     return false;   
 }
 
@@ -102,22 +110,17 @@ function toggleChartMenu(isEnable){
 }
 
 
-$( "#moorris-tmi-chart" ).click(function() {
-  alert( "Handler for .click() called." );
-});
-
-
-chart_loader= '<div id="chart_loader" style="position: absolute; left: 50%; top: 50%;"><img src="img/ajax_loader_blue_32.gif"></img></div>';
+chart_loader= '<div id="chart_loader" style="position: absolute; left: 50%; top: 5px;"><img src="img/ajax_loader_gray_32.gif"></img></div>';
 
 //ajax loading dialog
 $(document).ajaxSend(function(event, request, settings) {
-  $('#morris-tmi-chart').append(chart_loader);
+  $('#morris-tmi-chart-panel').append(chart_loader);
   //$('#ajax_loader').show();
   toggleChartMenu(false); 
 });
 
 $(document).ajaxComplete(function(event, request, settings) {
-    $('#chart_loader').remove();
+     $('#chart_loader').remove();
  // $('#ajax_loader').hide();
   toggleChartMenu(true);
 });

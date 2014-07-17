@@ -288,7 +288,7 @@ function dbExport($query,$split){
   $progress=100/$limit; //if 20, than each loop adds 0.2
   session_start();
   $_SESSION['exporter']['progress'] = 0;
-  $_SESSION['exporter']['progressMessage'] ='Creating CSV file...';
+  $_SESSION['exporter']['progressMessage'] ='Creating CSV data...';
   session_write_close();
   
   $progressLoop = 0;
@@ -344,11 +344,6 @@ function dbExport($query,$split){
       $curr_loop=0;
       $curr_split=$curr_split+1;
   }
-  
-  session_start();
-  $_SESSION['exporter']['progressMessage'] ='Writing ZIP file...';
-  session_write_close();
-
 
   $zipname = $csv_filename.'.zip';
   $zip = new ZipArchive;
@@ -357,21 +352,26 @@ function dbExport($query,$split){
   foreach ($file_names as $file) {
     $zip->addFile($file);
   }
-
   $zip->close();
+
 
   if(file_exists($zipname)==false)
     $zipname=0;
+  else
+    foreach ($file_names as $file){
+       unlink($file);//delete the csv
+  }
 
   //fclose($fp);
   pg_close();
+
 
   $returnArray = array("file"=>$zipname,"records"=>$limit);
 
   session_start();
   $_SESSION['exporter']['exportedFile']=$returnArray;
   session_write_close();
-  
+
   // Export the data and prompt a csv file for download
   /*header("Content-type: text/x-csv");
   header("Content-Disposition: attachment; filename=".$csv_filename."");

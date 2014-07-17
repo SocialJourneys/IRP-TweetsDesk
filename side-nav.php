@@ -10,8 +10,15 @@
                             <a href="tracklist.php"><i class="fa fa-twitter fa-fw"></i> Tracklist</a>
                         </li>
                         <li>
+                            <a href="analysis.php"><i class="fa fa-bar-chart-o fa-fw"></i> Analysis</a>
+                        </li>
+                        <li>
                             <a href="review-export.php"><i class="fa fa-table fa-fw"></i> Review & Export</a>
                         </li>
+                        <li>
+                            <a href="system-admin.php"><i class="fa fa-dashboard fa-fw"></i> System Admin</a>
+                        </li>
+                        
                     </ul>
                 </div>
             
