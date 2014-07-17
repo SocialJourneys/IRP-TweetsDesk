@@ -24,6 +24,11 @@ hashtag_chart_div = $('#morris-hashtag-chart');
 add_hashtag_chart_data('true');
 hashtag_chart_div.css('display','none');
 
+over_table=$("#dataTables-admin-overview").dataTable();
+
+overview_chart_loader= '<div id="overview_chart_loader" style="position: absolute; left: 50%; top: 5px;"><img src="img/ajax_loader_gray_32.gif"></img></div>';
+$('#admin-overview-tabel-panel').append(overview_chart_loader);
+
 }); 
 
 
@@ -48,7 +53,7 @@ function add_hashtag_chart_data(firstCall){
         contentType:"application/json",
         data:"from="+from+"&to="+to+"&frequency="+frequency+"&firstCall="+firstCall,
         success:function(response){
-        reload_hashtag_chart(response);
+        reload_hashtag_chart(response,firstCall);
         //alert(response[0].timestamp);
         console.log(JSON.stringify(response));
        // alert('hello2');
@@ -65,7 +70,20 @@ function add_hashtag_chart_data(firstCall){
       return false;
 }
 
-function reload_hashtag_chart(response){
+function update_system_overview(firstCall,total,per_sec){
+//update overview values
+    if(firstCall=='true'){
+
+      //alert(total);
+      over_table.fnUpdate(total,0,1); //
+      over_table.fnUpdate(per_sec,1,1);//
+
+    }
+
+    return false;
+}
+
+function reload_hashtag_chart(response,firstCall){
   hashtag_chart_data=[];
     //alert('inside reload chart: '+response.length);
     for(var i=0; i<response.length;i++){
@@ -83,14 +101,17 @@ function reload_hashtag_chart(response){
 
   if(hashtag_chart_data.length){
 
-        hashtag_chart_div.css('display','block');
+      update_system_overview(firstCall,response[0].total_tweets,response[0].tweets_per_second);
+
+    hashtag_chart_div.css('display','block');
             error_message.css('display','none');
-            
+
      hashtag_chart.setData(hashtag_chart_data);
     hashtag_chart.redraw();
 
-     $('#hashtag_chart_datetimepicker_from').val(response[0].timestamp);
+    $('#hashtag_chart_datetimepicker_from').val(response[0].timestamp);
     $('#hashtag_chart_datetimepicker_to').val(response[(response.length)-1].timestamp);
+
 
   }
   else{
@@ -130,6 +151,7 @@ $(document).ajaxSend(function(event, request, settings) {
 
 $(document).ajaxComplete(function(event, request, settings) {
      $('#chart_loader').remove();
+     $('#overview_chart_loader').remove();
  // $('#ajax_loader').hide();
   toggleChartMenu(true);
 });

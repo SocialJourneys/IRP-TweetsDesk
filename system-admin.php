@@ -16,6 +16,48 @@
       </ol>
 </div>
 
+<div class="row">
+    <div class="col-lg-10">
+        <div class="panel panel-info">
+            <div class="panel-heading" id="admin-overview-tabel-panel">
+                Overview
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover" id="dataTables-admin-overview">
+                        <thead style="display:none;">
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="gradeA">
+                                <td class="center" style="font-weight:bold;">Number of tweets</td>
+                                <td class="center" style="color:#428bca;" id="no-of-tweets"></td>
+                            </tr>
+                                <tr class="gradeA">
+                                <td class="center" style="font-weight:bold;">Tweets captured per second</td>
+                                <td class="center" style="color:#428bca;" id="tweets-per-second"></td>
+                            </tr>
+                                <tr class="gradeA" >
+                                <td class="center" style="font-weight:bold;">Tweets exported</td>
+                                <td class="center" style="color:#428bca;">500000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-10 col-md-10 col-sm-12">
@@ -98,22 +140,15 @@ $('#hashtag_chart_frequency').on('change', function() {
 });*/
 
 //data table init
-$('#dataTables-tweets').dataTable({
-        aaSorting: [[1, 'desc']],
-        bPaginate: true,
-        bFilter: true,
+$('#dataTables-admin-overview').dataTable({
+        bPaginate: false,
+        bFilter: false,
         bInfo: false,
-        bSortable: true,
-        bRetrieve: true,
-        aoColumnDefs: [
-            { "aTargets": [ 0 ], "bSortable": true },
-            { "aTargets": [ 1 ], "bSortable": true },
-            { "aTargets": [ 2 ], "bSortable": true }
-        ],
-        "oLanguage": {
+        bSortable: false,
+        bRetrieve: false,        "oLanguage": {
             "sInfo": 'Showing _END_ Sources.',
-            "sInfoEmpty": 'No tweets found',
-            "sEmptyTable": "No tweets found.",
+            "sInfoEmpty": '',
+            "sEmptyTable": ' Nothing'
         }
     }); 
 </script> 

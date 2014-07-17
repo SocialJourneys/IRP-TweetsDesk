@@ -65,11 +65,18 @@ $db_results = db_fetch($select);
 $last_row = pg_fetch_array($db_results, 0);
 $first_row = pg_fetch_array($db_results, (pg_num_rows($db_results)-1));
 
-
 //echo $db_array;
 
 $begin = strtotime($first_row[$time_field]);
 $end = strtotime($last_row[$time_field]);
+
+$tweets_per_second=0;
+$total_tweets=0;
+
+if(pg_num_rows($db_results)>0){
+	$tweets_per_second = pg_num_rows($db_results)/($end-$begin);
+	$total_tweets = pg_num_rows($db_results);
+}
 
 $seconds = ($end-$begin);
 $hours = ($end-$begin)/3600;
@@ -140,7 +147,9 @@ while(($loop_time-$interval)<=$end && pg_num_rows($db_results)>0){
 
 	$intervals[] = array("timestamp"=>(string)date('Y-m-d H:i:s',$loop_time),
 						"tweets"=>$tweets_count,
-						"hover"=>$hover);
+						"hover"=>$hover,
+						"tweets_per_second"=>$tweets_per_second,
+						"total_tweets"=>$total_tweets);
 
 	$loop_time = $loop_time+$interval;
 
