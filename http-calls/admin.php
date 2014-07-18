@@ -74,7 +74,7 @@ $tweets_per_second=0;
 $total_tweets=0;
 
 if(pg_num_rows($db_results)>0){
-	$tweets_per_second = pg_num_rows($db_results)/($end-$begin);
+	$tweets_per_second = round(pg_num_rows($db_results)/($end-$begin),2);
 	$total_tweets = pg_num_rows($db_results);
 }
 
@@ -95,7 +95,7 @@ $intervals=array();
 
 //$loop_time = $loop_time+$interval;
 
-while(($loop_time-$interval)<=$end && pg_num_rows($db_results)>0){
+while(($loop_time)<=$end && pg_num_rows($db_results)>0){
 	//$intervals[]=date('Y-m-d H:i:s',$loop_time);
 
 	//echo '<br/>time: '.	date('Y-m-d H:i:s',$loop_time);
@@ -105,7 +105,7 @@ while(($loop_time-$interval)<=$end && pg_num_rows($db_results)>0){
 	$hashtag_array=array();	
 	//concat query SELECT concat(LOWER(hashtag.text), ' (', count(hashtag.text) ,')') as hashtag from hashtag, tweet where hashtag.tweet_fk=tweet.id AND tweet.created_at >= '2014-06-10 00:00:00' AND tweet.created_at >= '2014-06-11 00:00:00' GROUP BY LOWER(hashtag.text) ORDER BY count(hashtag.text) desc
 	//$hashtag_query = "SELECT ('#'||LOWER(hashtag.text)|| ' ('|| count(hashtag.text) ||')') as hashtag from hashtag, tweet WHERE hashtag.tweet_fk=tweet.id AND tweet.created_at >= "."'".date('Y-m-d H:i:s',$loop_time-$interval)."'"." AND tweet.created_at <= "."'".date('Y-m-d H:i:s',$loop_time)."'"." GROUP BY LOWER(hashtag.text) ORDER BY count(hashtag.text) DESC";
-	$tweet_count_query = "SELECT count(id) from tweet WHERE ".$time_field." > "."'".date('Y-m-d H:i:s',$loop_time-$interval)."'"." AND ".$time_field." <= "."'".date('Y-m-d H:i:s',$loop_time)."'";
+	$tweet_count_query = "SELECT count(id) from tweet WHERE ".$time_field." >= "."'".date('Y-m-d H:i:s',$loop_time)."'"." AND ".$time_field." < "."'".date('Y-m-d H:i:s',$loop_time+$interval)."'";
 
 	$db_results = db_fetch($hashtag_query);
 	

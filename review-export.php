@@ -462,14 +462,14 @@ $db_count = db_count();
                         <label label-default="" for="review-field-split">
                           <input type="checkbox" name="split-checkbox[]" id="split" value= "split" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("split", $_POST['split-checkbox'])) echo "checked";}else echo "";?> >     
                           <strong>Split output file:</strong>
-                            <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Enter number of records per file. e.g 10000, 25000">
+                            <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Enter number of output files your want. Value must be between 1 to 10.">
                        <i class="fa fa-info"></i>
                     </button>  
                       </label>
                     </div>  
 
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-5 col-md-4 col-lg-4" id="filter-split">
-                    <input type="number" min="1" step="1" pattern="\d+" oninvalid="validatedMsg(this,1);" oninput="validatedMsg(this,1);" class="form-control review-control" name="split" id="review-filter-split" placeholder="Enter value" value="<?php echo isset($_POST['split'])?$_POST['split'] :''?>"/>       
+                    <input type="number" min="1" max="10" step="1" pattern="\d+" oninvalid="validatedMsg(this,10);" oninput="validatedMsg(this,10);" class="form-control review-control" name="split" id="review-filter-split" placeholder="Enter value" value="<?php echo isset($_POST['split'])?$_POST['split'] :''?>"/>       
  
                     </div>
             
@@ -625,7 +625,10 @@ $('[data-toggle="tooltip"]').tooltip();
 function validatedMsg(textbox,min) {
 
      if(textbox.validity.patternMismatch){
-        textbox.setCustomValidity('Please enter a number greater than or equal to '+min);
+        if(min==10)
+          textbox.setCustomValidity('Please enter a number between 1 or '+min);
+        else
+          textbox.setCustomValidity('Please enter a number greater than or equal to '+min);
     }    
     else {
         textbox.setCustomValidity('');

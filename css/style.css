@@ -89,9 +89,6 @@ white-space: nowrap;
 }
 
 
-
-
-
 .progress-bar.animate {
    width: 100%;
 }
@@ -107,4 +104,15 @@ white-space: nowrap;
 
 .progress-popup {
    margin-bottom: 0;
+}
+
+.fedback-error-signin{
+  width: 330px;
+  padding-left: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-left: 0px;
+  list-style: none;
+  color: #a94442;
+  list-style: none;
 }

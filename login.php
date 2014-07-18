@@ -113,6 +113,14 @@
                             <button class="btn btn-lg btn-success btn-block" type="submit">Login</button><br/>
                             </fieldset>
                         </form>
+
+                    </p>Don't have an account?</p>
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-2 col-xs-2">
+
+                    <a class="btn btn-xs btn-primary btn-block" href="register.php" style="margin-left:-10px;">Register Here!</a><br/>
+                            </div>
+
+
                     </div>
                 </div>
             </div>

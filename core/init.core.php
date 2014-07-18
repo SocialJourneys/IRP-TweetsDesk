@@ -24,7 +24,7 @@
 	//API URL constant:
 
 	//Application Authorization Key
-	//define("API_APP_KEY","aafa460be460462dcb7e56fda6d2217a");
+	define("API_APP_KEY","ik3490jf890l3490kpwf904pk3owe0l");
 
 	//Development mode:
 	//define("APIURL","http://139.133.73.55:9090/ecosystem-social-twitter/service");

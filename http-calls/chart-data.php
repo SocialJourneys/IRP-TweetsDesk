@@ -24,8 +24,8 @@ if(strlen($tweets_query)!=0){
 }
 else{
 	if(empty($from) && empty($to)){ //if selected dates or frequency
-		$from = date('Y-m-d H:i:s',strtotime('-1 '.$frequency)-3600);
-		$to = date('Y-m-d H:i:s',time()-3600);
+		$from = date('Y-m-d H:i:s.u',strtotime('-1 '.$frequency)-3600);
+		$to = date('Y-m-d H:i:s.u',time()-3600);
 	}
 	
 	$where = $_SESSION['where_query'];
@@ -40,8 +40,12 @@ else{
 //echo $select;
 //die();
 
+
+
 $db_results = db_fetch($select);
 //echo $db_results;
+//print_r('results: '.pg_num_rows($db_results));
+//die();
 
 $last_row = pg_fetch_array($db_results, 0);
 $first_row = pg_fetch_array($db_results, (pg_num_rows($db_results)-1));
@@ -65,18 +69,18 @@ echo '<br/>time difference in hours : '.$hours;
 echo '<br/>time difference in days : '.$days;
 */
 
-$interval = $seconds/23; //graph scale
+$interval = $seconds/24; //graph scale
 $loop_time = $begin; //initiale with begining timestamp
 $intervals=array();
 //$loop_time = $loop_time+$interval;
 
-	while(($loop_time-$interval)<=$end && pg_num_rows($db_results)>0){
+	while(($loop_time)<=$end && pg_num_rows($db_results)>0){
 		//$intervals[]=date('Y-m-d H:i:s',$loop_time);
 
 		//echo '<br/>time: '.	date('Y-m-d H:i:s',$loop_time);
 		//echo '<br/>time: '.	gmdate('Y-m-d H:i:s',);
 
-		$authors_query = "SELECT author from tweet ".$where." AND ".$time_field.">"."'".date('Y-m-d H:i:s.u',$loop_time-$interval)."'"." AND ".$time_field."<="."'".date('Y-m-d H:i:s.u',$loop_time)."'"."GROUP BY author";
+		$authors_query = "SELECT author from tweet ".$where." AND ".$time_field.">="."'".date('Y-m-d H:i:s.u',$loop_time)."'"." AND ".$time_field."<"."'".date('Y-m-d H:i:s.u',$loop_time+$interval)."'"."GROUP BY author";
 
 		$db_results = db_fetch($authors_query);
 		$author_count=pg_num_rows($db_results);
@@ -85,7 +89,7 @@ $intervals=array();
 		
 		//$author_count=sql_count($db_array,date('Y-m-d H:i:s',$loop_time-$interval),date('Y-m-d H:i:s',$loop_time),'author',true);
 
-		$tweets_query = "SELECT count(text) from tweet ".$where." AND ".$time_field.">"."'".date('Y-m-d H:i:s.u',$loop_time-$interval)."'"." AND ".$time_field."<="."'".date('Y-m-d H:i:s.u',$loop_time)."'";
+		$tweets_query = "SELECT count(text) from tweet ".$where." AND ".$time_field.">="."'".date('Y-m-d H:i:s.u',$loop_time)."'"." AND ".$time_field."<"."'".date('Y-m-d H:i:s.u',$loop_time+$interval)."'";
 		
 		$db_results = db_fetch($tweets_query);
 		$tweets_count=0;
@@ -115,4 +119,10 @@ echo json_encode($intervals);
 
 //die();
 
+?>
+<?php 
+
+function calculateScale($seconds){
+
+}
 ?>

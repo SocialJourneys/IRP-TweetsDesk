@@ -8,8 +8,9 @@ function get_db(){
 		$port = '5432';
 		$user = "postgres";
 		$password = "5L1ght1y";
-		$database = "tweetdesk";
-
+		//$database = "tweetdesk";
+		$database = "tmi";
+		
 		$db = pg_connect('host='.$hostname.' port='.$port.' dbname='.$database.' user='.$user.' password='.$password)
 		or 0; //die('Could not connect to database');
 		
@@ -23,7 +24,9 @@ function get_db(){
 	//echo "<br/><br/>query in db_fetch: ".$query;
 	//exit();
 
-	$result = pg_exec($db, $query);
+//pg_query
+	$result = pg_query($db, $query);
+	//$result = pg_exec($db, $query);
 	// query to get data from database
 
 // 	$rows = 

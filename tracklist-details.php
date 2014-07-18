@@ -124,7 +124,7 @@ $db_results = db_fetch($query);
 
 <!-- /.row -->
 <div class="row">
-    <div class="col-lg-10 col-md-10 col-sm-12">
+    <div class="col-lg-10 col-md-12 col-sm-12">
         <div class="panel panel-info">
             <div class="panel-heading" id="morris-tmi-chart-panel">
                 Tweets mentioning: <?php echo $term_name;?>

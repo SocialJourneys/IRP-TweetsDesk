@@ -60,7 +60,7 @@
 
 <!-- /.row -->
 <div class="row">
-    <div class="col-lg-10 col-md-10 col-sm-12">
+    <div class="col-lg-10 col-md-12 col-sm-12">
         <div class="panel panel-info">
             <div class="panel-heading" id="morris-hashtag-chart-panel">
                 Tweets Captured
@@ -68,13 +68,13 @@
                <div class="form-group-row heading-menu pull-right" id="chart_menu">
                 <!--label for="inputType" class="col-lg-2 col-md-2 col-sm-2 control-label"></label-->
                 <div class='datetimepicker-input-group date'>
-                    <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" name='hashtag_chart_datetimepicker_from' id='hashtag_chart_datetimepicker_from' placeholder="From" required/>
+                    <input type='text' data-date-format="YYYY-MM-DD HH:mm:ss" class="datetimepicker-form-control" name='hashtag_chart_datetimepicker_from' id='hashtag_chart_datetimepicker_from' placeholder="From" required/>
                 </div>
           
 
                     <!--label for="inputType" class="col-lg-1 col-md-1 col-sm-1 control-label"></label-->
                     <div class='datetimepicker-input-group date'>
-                        <input type='text' data-date-format="YYYY-MM-DD hh:mm:ss" class="datetimepicker-form-control" name='hashtag_chart_datetimepicker_to' id='hashtag_chart_datetimepicker_to' placeholder="To" required/>
+                        <input type='text' data-date-format="YYYY-MM-DD HH:mm:ss" class="datetimepicker-form-control" name='hashtag_chart_datetimepicker_to' id='hashtag_chart_datetimepicker_to' placeholder="To" required/>
                     </div>
                
                     <div class='datetimepicker-input-group date datetimepicker-input-select'>
@@ -92,7 +92,7 @@
     </div>
     <!-- /.panel-heading -->
     <div class="panel-body">
-        <span class="col-lg-10 col-md-10 col-sm-12" id="morris-hashtag-chart-error-message" style="font-size:20px; width:100%; height:100%; text-align:center;vertical-align:middle;">No tweets found.</span>
+        <span class="col-lg-10 col-md-12 col-sm-12" id="morris-hashtag-chart-error-message" style="font-size:20px; width:100%; height:100%; text-align:center;vertical-align:middle;">No tweets found.</span>
         <div id="morris-hashtag-chart"></div>
     </div>
     <!-- /.panel-body -->
