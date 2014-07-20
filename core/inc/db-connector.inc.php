@@ -3,13 +3,13 @@
 function get_db(){
 		// database constants
 		$table = '';
-		//$hostname = "localhost";
-		$hostname = "dtp-24.sncs.abdn.ac.uk";
+		$hostname = "localhost";
+		//$hostname = "dtp-24.sncs.abdn.ac.uk";
 		$port = '5432';
 		$user = "postgres";
 		$password = "5L1ght1y";
-		//$database = "tweetdesk";
-		$database = "tmi";
+		$database = "tweetdesk";
+		//$database = "tmi";
 		
 		$db = pg_connect('host='.$hostname.' port='.$port.' dbname='.$database.' user='.$user.' password='.$password)
 		or 0; //die('Could not connect to database');

@@ -1,9 +1,9 @@
 
 $(document).ready(function() {
-  hashtag_chart_data = [];
+  admin_chart_data = [];
 
- hashtag_chart =  new Morris.Area({
-        element: 'morris-hashtag-chart',
+ admin_chart =  new Morris.Area({
+        element: 'morris-admin-chart',
         xkey: 'time',
         ykeys: ['tweets'],
         labels: ['Tweets'],
@@ -11,18 +11,18 @@ $(document).ready(function() {
         hideHover: 'auto',
         resize: true,
         hoverCallback: function(index, options, content) {
-        return hashtag_chart_data[index].hover;
+        return admin_chart_data[index].hover;
         //this.xlabelAngle = 30;
         //$("#row-content").html("<div>" + "Year: " + options.data[index].y + "<br />" + options.labels[0] + ": " + options.data[index].a + "<br />" + options.labels[1] + ": " + options.data[index].b + "</div>");
     }
     });
 
-error_message = $('#morris-hashtag-chart-error-message');
+error_message = $('#morris-admin-chart-error-message');
 error_message.css('display','none');
-hashtag_chart_div = $('#morris-hashtag-chart');
+admin_chart_div = $('#morris-admin-chart');
 
-add_hashtag_chart_data('true');
-hashtag_chart_div.css('display','none');
+add_admin_chart_data('true');
+admin_chart_div.css('display','none');
 
 over_table=$("#dataTables-admin-overview").dataTable();
 
@@ -36,13 +36,13 @@ $('#admin-overview-tabel-panel').append(overview_chart_loader);
 
 //init chart
 
-function add_hashtag_chart_data(firstCall){  
+function add_admin_chart_data(firstCall){  
       
   //alert('hello1');
  
-  var from = $('#hashtag_chart_datetimepicker_from').val();
-  var to = $('#hashtag_chart_datetimepicker_to').val();
-  var frequency = $('#hashtag_chart_frequency').val();
+  var from = $('#admin_chart_datetimepicker_from').val();
+  var to = $('#admin_chart_datetimepicker_to').val();
+  var frequency = $('#admin_chart_frequency').val();
 
   //error_message.css('display','none');
   //tweets_chart_div.css('display','none');
@@ -53,7 +53,7 @@ function add_hashtag_chart_data(firstCall){
         contentType:"application/json",
         data:"from="+from+"&to="+to+"&frequency="+frequency+"&firstCall="+firstCall,
         success:function(response){
-        reload_hashtag_chart(response,firstCall);
+        reload_admin_chart(response,firstCall);
         //alert(response[0].timestamp);
         console.log(JSON.stringify(response));
        // alert('hello2');
@@ -62,7 +62,7 @@ function add_hashtag_chart_data(firstCall){
           //TODO show error on the UI
               console.log(JSON.stringify(response));
               error_message.css('display','block');
-              hashtag_chart_div.css('display','none');
+              admin_chart_div.css('display','none');
              //alert('there was an error!' + JSON.stringify(response));
           }
       });
@@ -83,41 +83,41 @@ function update_system_overview(firstCall,total,per_sec){
     return false;
 }
 
-function reload_hashtag_chart(response,firstCall){
-  hashtag_chart_data=[];
+function reload_admin_chart(response,firstCall){
+  admin_chart_data=[];
     //alert('inside reload chart: '+response.length);
     for(var i=0; i<response.length;i++){
         var timestamp = (response[i].timestamp);
         var tweets_count = response[i].tweets;
         var hoverData = response[i].hover;
         
-        hashtag_chart_data[i]={time:timestamp,
+        admin_chart_data[i]={time:timestamp,
                     hover:hoverData,
                     tweets:tweets_count,
                };
        
     }
-         // console.log(hashtag_chart_data);
+         // console.log(admin_chart_data);
 
-  if(hashtag_chart_data.length){
+  if(admin_chart_data.length){
 
       update_system_overview(firstCall,response[0].total_tweets,response[0].tweets_per_second);
 
-    hashtag_chart_div.css('display','block');
+    admin_chart_div.css('display','block');
             error_message.css('display','none');
 
-     hashtag_chart.setData(hashtag_chart_data);
-    hashtag_chart.redraw();
+     admin_chart.setData(admin_chart_data);
+    admin_chart.redraw();
 
-    $('#hashtag_chart_datetimepicker_from').val(response[0].timestamp);
-    $('#hashtag_chart_datetimepicker_to').val(response[(response.length)-1].timestamp);
+    $('#admin_chart_datetimepicker_from').val(response[0].timestamp);
+    $('#admin_chart_datetimepicker_to').val(response[(response.length)-1].timestamp);
 
 
   }
   else{
        //alert('No data found, try with different input.');
         error_message.css('display','block');
-        hashtag_chart_div.css('display','none');
+        admin_chart_div.css('display','none');
     }
     return false;   
 }
@@ -144,7 +144,7 @@ function toggleChartMenu(isEnable){
 
 //ajax loading dialog
 $(document).ajaxSend(function(event, request, settings) {
-  $('#morris-hashtag-chart-panel').append(chart_loader);
+  $('#morris-admin-chart-panel').append(chart_loader);
   //$('#ajax_loader').show();
   toggleChartMenu(false); 
 });

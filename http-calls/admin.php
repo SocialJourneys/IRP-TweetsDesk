@@ -158,3 +158,13 @@ while(($loop_time)<=$end && pg_num_rows($db_results)>0){
 http_response_code(200);
 echo json_encode($intervals);
 ?>
+<?php
+
+function system_tweets_chart(){
+
+}
+
+function system_overview(){
+
+}
+?>
