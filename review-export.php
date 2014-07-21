@@ -1,6 +1,7 @@
 <?php include('core/init.core.php');?>
 <?php include('header.php');?>
 <?php
+ini_set('memory_limit', '1500M');
 
 $db_count = db_count();
 

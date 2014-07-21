@@ -6,6 +6,9 @@ $_SESSION['exporter']['progress'] = 0;
 $_SESSION['exporter']['exportedFile'] = '';
 $_SESSION['exporter']['progressMessage'] ='';
 
+set_time_limit(100000);
+ini_set('memory_limit', '1024M');
+
 //prepare the SQL query from form
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
@@ -321,9 +324,12 @@ function dbExport($query,$split){
       $curr_loop=$curr_loop+1;
       
       //if(($progressLoop%5)<=0 && $_SESSION['progressBarValue']<100){
+          $progressLoop +=$progress;
+          if($progressLoop%4==0){
           session_start();
-          $_SESSION['exporter']['progress'] +=$progress;
+          $_SESSION['exporter']['progress'] =$progressLoop;
           session_write_close();
+        }
         //}
 
         //$progressLoop+=$progress;

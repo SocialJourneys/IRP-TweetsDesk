@@ -43,7 +43,7 @@
                             </tr>
                                 <tr class="gradeA" >
                                 <td class="center" style="font-weight:bold;">Tweets exported</td>
-                                <td class="center" style="color:#428bca;">500000</td>
+                                <td class="center" style="color:#428bca;"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -103,7 +103,7 @@
 
 <?php include('footer.php');?>
 
-<script type="text/javascript" src="http-calls/admin.js"> </script>
+<script type="text/javascript" src="http-calls/admin1.js"> </script>
 
 <script type="text/javascript">
 

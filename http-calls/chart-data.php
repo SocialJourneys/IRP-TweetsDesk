@@ -42,13 +42,13 @@ else{
 
 
 
-$db_results = db_fetch($select);
+$main_db_results = db_fetch($select);
 //echo $db_results;
 //print_r('results: '.pg_num_rows($db_results));
 //die();
 
-$last_row = pg_fetch_array($db_results, 0);
-$first_row = pg_fetch_array($db_results, (pg_num_rows($db_results)-1));
+$last_row = pg_fetch_array($main_db_results, 0);
+$first_row = pg_fetch_array($main_db_results, (pg_num_rows($main_db_results)-1));
 
 
 //echo $first_row;
@@ -74,7 +74,7 @@ $loop_time = $begin; //initiale with begining timestamp
 $intervals=array();
 //$loop_time = $loop_time+$interval;
 
-	while(($loop_time)<=$end && pg_num_rows($db_results)>0){
+	while(($loop_time)<=$end && pg_num_rows($main_db_results)>0){
 		//$intervals[]=date('Y-m-d H:i:s',$loop_time);
 
 		//echo '<br/>time: '.	date('Y-m-d H:i:s',$loop_time);
@@ -123,6 +123,7 @@ echo json_encode($intervals);
 <?php 
 
 function calculateScale($seconds){
-
+$hours = ($end-$begin)/3600;
+$days = ($end-$begin)/86400;
 }
 ?>

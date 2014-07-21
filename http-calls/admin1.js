@@ -29,6 +29,11 @@ over_table=$("#dataTables-admin-overview").dataTable();
 overview_chart_loader= '<div id="overview_chart_loader" style="position: absolute; left: 50%; top: 5px;"><img src="img/ajax_loader_gray_32.gif"></img></div>';
 $('#admin-overview-tabel-panel').append(overview_chart_loader);
 
+chart_loader= '<div id="admin_chart_loader" style="position: absolute; left: 50%; top: 5px;"><img src="img/ajax_loader_gray_32.gif"></img></div>';
+$('#morris-admin-chart-panel').append(chart_loader);
+toggleChartMenu(false); 
+
+
 update_system_overview();
 
 add_admin_chart_data('true');
@@ -52,22 +57,26 @@ function add_admin_chart_data(firstCall){
   //tweets_chart_div.css('display','none');
       $.ajax({
         type:"GET",
-        url:"http-calls/admin.php",
+        url:"http-calls/admin1.php",
         dataType:"json",
         contentType:"application/json",
         data:"from="+from+"&to="+to+"&frequency="+frequency+"&call=chart"+"&firstCall="+firstCall,
+        func:"chart",
         success:function(response){
         reload_admin_chart(response,firstCall);
         //alert(response[0].timestamp);
-        console.log(JSON.stringify(response));
+        //console.log(JSON.stringify(response));
        // alert('hello2');
         },
           error: function(response){
           //TODO show error on the UI
-              console.log(JSON.stringify(response));
+              //console.log(JSON.stringify(response));
               error_message.css('display','block');
               admin_chart_div.css('display','none');
              //alert('there was an error!' + JSON.stringify(response));
+          },
+          complete: function(){
+            toggleChartMenu(true);
           }
       });
 
@@ -78,11 +87,13 @@ function update_system_overview(){
 
       $.ajax({
         type:"GET",
-        url:"http-calls/admin.php",
+        url:"http-calls/admin1.php",
         dataType:"json",
         contentType:"application/json",
         data:"call=overview",
+        func:'overview',
         success:function(response){
+              console.log(JSON.stringify(response));
 
           var tps = response.tweets_per_second;
           var total = response.total_tweets;
@@ -157,17 +168,15 @@ function toggleChartMenu(isEnable){
 }
 
 
-  chart_loader= '<div id="chart_loader" style="position: absolute; left: 50%; top: 5px;"><img src="img/ajax_loader_gray_32.gif"></img></div>';
 
 //ajax loading dialog
 $(document).ajaxSend(function(event, request, settings) {
-  $('#morris-admin-chart-panel').append(chart_loader);
-  //$('#ajax_loader').show();
-  toggleChartMenu(false); 
+    //$('#ajax_loader').show();
 });
 
 $(document).ajaxComplete(function(event, request, settings) {
-     $('#chart_loader').remove();
- // $('#ajax_loader').hide();
-  toggleChartMenu(true);
+      if (settings.func === 'chart')  
+        $('#admin_chart_loader').remove();
+      
+    // $('#ajax_loader').hide();
 });
