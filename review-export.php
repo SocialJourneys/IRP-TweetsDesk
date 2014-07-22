@@ -434,7 +434,7 @@ $db_count = db_count();
                     </td>
                     <td>
                     <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-stakeholder">
-                        <select class="form-control review-control" name="stake_holder" id="review-filter-stakeholder">
+                        <select class="form-control review-control" name="stake_holder_condition" id="review-filter-stakeholder">
                           <option value="" <?php if($_POST['stake_holder'] == "") echo "selected";?> ></option>
                           <option value="True" <?php if($_POST['stake_holder'] == "True") echo "selected";?> >True</option>
                           <option value="False" <?php if($_POST['stake_holder'] == "False") echo "selected";?> >False</option>
@@ -447,6 +447,31 @@ $db_count = db_count();
                     </div>
                     </td>
                 </tr><!-- Stakeholder-->
+
+                <tr><!-- Geolocation-->
+                    <td>
+                    <div class="review-form-group form-group col-xs-12 col-sm-12 col-lg-12">
+                        <label label-default="" for="review-field-geolocation">
+                          <input type="checkbox" name="review-checkbox[]" value="geolocation_fk" id="geolocation" <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'){ if (in_array("geolocation_fk", $_POST['review-checkbox'])) echo "checked";}else echo "checked";?> >   
+                          <strong>Geolocation:</strong>
+                      </label>
+                    </div>   
+                    </td>
+                    <td>
+                    <div class="review-form-group form-inline form-group col-xs-6 col-sm-12 col-md-10 col-lg-8" id="filter-geolocation">
+                        <select class="form-control review-control" name="geolocation_fk_condition" id="review-filter-geolocation">
+                          <option value="with" <?php if($_POST['geolocation_fk'] == "with") echo "selected";?> >Tweets with geolocation</option>
+                          <option value="without" <?php if($_POST['geolocation_fk'] == "without") echo "selected";?> >Tweets without geolocation</option>
+                          <option value="" <?php if($_POST['geolocation_fk'] == "") echo "selected";?> >All tweets</option>
+                      </select>
+
+                      <button type="button" class="btn btn-default btn-xs review-info-btn" data-placement="top" data-toggle="tooltip" data-placement="top" title="Filter tweets by geolocation data.">
+                       <i class="fa fa-info"></i>
+                    </button>  
+
+                    </div>
+                    </td>
+                </tr><!-- Geolocation-->
 
                 <tr><!-- required text Split-->
 

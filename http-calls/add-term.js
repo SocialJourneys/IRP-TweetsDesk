@@ -32,40 +32,75 @@ function addTerm(userRole){
         data:"term_name="+term_name+"&term_type="+term_type,
 
         success:function(response){
+        if(response.statusCode==400)
+            showError(response.moreInfo);
+            //showError('')
+        else if(response.tracklistArr !=undefined || response.existingTrackList!=undefined) {
+
         var tracklistArr = response.trackLists; //array
         var values='';
-       // alert(tracklistArr);
-        for(var i = 0; i < tracklistArr.length; i++) {
-    		//console.log(response.trackLists[i].name);
-    		if(values.length)
-    			values=values+','+tracklistArr[i].name;
-	    	else
-	    		values=tracklistArr[i].name;
+        var existingTracklistArr = response.existingTrackList; //array
+        var existingValues='';
 
-    		
-    		addrow(tracklistArr[i],userRole);
-		}
+       // alert(tracklistArr);
+          for(var i = 0; i < tracklistArr.length; i++) {
+      		//console.log(response.trackLists[i].name);
+      		if(values.length)
+      			values=values+','+tracklistArr[i].name;
+  	    	else
+  	    		values=tracklistArr[i].name;
+
+      		
+      		addrow(tracklistArr[i],userRole);
+
+         }
+
+          for(var i = 0; i < existingTracklistArr.length; i++) {
+          //console.log(response.trackLists[i].name);
+          if(existingValues.length)
+            existingValues=existingValues+','+existingTracklistArr[i].name;
+          else
+            existingValues=existingTracklistArr[i].name;
+          }
+
+        message_added='';
+        message_existing='';
+
+      if(tracklistArr.length)
+        message_added = "Successfully Added: <strong>" + values +"</strong><br/>";
+      if(existingTracklistArr.length)
+        message_existing = "Unable to add, terms already existed : <strong>" + existingValues +"</strong>";
+  
+        bootbox.alert(message_added+message_existing);
+
+	 	   }
 
         //alert (response.photos[0]);
 		//	console.log(JSON.stringify(response));
         //bootbox.alert("Successfully Added: " + response.name);
 
-			bootbox.alert("Successfully Added: </strong>" + values +"</strong>");
+        }, //success
 
-        //TODO append in the UI
-        
-        },
+
           error: function(response){
           //TODO show error on the UI
 			console.log(JSON.stringify(response));
              alert('there was an error!' + JSON.stringify(response));
 
+          },//error
+
+          complete: function(){
+              $('#ajax_loader').hide();
           }
       });
 
       return false;
 }
 
+function showError(message){
+      bootbox.alert(message);
+
+}
 //add newly added data in table
 function addrow(response,userRole) {
 

@@ -15,9 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
       $query = 'SELECT ';
       $where = '';
       $fields= '';
-      $table = 'tweet';
+      $tables;
+      $table_tweet = 'tweet';
+      $table_geolocation = 'geolocation';
+      $join ='';
 
       $comb_criteria = ' '.$_POST['filters_criteria'].' '; //AND or OR
+      $tables = $table_tweet;
 
       foreach($_POST['review-checkbox'] as $checkbox) {
 
@@ -30,10 +34,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         elseif($checkbox!='limit')*/
           
         //handling first comma
-           if($fields) 
-                $fields = $fields.', '.$checkbox;
-           else
-              $fields = $checkbox;
+           if($fields && $checkbox!='geolocation_fk') {
+//              if($checkbox=='geolocation_fk')
+  //              $fields = $fields.', geolocation.'.$checkbox;
+    //          else
+                $fields = $fields.',tweet.'.$checkbox;
+            }
+           else if($checkbox!='geolocation_fk'){
+      //        if($checkbox=='geolocation_fk')
+        //        $fields = $fields.', geolocation.'.$checkbox;
+          //    else
+              $fields = 'tweet.'.$checkbox;
+            }
           
 
           //build the where clause
@@ -44,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 if($where)
                   $where = $where . $comb_criteria;
 
-                $where = $where.' '.$checkbox. ' = '.trim($_POST[$checkbox]);
+                $where = $where.' tweet.'.$checkbox. ' = '.trim($_POST[$checkbox]);
               }
                break;
              }
@@ -66,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 //$_POST[$checkbox.'_from'] = "'".trim($_POST[$checkbox.'_from'])."'";
                 $from = "'".trim($_POST[$checkbox.'_from'])."'";
                 //create where clause
-                $where = $where.$checkbox.' >= '.$from;
+                $where = $where.'tweet.'.$checkbox.' >= '.$from;
               }
               //to date
               if(trim($_POST[$checkbox.'_to'])!=""){
@@ -78,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 //$_POST[$checkbox.'_to'] = "'".trim($_POST[$checkbox.'_to'])."'";
                 $to = "'".trim($_POST[$checkbox.'_to'])."'";
                 //create where clause
-                $where = $where.$checkbox.' <= '.$to;
+                $where = $where.'tweet.'.$checkbox.' <= '.$to;
               }
 
               //close Where
@@ -101,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
               if(trim($_POST[$checkbox.'_from'])!=""){
 //                $_POST[$checkbox.'_from'] = "'".trim($_POST[$checkbox.'_from'])."'";
                 $from = "'".trim($_POST[$checkbox.'_from'])."'";
-                $where = $where.$checkbox.'>='.$from;
+                $where = $where.'tweet.'.$checkbox.'>='.$from;
               }
               if(trim($_POST[$checkbox.'_to'])!=""){
                 if(trim($_POST[$checkbox.'_from'])!="")
@@ -109,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
                 //$_POST[$checkbox.'_to'] = "'".trim($_POST[$checkbox.'_to'])."'";
                 $to = "'".trim($_POST[$checkbox.'_to'])."'";
-                $where = $where.$checkbox.'<='.$to;
+                $where = $where.'tweet.'.$checkbox.'<='.$to;
               }
 
                 $where = $where.' )';
@@ -124,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 if($where)
                   $where = $where . $comb_criteria;
 
-                $where = $where.' '.$checkbox. $_POST[$checkbox.'_condition'].trim($_POST[$checkbox]);
+                $where = $where.' tweet.'.$checkbox. $_POST[$checkbox.'_condition'].trim($_POST[$checkbox]);
               }
                break;
              }
@@ -135,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 if($where)
                   $where = $where . $comb_criteria;
 
-                $where = $where.' '.$checkbox. $_POST[$checkbox.'_condition'].trim($_POST[$checkbox]);
+                $where = $where.' tweet.'.$checkbox. $_POST[$checkbox.'_condition'].trim($_POST[$checkbox]);
               }
                break;
              }
@@ -158,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     else
                       $text = "'".trim($_POST[$checkbox])."'";
 
-                    $where = $where.' '.$checkbox.' '.$_POST[$checkbox.'Keyword_condition'].' '.$text.' ';
+                    $where = $where.' tweet.'.$checkbox.' '.$_POST[$checkbox.'Keyword_condition'].' '.$text.' ';
                 }
 
                 //loop through dynamic boxes
@@ -175,7 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     else
                       $text = "'".trim($value)."'";
 
-                    $where = $where.' '.$checkbox.' '.$condition.' '.$text.' ';
+                    $where = $where.' tweet.'.$checkbox.' '.$condition.' '.$text.' ';
                   }
                        // echo( 'condition: ' . $key.', value:'.$value.'<br/>' );
                     //    echo sizeof($keywords);
@@ -188,13 +200,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                break;
              }
 
+             case 'geolocation_fk':{
+
+              //if(trim($_POST[$checkbox])!=""){
+                //echo 'inside gelocation';
+                //echo $_POST[$checkbox.'_condition'];
+
+                switch ($_POST[$checkbox.'_condition']) {
+                  case 'with':
+                  if($where)
+                    $where = $where . $comb_criteria;
+                  $fields = $fields.',geolocation.latitude, geolocation.longitude';
+                  $tables = $tables.','.$table_geolocation;
+                  $where = $where.' (tweet.'.$checkbox.' is not null AND geolocation.id=tweet.'.$checkbox.')';
+                 // --select tweet.text, geolocation.latitude, geolocation.longitude from tweet, geolocation where tweet.geolocation_fk is not null and geolocation.id = tweet.geolocation_fk
+                    break;
+                  case 'without':
+                  if($where)
+                    $where = $where . $comb_criteria;
+                  $where = $where.' (tweet.'.$checkbox.' is null) ';
+                    //select tweet.id, text, geolocation_fk from tweet where geolocation_fk is null
+                    break;    
+                  default: //All
+                  $fields = $fields.',geolocation.latitude, geolocation.longitude';
+                  $join = ' LEFT JOIN geolocation on geolocation.id=tweet.'.$checkbox;
+                //--select tweet.id, tweet.text, geolocation.latitude, geolocation.longitude from tweet left join geolocation on geolocation.id = tweet.geolocation_fk where tweet.id > 326153
+                    break;
+                } //switch condition
+              //}
+               break;
+             }
+
              default:{
               if(trim($_POST[$checkbox])!=""){
                 
                 $inpval = trim($_POST[$checkbox]);
                 $condition = " = ";
 
-                if($checkbox==='in_reply_to_screen_name' || $checkbox==='iso_language_code' || $checkbox==='source' || $checkbox==='author'){
+                if($checkbox=='in_reply_to_screen_name' || $checkbox=='iso_language_code' || $checkbox=='source' || $checkbox=='author'){
                   //$_POST[$checkbox] = "'".trim($_POST[$checkbox])."'";
                     $inpval = "'%".$inpval."%'";
                     $condition = " LIKE ";
@@ -203,7 +246,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 if($where)
                   $where = $where . $comb_criteria;
 
-                $where = $where.' LOWER('.$checkbox.')'.$condition.'LOWER('.$inpval.')';
+                $where = $where.' LOWER(tweet.'.$checkbox.')'.$condition.'LOWER('.$inpval.')';
               }
                break;
              }
@@ -227,7 +270,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         if(!empty($_POST['limit']))
           $limit = ' LIMIT '.trim($_POST['limit']);
 
-        $query = $query .$fields.' from '. $table.$where." ORDER BY created_at DESC ".$limit;
+        $query = $query .$fields.' from '. $tables.$join.$where." ORDER BY tweet.created_at DESC ".$limit;
+
+        echo $query;
 
           $message_limit=$limit;
           session_start();
