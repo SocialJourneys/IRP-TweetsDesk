@@ -11,7 +11,7 @@ if($term_type==='handle'){
 }
 if($term_type==='hashtag'){
     $term_type='#';
-    $where = "WHERE text ~* '[^[:alnum:]]".$term_name."[^[:alnum:]]'";
+    $where = "WHERE text ~* '[^[:alnum:]]#".$term_name."[^[:alnum:]]'";
 }
 if($term_type==='search-term'){
     $term_type='';
@@ -19,8 +19,8 @@ if($term_type==='search-term'){
 }
 
 $select = 'SELECT text,created_at,author,original_tweet_id from tweet ';
-$limit =' LIMIT 3000';
-$query = $select.$where.' ORDER BY created_at DESC'.$limit;
+$limit =' LIMIT 1000';
+$query = $select.$where.' ORDER BY id DESC'.$limit;
 
 $_SESSION['tweets_query'] = $select.$where;
 $_SESSION['where_query'] = $where;
@@ -28,7 +28,8 @@ $_SESSION['where_query'] = $where;
 //echo $query;
 //exit();
 
-$db_results = db_fetch($query);
+//$db_results = db_fetch($query);
+$db_results = db_fetch_cached($query);
 
 ?>
 <div id="page-wrapper">
@@ -92,9 +93,9 @@ $db_results = db_fetch($query);
                         </thead>
                         <tbody>
                             <?php
-                            for($ri = 0; $ri < pg_num_rows($db_results); $ri++) {
-    
-                                $row = pg_fetch_array($db_results, $ri);
+                           // for($ri = 0; $ri < pg_num_rows($db_results); $ri++) {
+                            for($ri = 0; $ri < count($db_results); $ri++) {
+                                $row = $db_results[$ri];
                                 $text = $row['text'];
                                 $created_at = $row['created_at'];
                                 $author = $row['author'];
@@ -109,7 +110,7 @@ $db_results = db_fetch($query);
                                 echo '</tr>';
                             }
                             ?>
-                        </tbody>
+                        <tbody>
                     </table>
                 </div>
                 <!-- /.table-responsive -->
@@ -222,4 +223,28 @@ $('#dataTables-tweets').dataTable({
             "sEmptyTable": "No tweets found.",
         }
     }); 
+
+   /* $('#dataTables-tweets').DataTable( {
+        serverSide: true,
+        ordering: false,
+        searching: false,
+        iDisplayLength: 10,
+        sSearch:"AberdeenCity",
+        ajax: {
+            url: "tl-details-script.php",
+            dataSrc: function ( json ) {
+                for ( var i=0, ien=json.length ; i<ien ; i++ ) {
+                   // json[i][0] = '<a href="/message/'+json[i][0]+'>View message</a>';
+                }
+                alert(json);
+                return json;
+            }
+        },
+        dom: "rtiS",
+        scrollY: 200,
+        scroller: {
+            loadingIndicator: true
+        }
+    } );*/
+
 </script> 

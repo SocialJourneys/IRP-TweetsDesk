@@ -21,7 +21,7 @@ error_message = $('#morris-hashtag-chart-error-message');
 error_message.css('display','none');
 hashtag_chart_div = $('#morris-hashtag-chart');
 
-add_hashtag_chart_data('true');
+//add_hashtag_chart_data('true');
 hashtag_chart_div.css('display','none');
 
 }); 
@@ -31,7 +31,7 @@ hashtag_chart_div.css('display','none');
 
 //init chart
 
-function add_hashtag_chart_data(firstCall){  
+function add_hashtag_chart_data1(firstCall){  
       
   //alert('hello1');
  
@@ -65,7 +65,7 @@ function add_hashtag_chart_data(firstCall){
       return false;
 }
 
-function reload_hashtag_chart(response){
+function reload_hashtag_chart1(response){
   hashtag_chart_data=[];
     //alert('inside reload chart: '+response.length);
     for(var i=0; i<response.length;i++){

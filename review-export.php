@@ -1,7 +1,6 @@
 <?php include('core/init.core.php');?>
 <?php include('header.php');?>
 <?php
-ini_set('memory_limit', '1500M');
 
 $db_count = db_count();
 
@@ -26,7 +25,7 @@ $db_count = db_count();
     <div class="panel panel-info">
       
     <div class="panel-heading">Review
-      <span class="pull-right" style="padding-bottom:10px;"><strong>Available tweets: <span style="color:green;"><?php echo $db_count?></span></strong></span>
+      <span class="pull-right" style="padding-bottom:10px;"><strong>Available tweets: <span style="color:green;"><?php echo number_format($db_count); ?></span></strong></span>
   </div>
    
     <div class="panel-body">

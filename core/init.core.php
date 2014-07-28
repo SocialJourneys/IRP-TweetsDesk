@@ -6,7 +6,7 @@
 	//die();
 	//Create an exception page array:
 //	$exceptions = array('register','login','review-export','tracklist','tracklist-details');
-	$exceptions = array('register','login');
+	$exceptions = array('register','login','gmp-test');
 
 	//Find out the current page name:
 	$exploded = explode('/', $_SERVER['SCRIPT_NAME']);
@@ -31,6 +31,8 @@
 	define("APIURL","http://dtp-24.sncs.abdn.ac.uk:8080/ecosystem-social-twitter/service");
 	
 	define("DB_CONNECTION","host=localhost port=5432 dbname=tweetdesk user=postgres password=5L1ght1y");
+	define("EXPORT_FOLDER","db_exports/");
+
 
 	//Deployment mode:
 	//define("APIURL","http://localhost:8080/smile-server/api-1.1");

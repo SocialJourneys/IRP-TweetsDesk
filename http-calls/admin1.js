@@ -34,9 +34,9 @@ $('#morris-admin-chart-panel').append(chart_loader);
 toggleChartMenu(false); 
 
 
-update_system_overview();
+//update_system_overview();
 
-add_admin_chart_data('true');
+//add_admin_chart_data('true');
 
 }); 
 

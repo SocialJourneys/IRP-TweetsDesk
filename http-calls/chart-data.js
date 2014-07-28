@@ -16,11 +16,11 @@ $(document).ready(function() {
 
 error_message = $('#morris-tmi-chart-error-message');
 tweets_chart_div = $('#morris-tmi-chart');
-add_chart_data();
+//add_chart_data();
 
 }); 
 
-function add_chart_data(){  
+function add_chart_data1(){  
       
   //alert('hello1');
  
@@ -55,7 +55,7 @@ function add_chart_data(){
       return false;
 }
 
-function reload_chart(response){
+function reload_chart1(response){
 
     //alert('inside reload chart: '+response.length);
 

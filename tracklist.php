@@ -1,6 +1,6 @@
 <?php include('core/init.core.php');?>
 <?php
-$url = APIURL.'/tracklist';
+/*$url = APIURL.'/tracklist';
 $headers = array('Content-Type: application/json',"Authorization: ".$_SESSION['account']['apiKey']);
 //$headers = array('Content-Type: application/json');
 //REST response:
@@ -17,11 +17,14 @@ if($status && $status!=201){
 
     header("Location: logout.php");
     die();  
-}
+}*/
 
 //print_r($response);
 //die();
-$dataArray = $dataArray->{'trackLists'};
+
+$dataArray = db_fetch('SELECT * FROM track_list');
+
+//$dataArray = $dataArray->{'trackLists'};
 
 ?>
 <?php include('header.php');?>
@@ -81,36 +84,6 @@ $dataArray = $dataArray->{'trackLists'};
 <?php
 }
 ?>
-<?php 
-$rawData = '{
-    "0":{"id":10,"term":"Aberdeen","type":"hashtag"},
-    "1":{"id":11,"term":"Glasgow","type":"search-term"},
-    "2":{"id":12,"term":"FirstAberdeen","type":"handle"},
-    "3":{"id":13,"term":"road block","type":"search-term"},
-    "4":{"id":14,"term":"Edinburgh","type":"hashtag"},
-    "5":{"id":15,"term":"Bus","type":"search-term"},
-    "6":{"id":16,"term":"Waiting for bus","type":"search-term"},
-    "7":{"id":17,"term":"StageCoach","type":"handle"},
-    "8":{"id":18,"term":"UniOfStAndrews","type":"handle"},
-    "9":{"id":19,"term":"Union Street","type":"search-term"},
-    "10":{"id":20,"term":"KingStreet","type":"hashtag"},
-    "11":{"id":21,"term":"MacRobert Building","type":"search-term"},
-    "12":{"id":22,"term":"DotRural","type":"handle"},
-    "13":{"id":23,"term":"raining","type":"hashtag"},
-    "14":{"id":24,"term":"UniOfAberdeen","type":"handle"},
-    "15":{"id":25,"term":"walking home","type":"search-term"},
-    "16":{"id":26,"term":"walking in rain","type":"search-term"},
-    "16":{"id":27,"term":"EarlyMorning","type":"hashtag"},
-    "17":{"id":28,"term":"KingsCollege","type":"handle"},
-    "18":{"id":29,"term":"SocialJourneys","type":"handle"},
-    "19":{"id":30,"term":"Where is my bus?","type":"search-term"},
-    "20":{"id":31,"term":"Dogs","type":"hashtag"}
-}';
-
-//echo $dataArray;
-$tempData = json_decode($rawData, true);
-//print_r($dataArray);
-?>
 <div class="row" id="term-list">
     <div class="col-lg-10">
         <div class="panel panel-info">
@@ -129,13 +102,18 @@ $tempData = json_decode($rawData, true);
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($dataArray as $key => $value) {
-                                $name = $value->{'name'};
-                                $id = $value->{'id'};
-                                $type = $value->{'type'};
+                            <?php //foreach ($dataArray as $key => $value) {
+                                while($row = pg_fetch_array($dataArray)){
+                                //$name = $value->{'name'};
+                                //$id = $value->{'id'};
+                                //$type = $value->{'type'};
+                                $name = $row['name'];
+                                $id = $row['id'];
+                                $type = $row['type'];
+                                    
                                 echo '<tr class="gradeA" id="dataTables-tracklist-'.$id.'">';
-                                echo '<td class="center"><a href="tracklist-details.php?term_name='.$value->{'name'}.'&term_type='.$type.'">'.$value->{'name'}.'</a></td>';
-                                echo '<td class="center">'.$value->{'type'}.'</td>';
+                                echo '<td class="center"><a href="tracklist-details.php?term_name='.$name .'&term_type='.$type.'">'.$name.'</a></td>';
+                                echo '<td class="center">'.$type.'</td>';
  //                               echo "<td class=\"center\"><a href=\"#\" class=\"btn btn-danger btn-sm active\" role=\"button\" onClick=\"deleteTerm($id,'$name')\">Delete</a></td>";
                                 echo "<td class=\"center\">";
                                     if($_SESSION['account']['userRole']=='Admin'||$_SESSION['account']['userRole']=='Super Admin')
@@ -157,33 +135,7 @@ $tempData = json_decode($rawData, true);
 </div>
 <!-- /.row -->
 </div>
-
-<!--delete confirmation modal, not used anymore-->
-    <!--div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
-                </div>
-            
-                <div class="modal-body">
-                    <p>Are you sure you want to Delete?</p>
-                    <p class="debug-record"></p>
-                </div>
-                
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <a href="#" class="btn btn-danger danger">Delete</a>
-                </div>
-            </div>
-        </div>
-    </div-->
-
-
 <?php include('footer.php');?>
-
 <script type="text/javascript" src="http-calls/delete-term.js"> </script>
 <script type="text/javascript" src="http-calls/add-term.js"> </script>
 

@@ -135,4 +135,30 @@ while(($loop_time)<=$end && pg_num_rows($db_results)>0){
 }
 http_response_code(200);
 echo json_encode($intervals);
+
+
+function calculateScale($seconds){
+
+$minute = 60;
+$hour = $minute*60;
+$day = $hour*24;
+$week = $day*7;
+$month = $week * 4;
+$half_year = $month*6;
+$year = $half_year*2;
+
+	if($seconds>=$year)
+		return 11; //12 months 
+	else if($seconds>=$half_year)
+		return 5; //6 months
+	else if($seconds>=$month)
+		return 14; //15 days
+	else if($seconds>=$week)
+		return 6; //7 days
+	else if($seconds>=$day)
+		return 11; //12 hours
+	else if($seconds>=$hour)
+		return 
+
+}
 ?>

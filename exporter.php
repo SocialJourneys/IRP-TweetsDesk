@@ -7,7 +7,7 @@ $_SESSION['exporter']['exportedFile'] = '';
 $_SESSION['exporter']['progressMessage'] ='';
 
 set_time_limit(100000);
-ini_set('memory_limit', '1024M');
+ini_set('memory_limit', '2048M');
 
 //prepare the SQL query from form
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -272,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         $query = $query .$fields.' from '. $tables.$join.$where." ORDER BY tweet.created_at DESC ".$limit;
 
-        echo $query;
+        //echo $query;
 
           $message_limit=$limit;
           session_start();
@@ -299,15 +299,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 function dbExport($query,$split){
 
   // filename for export
-  $csv_filename = 'db_exports/TMI_export_'.'_'.date('Y-m-d_H.i.s');
-
+  $csv_filename = EXPORT_FOLDER.'TMI_export_'.'_'.date('Y-m-d_H.i.s');
 
   $db = get_db();
   //$query = 'SELECT * FROM track_list'; 
 
 
   //echo "<br/><br/>query in exporter: ".$query;
-  $result = pg_exec($db, $query);
+  $result = pg_query($db, $query);
    
 
   // create empty variable to be filled with export data
@@ -359,7 +358,15 @@ function dbExport($query,$split){
       while($curr_loop<$loop && ($row=pg_fetch_array($result))) { 
         // create line with field values
         for($i = 0; $i < $field; $i++) {
-          $csv_value = $row[pg_field_name($result,$i)];
+
+          if(pg_field_name($result,$i) == 'original_tweet_id' || pg_field_name($result,$i) == 'in_reply_to_status_id'){
+            $csv_value = '"'.$row[pg_field_name($result,$i)].'"';
+            //$csv_value = str_replace("'", "", $csv_value);
+
+          }
+          else
+            $csv_value = $row[pg_field_name($result,$i)];
+  
           $csv_value = str_replace('"', '""', $csv_value);
           $csv_export.= '"'.$csv_value.'",';
         } 
@@ -388,7 +395,11 @@ function dbExport($query,$split){
         $file = $csv_filename.'.csv';
       // Open the file to get existing content
       // Write the contents back to the file
-      file_put_contents($file, $csv_export);
+      $p_file = fopen($file,"w");
+      fwrite($p_file,$csv_export);
+      fclose($p_file);
+
+      //file_put_contents($file, $csv_export);
       $file_names[]=$file;
 
 
@@ -412,7 +423,7 @@ function dbExport($query,$split){
     foreach ($file_names as $file){
        unlink($file);//delete the csv
   }
-
+  deleteOldFiles();
   //fclose($fp);
   pg_close();
 
@@ -428,5 +439,19 @@ function dbExport($query,$split){
   header("Content-Disposition: attachment; filename=".$csv_filename."");
   echo($csv_export);*/
   return  $returnArray;
+  }
+
+  function deleteOldFiles(){
+    $dir = EXPORT_FOLDER;
+
+    foreach(glob($dir.'*.*') as $v){
+    $last_modified = filemtime($v);//get the last modified time of file
+
+    $diff = abs($last_modified - time());
+    if( ($diff/(60*60*24))>=1 ) //older than 24 hours
+        unlink($v); 
+       
+    }
+
   }
 ?>
