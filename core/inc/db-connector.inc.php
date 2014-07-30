@@ -18,8 +18,7 @@ function get_db(){
 
 	}
 
-function db_fetch_cached($query){
-
+function get_memcache(){
 	$memcache = new Memcached();
 
 	//for memcached
@@ -27,6 +26,13 @@ function db_fetch_cached($query){
 
 	//for memcache
 	//$memcache->connect("127.0.0.1", '11211') or die ("Could not connect");
+
+	return $memcache;
+}
+
+function db_fetch_cached($query){
+
+	$memcache = get_memcache();
 
 	$key = md5($query);
 	$retrieveData = $memcache->get($key);
@@ -48,7 +54,7 @@ function db_fetch_cached($query){
 		}*/
 		
 		$retrieveData = $memcache->replace($key, $db_data); 
-		if( $result == false )  
+		if( $retrieveData == false )  
 			$memcache->set($key, pg_fetch_all($db_data),3600) or die ("Failed to save data at the server");
 		
 		$retrieveData = $memcache->get($key);
@@ -97,8 +103,26 @@ function db_fetch_cached($query){
 		return $result[0]['count'];
 	}
 
-	function set_session($data){
+
+	function set_cache_data($data, $ky){
+		$memcache = get_memcache();
+
+		$key = md5($ky);
+		$retrieveData = $memcache->get($key);
 		
+		if($retrieveData)
+			$retrieveData = $memcache->replace($key, $data);
+		else
+			$memcache->set($key,data,1) or die ("Failed to save data at the server");
+
+	}
+
+	function get_cache_data($ky){
+		$memcache = get_memcache();
+
+		$key = md5($ky);
+		$retrieveData = $memcache->get($key);
+		return $retrieveData;
 	}
 
 ?>
